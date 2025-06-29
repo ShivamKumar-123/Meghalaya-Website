@@ -1,0 +1,564 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+    Treval Around
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .gradient-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(to right, #00d2ff, #00c6ff); /* color from your image */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+    }
+
+    {% comment %} 3D slider css start from here  {% endcomment %}
+    .text-card {
+        background-color: #1c1c1c;
+        padding: 30px;
+        margin-left: -10%;
+        border-radius: 20px;
+        max-width: 500px;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .text-card h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #00ffd5;
+        font-weight: 700;
+    }
+    
+    .text-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        color: #e0e0e0;
+    }
+    
+    
+    
+    
+    .divbody{
+        background-color: black;
+        height: 80vh;
+        width: 100%;
+        display: flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: space-around;
+        overflow: hidden;
+        padding-right:220px;
+        gap:20px;
+    }
+    .sliderd{
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transform-style: preserve-3d;
+        animation: rotate 30s linear infinite;
+        
+    }
+    
+    @keyframes rotate{
+        0% {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        100% {
+            transform: perspective(1000px) rotateY(360deg);
+        }
+    }
+    
+    .sliderd span{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        transform-origin: center;
+        transform-style: preserve-3d;
+        transform: rotateY(calc(var(--i)*45deg)) translateZ(350px);
+    }
+    
+    .sliderd span img{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        border-radius:10px ;
+    }
+    
+    .sliderd span:hover img{
+        transform: translateY(-50px) scale(1.2);
+    }
+
+    @media screen and (max-width: 1030px) {
+        .divbody {
+            flex-direction: column;
+            padding-right: 0;
+            height: auto;
+            padding-bottom: 72px;
+            align-items: center; /* centers children when stacked vertically */
+        }
+    
+        .text-card {
+            margin-left: 24px;
+            margin-top:40px;
+            width: 90%;
+            padding: 20px;
+            margin-right:8%;
+            box-sizing: border-box;
+        }
+    
+        .sliderd {
+            margin-top: 60px;
+            width: 180px;      /* slightly larger for small screens */
+            height: 180px;
+        }
+    }
+    
+    @media screen and (max-width: 768px) {
+        .divbody {
+            flex-direction: column;
+            padding-right: 0;
+            height: auto;
+            padding-bottom: 72px;
+            align-items: center; /* centers children when stacked vertically */
+        }
+    
+        .text-card {
+            margin-left: 24px;
+            width: 90%;
+            padding: 20px;
+            margin-right:8%;
+            box-sizing: border-box;
+        }
+    
+        .sliderd {
+            margin-top: 60px;
+            width: 180px;      /* slightly larger for small screens */
+            height: 180px;
+        }
+    }
+    {% comment %} 3D slider css end from here  {% endcomment %}
+
+    {% comment %} another 3D slider for images {% endcomment %}
+
+    .gallery {
+        width: 100%;
+    }
+
+    .gallery-container {
+        align-items: center;
+        display: flex;
+        height: 400px;
+        margin: 0 auto;
+        max-width: 1000px;
+        position: relative;
+    }
+
+    .gallery-item {
+        height: 200px;
+        opacity: 0;
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+        width: 330px;
+        z-index: 0;
+        border-radius: 15px;
+        background-size: contain;
+    }
+
+    .gallery-item-1 {
+        left: 15%;
+        opacity: 0.4;
+        transform: translateX(-50%);
+    }
+
+    .gallery-item-2,
+    .gallery-item-4 {
+        height: 250px;
+        opacity: 0.8;
+        width: 380px;
+        z-index: 1;
+    }
+
+    .gallery-item-2 {
+        left: 30%;
+        transform: translateX(-50%);
+    }
+
+    .gallery-item-3 {
+        box-shadow: -2px 5px 33px 6px rgba(0, 0, 0, 0.35);
+        height: 300px;
+        opacity: 1;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 430px;
+        z-index: 2;
+    }
+
+    .gallery-item-4 {
+        left: 70%;
+        transform: translateX(-50%);
+    }
+
+    .gallery-item-5 {
+        left: 85%;
+        opacity: 0.4;
+        transform: translateX(-50%);
+    }
+
+    .gallery-controls {
+        display: flex;
+        justify-content: center;
+        margin: 25px 0;
+        height: 100px;
+    }
+
+    .gallery-controls button {
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
+        font-size: 30px;
+        margin: 0 50px;
+        padding: 0 12px;
+        text-transform: capitalize;
+    }
+
+    .gallery-controls-button:focus {
+        outline: none;
+    }
+
+    .gallery-controls-previous {
+        position: relative;
+    }
+
+    .gallery-controls-previous::before {
+        border: solid #51a4e8;
+        border-width: 0 5px 5px 0;
+        content: '';
+        display: inline-block;
+        height: 5px;
+        left: -30px;
+        padding: 10px;
+        position: absolute;
+        top: 25%;
+        transform: rotate(135deg) translateY(-50%);
+        transition: left 0.15s ease-in-out;
+        width: 5px;
+    }
+
+    .gallery-controls-previous:hover::before {
+        left: -40px;
+    }
+
+    .gallery-controls-next {
+        position: relative;
+    }
+
+    .gallery-controls-next::before {
+        border: solid #51a4e8;
+        border-width: 0 5px 5px 0;
+        content: '';
+        display: inline-block;
+        height: 5px;
+        padding: 10px;
+        position: absolute;
+        right: -30px;
+        top: 45%;
+        transform: rotate(-45deg) translateY(-50%);
+        transition: right 0.15s ease-in-out;
+        width: 5px;
+    }
+
+    .gallery-controls-next:hover::before {
+        right: -40px;
+    }
+
+    .gallery-nav {
+        bottom: -15px;
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        position: absolute;
+        width: 100%;
+    }
+
+    .gallery nav li {
+        background: #ccc;
+        border-radius: 50%;
+        height: 10px;
+        margin: 0 16px;
+        width: 10px;
+    }
+
+    .gallery-nav li.gallery-item-selected {
+        background: #555;
+    }
+
+    @media (max-width: 768px) {
+        .gallery-container {
+            height: 300px;
+        }
+    
+        .gallery-item {
+            height: 120px;
+            width: 200px;
+        }
+    
+        .gallery-item-1 {
+            left: 10%;
+        }
+    
+        .gallery-item-2,
+        .gallery-item-4 {
+            height: 150px;
+            width: 230px;
+        }
+    
+        .gallery-item-2 {
+            left: 30%;
+        }
+    
+        .gallery-item-3 {
+            height: 180px;
+            width: 260px;
+        }
+    
+        .gallery-item-4 {
+            left: 70%;
+        }
+    
+        .gallery-item-5 {
+            left: 90%;
+        }
+    
+        .gallery-controls {
+            height: 80px;
+            margin: 15px 0;
+        }
+    
+        .gallery-controls button {
+            font-size: 24px;
+            margin: 0 20px;
+        }
+    
+        .gallery-controls-previous::before {
+            left: -20px;
+        }
+    
+        .gallery-controls-previous:hover::before {
+            left: -30px;
+        }
+    
+        .gallery-controls-next::before {
+            right: -20px;
+        }
+    
+        .gallery-controls-next:hover::before {
+            right: -30px;
+        }
+    }
+
+    .card:hover{
+        border:3px solid tomato;
+        transform:scale(1.03);
+        transition-duration:0.4s;
+    }
+</style>
+<!-- Carousel -->
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" style="height: 60vh; overflow: hidden;">
+    <div class="carousel-inner h-100">
+        
+        <div class="carousel-item active h-100">
+            <img src="{% static 'imagesVideo/t3.jpeg' %}" class="d-block w-100 h-100" alt="..." style="object-fit: cover;">
+        </div>
+
+        <div class="carousel-item h-100">
+            <img src="{% static 'imagesVideo/t7.jpeg' %}" class="d-block w-100 h-100" alt="..." style="object-fit: cover;">
+        </div>
+
+        <div class="carousel-item h-100">
+            <img src="{% static 'imagesVideo/t4.jpeg' %}" class="d-block w-100 h-100" alt="..." style="object-fit: cover;">
+        </div>
+
+        <div class="carousel-item h-100">
+            <img src="{% static 'imagesVideo/t10.jpeg' %}" class="d-block w-100 h-100" alt="..." style="object-fit: cover;">
+        </div>
+
+    </div>
+</div>
+
+<div class="container-fluid my-5 px-4">
+
+    <div class="card p-5 mb-4 mx-auto" style="max-width: 1400px; background-color: #000; color: whitesmoke; border-radius: 20px; box-shadow: 0 10px 30px whitesmoke;">
+        <h3 class="text-center mb-3" style="color: #00ffe7; font-family: 'Playfair Display', serif;">{{mydata.0.festival_name}}</h3>
+        <p style="font-family: 'Roboto', sans-serif; color: #d1bfae; font-size: 1.05rem; line-height: 1.8;">
+            Nestled in the enchanting region of Northeast India, Assam, Sikkim, Arunachal Pradesh, Tripura, Mizoram, and Nagaland each offer a unique blend of culture, nature, and history. Assam, known for its lush tea gardens, the mighty Brahmaputra River, and rich wildlife sanctuaries like Kaziranga, serves as a cultural and economic hub of the region. Sikkim, a serene Himalayan state, captivates with its snow-capped peaks, Buddhist monasteries, and the iconic Kanchenjunga. Arunachal Pradesh, often called the "Land of the Rising Sun," is a treasure trove of tribal traditions, dense forests, and unexplored valleys. Tripura, rich in archaeological heritage, showcases palaces like Ujjayanta and a mix of tribal and Bengali cultures. Mizoram, with its rolling hills and vibrant festivals, offers a peaceful escape into nature and tradition. Lastly, Nagaland stands out with its diverse tribal communities, colorful festivals like Hornbill, and a deep-rooted warrior legacy. Together, these states form a culturally rich and geographically diverse mosaic that is both mesmerizing and underexplored.
+        </p>
+    </div>
+
+</div>
+
+<h1 class="gradient-text text-center mt-5">Assam</h1>
+<div class="container my-5">
+    <div class="card shadow-lg p-4 border-0" style="border-radius: 20px; background-color: transparent; color: whitesmoke;">
+    <p class="text-justify fs-5" style="font-family: 'Roboto', sans-serif; line-height: 1.8;">
+        Manipur, often referred to as the <strong>"Jewel of India,"</strong> is a culturally rich and picturesque state in Northeast India, known for its graceful classical dance, scenic landscapes, and diverse traditions. Surrounded by hills and valleys, the state's capital, <strong>Imphal</strong>, is home to historical sites like the <em>Kangla Fort</em> and the <em>INA Memorial</em>. One of its most unique features is <strong>Loktak Lake</strong>, the largest freshwater lake in Northeast India, famous for its <em>phumdis</em> — floating islands of vegetation. Manipur is also the birthplace of <strong>Ras Lila</strong>, a classical dance form depicting the love story of Radha and Krishna. The people of Manipur, primarily <strong>Meiteis, Nagas, Kukis</strong>, and other tribes, celebrate vibrant festivals like <strong>Yaoshang</strong> and <strong>Lai Haraoba</strong>, showcasing their deep-rooted cultural spirit. With its blend of natural beauty, traditional art, and warm hospitality, Manipur offers a truly enchanting experience.
+    </p>
+    </div>
+</div>
+
+{% comment %} 3D card rotating card section start from here  {% endcomment %}
+
+<div class="divbody">
+    <div class="text-card">
+        <div class="text">
+            <h2 class="text-center mt-5" style="color: #00e6e6; font-family: 'Playfair Display', serif;">
+                Northeast India – A Tapestry of Culture, Nature, and Tradition
+            </h2>
+            <p class="fs-5 text-justify" style="color: whitesmoke; font-family: 'Roboto', sans-serif; line-height: 1.8;">
+                Explore the diverse and enchanting states of Northeast India — from the tea-scented valleys of <strong>Assam</strong> and the serene Himalayan beauty of <strong>Sikkim</strong>, to the pristine wilderness of <strong>Arunachal Pradesh</strong>. Immerse yourself in the royal heritage of <strong>Tripura</strong>, the lush green hills of <strong>Mizoram</strong>, and the vibrant tribal culture of <strong>Nagaland</strong>. Each state is a world in itself, offering breathtaking landscapes, rich traditions, and warm hospitality. Together, they weave a colorful cultural mosaic where ancient customs thrive amidst nature’s most spectacular backdrops.
+            </p>
+
+        </div>
+    </div>
+    
+    <div class="sliderd">
+        <span style="--i:1;"><img src="{% static "imagesVideo/t10.jpeg" %} " alt=""></span>
+        <span style="--i:2;"><img src="{% static "imagesVideo/t8.jpg" %}" alt=""></span>
+        <span style="--i:3;"><img src="{% static "imagesVideo/t11.jpeg" %}" alt=""></span>
+        <span style="--i:4;"><img src="{% static "imagesVideo/t13.jpeg" %}" alt=""></span>
+        <span style="--i:5;"><img src="{% static "imagesVideo/t14.jpg" %}" alt=""></span>
+        <span style="--i:6;"><img src="{% static "imagesVideo/t4.jpeg" %}" alt=""></span>
+        <span style="--i:7;"><img src="{% static "imagesVideo/t15.jpg" %}" alt=""></span> <!-- Corrected from "images/.jpg" -->
+        <span style="--i:8;"><img src="{% static "imagesVideo/t16.jpg" %}" alt=""></span>
+        
+    </div>
+</div>
+
+{% comment %} 3D card rotating card section end from here {% endcomment %}
+
+<h1 class="gradient-text text-center mt-5">Top Destinations to Explore</h1>
+
+<!-- Cards for Remaining Items -->
+<div class="container mt-4">
+    <div class="row g-4">
+        {% for data in mydata %}
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+                <img src="{{ data.image.url }}" class="card-img-top img-fluid fixed-img" alt="...">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ data.place }}</h5>
+                    <p class="card-text">{{ data.description }}</p>
+                </div> 
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<div class="gallery">
+    <div class="gallery-container">
+        <img src="{% static "imagesVideo/t10.jpeg" %}" alt="" class="gallery-item gallery-item1" data-index="1">
+        <img src="{% static "imagesVideo/t11.jpeg" %}" alt="" class="gallery-item gallery-item2" data-index="2">
+        <img src="{% static "imagesVideo/t13.jpeg" %}" alt="" class="gallery-item gallery-item3" data-index="3">
+        <img src="{% static "imagesVideo/t1.jpeg" %}" alt="" class="gallery-item gallery-item4" data-index="4">
+        <img src="{% static "imagesVideo/t2.jpeg" %}" alt="" class="gallery-item gallery-item5" data-index="5">
+        <img src="{% static "imagesVideo/t3.jpeg" %}" alt="" class="gallery-item gallery-item6" data-index="6">
+        <img src="{% static "imagesVideo/t4.jpeg" %}" alt="" class="gallery-item gallery-item7" data-index="7">
+        <img src="{% static "imagesVideo/t5.jpeg" %}" alt="" class="gallery-item gallery-item8" data-index="8">
+        <img src="{% static "imagesVideo/t6.jpeg" %}" alt="" class="gallery-item gallery-item9" data-index="9">
+        <img src="{% static "imagesVideo/t7.jpeg" %}" alt="" class="gallery-item gallery-item10" data-index="11">
+        <img src="{% static "imagesVideo/t9.jpeg" %}" alt="" class="gallery-item gallery-item10" data-index="12">
+        <img src="{% static "imagesVideo/t14.jpg" %}" alt="" class="gallery-item gallery-item10" data-index="13">
+        <img src="{% static "imagesVideo/t15.jpg" %}" alt="" class="gallery-item gallery-item10" data-index="14">
+        <img src="{% static "imagesVideo/t16.jpg" %}" alt="" class="gallery-item gallery-item10" data-index="15">
+    </div>
+    <div class="gallery-controls"></div>
+</div>
+
+
+{% comment %} Second div for 3D slider end here  {% endcomment %}
+
+
+
+
+
+{% comment %} <script src="{% static 'js/script.js' %}"></script> {% endcomment %}
+
+<script>
+    const galleryContainer = document.querySelector('.gallery-container');
+    const galleryControlsContainer = document.querySelector('.gallery-controls');
+    const galleryControls = ['previous', 'next'];
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    class Carousel {
+        constructor(container, items, controls) {
+            this.carouselContainer = container;
+            this.carouselControls = controls;
+            this.carouselArray = [...items];
+        }
+
+        updateGallery() {
+            this.carouselArray.forEach(el => {
+                el.classList.remove('gallery-item-1');
+                el.classList.remove('gallery-item-2');
+                el.classList.remove('gallery-item-3');
+                el.classList.remove('gallery-item-4');
+                el.classList.remove('gallery-item-5');
+            });
+
+            this.carouselArray.slice(0, 5).forEach((el, i) => {
+                el.classList.add(`gallery-item-${i + 1}`);
+            });
+        }
+
+        setCurrentState(direction) {
+            if (direction.className == 'gallery-controls-previous') {
+                this.carouselArray.unshift(this.carouselArray.pop());  // Move last to front
+            } else {
+                this.carouselArray.push(this.carouselArray.shift());   // Move first to end
+            }
+            this.updateGallery();  // Refresh classes
+        }
+
+        setControls() {
+            this.carouselControls.forEach(control => {
+                galleryControlsContainer.appendChild(document.createElement('button')).className = `gallery-controls-${control}`;
+                document.querySelector(`.gallery-controls-${control}`).innerText = control;
+            });
+        }
+        
+        useControls() {
+            const triggers = [...galleryControlsContainer.childNodes];  // Get all button nodes
+        
+            triggers.forEach(control => {
+                control.addEventListener('click', e => {
+                    e.preventDefault();                        // Prevent default action
+                    this.setCurrentState(control);             // Change carousel state
+                });
+            });
+        }
+    
+}
+
+    const exampleCarousel = new Carousel(galleryContainer, galleryItems, galleryControls);
+
+    exampleCarousel.setControls();   // Dynamically create navigation buttons
+    exampleCarousel.useControls();   // Attach functionality (click events) to them
+
+</script>
+
+
+{% endblock %}

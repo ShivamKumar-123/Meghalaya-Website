@@ -1,0 +1,429 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+{{ mydataVideo.0.name }}
+{% endblock %}
+
+{% block content %}
+<style>
+    .text-card {
+        background-color: #1c1c1c;
+        padding: 30px;
+        margin-left: -12%;
+        border-radius: 20px;
+        max-width: 500px;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        font-family: 'Playfair Display', serif;
+    }
+    
+    @media (max-width: 575.98px) {
+        .text-card {
+        margin-left: -1%;
+        }
+    }
+
+    #cube-container {
+        width: 240px;
+        height: 240px;
+        margin: 200px auto;
+        perspective: 800px;
+    }
+    
+    #cube-container:before {
+        content: '';
+        position: absolute;
+        top: 90px;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 75px 20px #226e521a, inset 0 0 350px rgba(0,0,0,0.1);
+        transform: rotateX(95deg) translateZ(-80px) scale(1);
+        animation: rotateShadow 16s infinite;
+    }
+    
+    .cube {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: all 0.8s ease-in-out;
+        animation: rotate 16s infinite;
+    }
+    
+    .cube img {
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        backface-visibility: hidden;
+    }
+    
+    .cube img:nth-child(1) {
+        transform: rotateY(0deg) translateZ(120px);
+    }
+    
+    .cube img:nth-child(2) {
+        transform: rotateY(90deg) translateZ(120px);
+    }
+    
+    .cube img:nth-child(3) {
+        transform: rotateY(-90deg) translateZ(120px);
+    }
+    
+    .cube img:nth-child(4) {
+        transform: rotateY(180deg) translateZ(120px);
+    }
+    
+    @keyframes rotate {
+        0%   { transform: rotateY(0deg); }
+        25%  { transform: rotateY(90deg); }
+        50%  { transform: rotateY(180deg); }
+        75%  { transform: rotateY(270deg); }
+        100% { transform: rotateY(360deg); }
+    }
+    
+    @keyframes rotateShadow {
+        0%   { transform: rotateX(95deg) translateZ(-80px) scale(1) rotateZ(360deg); }
+        25%  { transform: rotateX(95deg) translateZ(-80px) scale(1) rotateZ(270deg); }
+        50%  { transform: rotateX(95deg) translateZ(-80px) scale(1) rotateZ(180deg); }
+        75%  { transform: rotateX(95deg) translateZ(-80px) scale(1) rotateZ(90deg); }
+        100% { transform: rotateX(95deg) translateZ(-80px) scale(1) rotateZ(0deg); }
+    }
+
+
+
+    {% comment %} next video div css {% endcomment %}
+
+    .place {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        padding: 24px;
+        box-sizing: border-box;
+        background-color: #0a0a0a; /* optional dark background for contrast */
+    }
+    
+    .image-container {
+        width: 100%;
+        max-width: 800px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-container:hover{
+        border:2px solid tomato;
+    }
+    
+    .image-container video {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 16px;
+    }
+    
+    .text-content {
+        max-width: 800px;
+        padding: 16px;
+        background-color: #1a1a1a;
+        border-radius: 12px;
+        color: #f5f5f5;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .text-content:hover{
+        border:3px solid #4da3c3;
+    }
+    .text-content h2 {
+        color: #1e90ff;
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+    
+    .text-content p {
+        color: #dcdcdc;
+        font-size: 17px;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+    
+    /* Responsive layout: side-by-side on wider screens */
+    @media (min-width: 768px) {
+        .place {
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+        }
+    
+        .image-container,
+        .text-content {
+            flex: 1;
+            max-width: 50%;
+        }
+    
+        .text-content {
+            padding: 24px;
+            margin-left: 20px;
+            text-align: left;
+        }
+    }
+
+    .card:hover{
+        border:3px solid tomato;
+        transform:scale(1.03);
+        transition-duration:0.4s;
+    }
+
+    {% comment %} 3D slider css start from here  {% endcomment %}
+    .text-card {
+        background-color: #1c1c1c;
+        padding: 30px;
+        margin-left: -12%;
+        border-radius: 20px;
+        max-width: 500px;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .text-card h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #00ffd5;
+        font-weight: 700;
+    }
+    
+    .text-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        color: #e0e0e0;
+    }
+    
+    
+    
+    
+    .divbody{
+        background-color: black;
+        height: 80vh;
+        width: 100%;
+        display: flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: space-around;
+        overflow: hidden;
+        padding-right:220px;
+        gap:20px;
+    }
+    .sliderd{
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transform-style: preserve-3d;
+        animation: rotate 30s linear infinite;
+        
+    }
+    
+    @keyframes rotate{
+        0% {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        100% {
+            transform: perspective(1000px) rotateY(360deg);
+        }
+    }
+    
+    .sliderd span{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        transform-origin: center;
+        transform-style: preserve-3d;
+        transform: rotateY(calc(var(--i)*45deg)) translateZ(350px);
+    }
+    
+    .sliderd span img{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        border-radius:10px ;
+    }
+    
+    .sliderd span:hover img{
+        transform: translateY(-50px) scale(1.2);
+    }
+    
+    @media screen and (max-width: 768px) {
+        .divbody {
+            flex-direction: column;
+            padding-right: 0;
+            height: auto;
+            padding-bottom: 72px;
+            align-items: center; /* centers children when stacked vertically */
+        }
+    
+        .text-card {
+            margin-left: 24px;
+            width: 90%;
+            padding: 20px;
+            margin-right:8%;
+            box-sizing: border-box;
+        }
+    
+        .sliderd {
+            margin-top: 60px;
+            width: 180px;      /* slightly larger for small screens */
+            height: 180px;
+        }
+    }
+    {% comment %} 3D slider css end from here  {% endcomment %}
+</style>
+
+<div class="container-fluid my-5 px-4">
+    <div class="card p-5 mx-auto" style="max-width: 1500px; width: 100%; background-color: #000; color: whitesmoke; border-radius: 20px; box-shadow: 0 10px 30px whitesmoke; font-family: 'Playfair Display', serif;">
+    
+    <!-- Centered h1 -->
+    <h1 class="text-center mb-4" style="color: #00ffe7; font-weight: bold;">
+        About Region of Meghalaya
+    </h1>
+
+    <!-- Expanded paragraph -->
+    <p style="font-family: 'Roboto', sans-serif; color: #d1bfae; font-size: 1.05rem; line-height: 1.8;">
+        The region of Meghalaya, nestled in the captivating hills of Northeast India, is one of the most enchanting destinations in the country. Renowned as the “Abode of Clouds,” it experiences some of the highest rainfall in the world, giving rise to lush forests, mist-covered valleys, and vibrant flora. The landscape is dotted with cascading waterfalls like Nohkalikai and Seven Sisters, serene lakes such as Umiam, and the world-famous living root bridges crafted over generations by the indigenous Khasi people.
+        <br><br>
+        Culturally rich and naturally gifted, Meghalaya is a land where tradition and nature exist in perfect harmony. Sacred forests like Mawphlang echo with ancient spiritual rituals, while cleanest villages like Mawlynnong set inspiring examples of eco-living. The cool climate, untouched natural beauty, and the warm hospitality of the local tribes make Meghalaya not just a place to visit, but a region to experience with heart and soul.
+    </p>
+
+    </div>
+</div>
+
+
+<div class="container py-5 px-3">
+    <div class="row align-items-center">
+    
+    <!-- Left Side: Text Card (centered on small screens) -->
+    <div class="col-lg-6 d-flex justify-content-center mb-4 mb-lg-0">
+        <div class="text-card w-100" style="max-width: 600px;">
+        <div class="text">
+            <h1 class="card-title text-center mb-4" style="color: #00ffe7; font-family: 'Playfair Display', serif; font-weight: bold;">
+                A Journey Through Meghalaya’s Diverse Regions
+            </h1>
+            <p class="card-text" style="font-family: 'Roboto', sans-serif; font-size: 1.05rem; line-height: 1.8; color: white;">
+            Meghalaya is divided into four primary regions, each possessing its own distinct cultural and natural identity. 
+            <strong>Khasi Hills</strong>, known for its picturesque landscapes and vibrant traditions, is home to the capital city, Shillong. 
+            <strong>Garo Hills</strong> boasts lush green forests and wildlife sanctuaries, representing the spirit of nature and adventure. 
+            <strong>Jaintia Hills</strong> is rich in limestone caves and heritage, with ancient traditions passed through generations. 
+            Lastly, <strong>Ri Bhoi</strong> offers serene countryside, rolling hills, and a growing blend of rural charm and urban development. 
+            Together, these regions paint a rich and diverse portrait of Meghalaya’s beauty and legacy.
+            </p>
+        </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Cube -->
+    <div class="col-lg-6 d-flex justify-content-center">
+        <div id="cube-container">
+        <div class="cube">
+            <img src="{% static 'imagesVideo/khasi.jpg' %}" alt="Image 1">
+            <img src="{% static 'imagesVideo/garo.jpg' %}" alt="Image 2">
+            <img src="{% static 'imagesVideo/jaintia.jpg' %}" alt="Image 3">
+            <img src="{% static 'imagesVideo/Ri Bhoi.jpg' %}" alt="Image 4">
+        </div>
+        </div>
+    </div>
+
+    </div>
+</div>
+
+<div class="place">
+    <!-- Fixed size video container -->
+    <div class="image-container">
+        <video width="100%" height="auto" autoplay muted>
+            <source src="{{ mydataVideo.0.video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Text content from video model -->
+    <div class="text-content">
+        <h2 style="color:#1e90ff;font-size:28px;font-weight:600;text-align:center">
+            {{ mydataVideo.0.name }}
+        </h2>
+        <p style="color:whitesmoke;font-size:16px;font-weight:510;">
+            {{ mydataVideo.0.description }}
+        </p>
+    </div>
+</div>
+
+<!-- Cards for Remaining Items -->
+<div class="container mt-4">
+    <div class="row g-4">
+        {% for data in mydata %}
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+                <img src="{{ data.image.url }}" class="card-img-top img-fluid fixed-img" alt="...">
+                {% comment %} <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ data.name }}</h5>
+                    <p class="card-text">{{ data.description }}</p>
+                </div> {% endcomment %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% comment %} 3D card rotating card section start from here  {% endcomment %}
+
+<div class="divbody">
+    <div class="text-card">
+        <div class="text">
+            <h2>Meghalaya – A Land of Four Living Landscapes</h2>
+            <p>
+                Discover the soul of Meghalaya through its four vibrant regions – the misty heights of the Khasi Hills, where living root bridges stretch across time; the ancient Jaintia Hills, echoing with legends and megalithic marvels; the wild Garo Hills, home to deep forests and hidden caves; and the serene Ri-Bhoi, a gateway of green fields and tranquil waters. 
+                Each region paints a unique story on the canvas of this cloud-kissed land – where nature, culture, and spirit breathe as one.
+            </p>
+        </div>
+    </div>
+    
+    <div class="sliderd">
+        <span style="--i:1;"><img src="{% static "imagesVideo/garo.jpg" %} " alt=""></span>
+        <span style="--i:2;"><img src="{% static "imagesVideo/garo5.jpg" %}" alt=""></span>
+        <span style="--i:3;"><img src="{% static "imagesVideo/jaintia.jpg" %}" alt=""></span>
+        <span style="--i:4;"><img src="{% static "imagesVideo/khasi.jpg" %}" alt=""></span>
+        <span style="--i:5;"><img src="{% static "imagesVideo/JaintiaHills2.jpg" %}" alt=""></span>
+        <span style="--i:6;"><img src="{% static "imagesVideo/JaintiaHills5.jpg" %}" alt=""></span>
+        <span style="--i:7;"><img src="{% static "imagesVideo/RiBhoi3.jpg" %}" alt=""></span> <!-- Corrected from "images/.jpg" -->
+        <span style="--i:8;"><img src="{% static "imagesVideo/RiBhoi4.jpg" %}" alt=""></span>
+        
+        
+    </div>
+</div>
+
+{% comment %} 3D card rotating card section end from here {% endcomment %}
+
+
+<!-- Cards for Region of meghalaya -->
+<div class="container mt-0 mb-9">
+    <div class="row g-4">
+        {% for data in mydata %}
+        <div class="col-12 col-sm-6 col-md-4">
+            {% if data.region_name %}
+            <div class="card h-100">
+                <img src="{{ data.image.url }}" class="card-img-top img-fluid fixed-img" alt="...">
+                    <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ data.region_name }}</h5>
+                    <p class="card-text">{{ data.description }}</p>
+                </div> 
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

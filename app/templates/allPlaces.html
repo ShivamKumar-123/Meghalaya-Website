@@ -1,0 +1,672 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+{{ mydataVideo.0.name }}
+{% endblock %}
+
+{% block content %}
+    <style>
+        .place {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding: 24px;
+            box-sizing: border-box;
+            background-color: #0a0a0a; /* optional dark background for contrast */
+        }
+        
+        .image-container {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-container:hover{
+            border:2px solid tomato;
+        }
+        
+        .image-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 16px;
+        }
+        
+        .text-content {
+            max-width: 800px;
+            padding: 16px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            color: #f5f5f5;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .text-content:hover{
+            border:3px solid #4da3c3;
+        }
+        .text-content h2 {
+            color: #1e90ff;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        
+        .text-content p {
+            color: #dcdcdc;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        /* Responsive layout: side-by-side on wider screens */
+        @media (min-width: 768px) {
+            .place {
+                flex-direction: row;
+                justify-content: center;
+                align-items: flex-start;
+            }
+        
+            .image-container,
+            .text-content {
+                flex: 1;
+                max-width: 50%;
+            }
+        
+            .text-content {
+                padding: 24px;
+                margin-left: 20px;
+                text-align: left;
+            }
+        }
+        .card:hover{
+            border:3px solid tomato;
+            transform:scale(1.03);
+            transition-duration:0.4s;
+        }
+
+        .animated-underline {
+            position: relative;
+            display: inline-block;
+            font-weight: bold;
+            padding-bottom:8px;
+        }
+        
+        .animated-underline::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, tomato 0%, transparent 50%, tomato 100%);
+            background-size: 200% 100%;
+            animation: smoothUnderline 2s linear infinite;
+        }
+        
+        /* Smooth loop animation */
+        @keyframes smoothUnderline {
+            0% {
+            background-position: 200% 0;
+            }
+            100% {
+            background-position: -200% 0;
+            }
+        }
+    {% comment %} 3D Card slider one code here  {% endcomment %}
+    .text-card {
+        background-color: #1c1c1c;
+        padding: 30px;
+        margin-left: -12%;
+        border-radius: 20px;
+        max-width: 500px;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        font-family: 'Playfair Display', serif;
+    }
+
+    .text-card h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #00ffd5;
+        font-weight: 700;
+    }
+
+    .text-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        color: #e0e0e0;
+    }
+
+
+
+
+    .divbody{
+        background-color: black;
+        height: 80vh;
+        width: 100%;
+        display: flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: space-around;
+        overflow: hidden;
+        padding-right:220px;
+        gap:20px;
+    }
+    .sliderd{
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transform-style: preserve-3d;
+        animation: rotate 30s linear infinite;
+        
+    }
+
+    @keyframes rotate{
+        0% {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        100% {
+            transform: perspective(1000px) rotateY(360deg);
+        }
+    }
+
+    .sliderd span{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        transform-origin: center;
+        transform-style: preserve-3d;
+        transform: rotateY(calc(var(--i)*45deg)) translateZ(350px);
+    }
+
+    .sliderd span img{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        border-radius:10px ;
+    }
+
+    .sliderd span:hover img{
+        transform: translateY(-50px) scale(1.2);
+    }
+
+    @media screen and (max-width: 768px) {
+        .divbody {
+            flex-direction: column;
+            padding-right: 0;
+            height: auto;
+            padding-bottom: 72px;
+            align-items: center; /* centers children when stacked vertically */
+        }
+
+        .text-card {
+            margin-left: 24px;
+            width: 90%;
+            padding: 20px;
+            margin-right:8%;
+            box-sizing: border-box;
+        }
+
+        .sliderd {
+            margin-top: 60px;
+            width: 180px;      /* slightly larger for small screens */
+            height: 180px;
+        }
+    }
+
+
+{% comment %} another 3D slider for images {% endcomment %}
+
+        .gallery {
+            width: 100%;
+        }
+
+        .gallery-container {
+            align-items: center;
+            display: flex;
+            height: 400px;
+            margin: 0 auto;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .gallery-item {
+            height: 200px;
+            opacity: 0;
+            position: absolute;
+            transition: all 0.3s ease-in-out;
+            width: 330px;
+            z-index: 0;
+            border-radius: 15px;
+            background-size: contain;
+        }
+
+        .gallery-item-1 {
+            left: 15%;
+            opacity: 0.4;
+            transform: translateX(-50%);
+        }
+
+        .gallery-item-2,
+        .gallery-item-4 {
+            height: 250px;
+            opacity: 0.8;
+            width: 380px;
+            z-index: 1;
+        }
+
+        .gallery-item-2 {
+            left: 30%;
+            transform: translateX(-50%);
+        }
+
+        .gallery-item-3 {
+            box-shadow: -2px 5px 33px 6px rgba(0, 0, 0, 0.35);
+            height: 300px;
+            opacity: 1;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 430px;
+            z-index: 2;
+        }
+
+        .gallery-item-4 {
+            left: 70%;
+            transform: translateX(-50%);
+        }
+
+        .gallery-item-5 {
+            left: 85%;
+            opacity: 0.4;
+            transform: translateX(-50%);
+        }
+
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            height: 100px;
+        }
+
+        .gallery-controls button {
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+            font-size: 30px;
+            margin: 0 50px;
+            padding: 0 12px;
+            text-transform: capitalize;
+        }
+
+        .gallery-controls-button:focus {
+            outline: none;
+        }
+
+        .gallery-controls-previous {
+            position: relative;
+        }
+
+        .gallery-controls-previous::before {
+            border: solid #51a4e8;
+            border-width: 0 5px 5px 0;
+            content: '';
+            display: inline-block;
+            height: 5px;
+            left: -30px;
+            padding: 10px;
+            position: absolute;
+            top: 25%;
+            transform: rotate(135deg) translateY(-50%);
+            transition: left 0.15s ease-in-out;
+            width: 5px;
+        }
+
+        .gallery-controls-previous:hover::before {
+            left: -40px;
+        }
+
+        .gallery-controls-next {
+            position: relative;
+        }
+
+        .gallery-controls-next::before {
+            border: solid #51a4e8;
+            border-width: 0 5px 5px 0;
+            content: '';
+            display: inline-block;
+            height: 5px;
+            padding: 10px;
+            position: absolute;
+            right: -30px;
+            top: 45%;
+            transform: rotate(-45deg) translateY(-50%);
+            transition: right 0.15s ease-in-out;
+            width: 5px;
+        }
+
+        .gallery-controls-next:hover::before {
+            right: -40px;
+        }
+
+        .gallery-nav {
+            bottom: -15px;
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            position: absolute;
+            width: 100%;
+        }
+
+        .gallery nav li {
+            background: #ccc;
+            border-radius: 50%;
+            height: 10px;
+            margin: 0 16px;
+            width: 10px;
+        }
+
+        .gallery-nav li.gallery-item-selected {
+            background: #555;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-container {
+                height: 300px;
+            }
+        
+            .gallery-item {
+                height: 120px;
+                width: 200px;
+            }
+        
+            .gallery-item-1 {
+                left: 10%;
+            }
+        
+            .gallery-item-2,
+            .gallery-item-4 {
+                height: 150px;
+                width: 230px;
+            }
+        
+            .gallery-item-2 {
+                left: 30%;
+            }
+        
+            .gallery-item-3 {
+                height: 180px;
+                width: 260px;
+            }
+        
+            .gallery-item-4 {
+                left: 70%;
+            }
+        
+            .gallery-item-5 {
+                left: 90%;
+            }
+        
+            .gallery-controls {
+                height: 80px;
+                margin: 15px 0;
+            }
+        
+            .gallery-controls button {
+                font-size: 24px;
+                margin: 0 20px;
+            }
+        
+            .gallery-controls-previous::before {
+                left: -20px;
+            }
+        
+            .gallery-controls-previous:hover::before {
+                left: -30px;
+            }
+        
+            .gallery-controls-next::before {
+                right: -20px;
+            }
+        
+            .gallery-controls-next:hover::before {
+                right: -30px;
+            }
+        }
+        
+    </style>
+
+
+
+
+    <!-- First Place Section - Shows the first item only -->
+    <div class="place">
+        <!-- Fixed size video container -->
+        <div class="image-container">
+            <video width="100%" height="auto" autoplay muted>
+                <source src="{{ mydataVideo.0.video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    
+        <!-- Text content from video model -->
+        <div class="text-content">
+            <h2 style="color:#1e90ff;font-size:28px;font-weight:600;text-align:center">
+                {{ mydataVideo.0.name }}
+            </h2>
+            <p style="color:whitesmoke;font-size:16px;font-weight:510;">
+                {{ mydataVideo.0.description }}
+            </p>
+        </div>
+    </div>
+    
+
+{% comment %} 3D card rotating card section start from here  {% endcomment %}
+
+<div class="divbody">
+    <div class="text-card">
+        <div class="text">
+            <h2>Meghalaya – Where the Earth Breathes with the Sky</h2>
+            <p>
+                Tucked away in the emerald folds of Northeast India, Meghalaya is a land where nature speaks in the language of mist and melody. Clouds drift low over forested hills, waterfalls dance from dizzying heights, and ancient root bridges carry footsteps through timeless wonder. 
+                From the tranquil charm of Mawlynnong to the echoing chambers of Mawsmai Caves, every corner is a canvas painted with nature’s grace. Lose yourself in the rhythm of rain, the hush of hidden trails, and the stories carried on the winds of this heavenly abode.
+            </p>
+
+        </div>
+    </div>
+    
+    <div class="sliderd">
+        <span style="--i:1;"><img src="{% static "imagesVideo/img2.png" %} " alt=""></span>
+        <span style="--i:2;"><img src="{% static "imagesVideo/img3.png" %}" alt=""></span>
+        <span style="--i:3;"><img src="{% static "imagesVideo/img5.png" %}" alt=""></span>
+        <span style="--i:4;"><img src="{% static "imagesVideo/img6.png" %}" alt=""></span>
+        <span style="--i:5;"><img src="{% static "imagesVideo/img9.png" %}" alt=""></span>
+        <span style="--i:6;"><img src="{% static "imagesVideo/img12.png" %}" alt=""></span>
+        <span style="--i:7;"><img src="{% static "imagesVideo/img16.png" %}" alt=""></span> <!-- Corrected from "images/.jpg" -->
+        <span style="--i:8;"><img src="{% static "imagesVideo/img14.png" %}" alt=""></span>
+        
+        
+    </div>
+</div>
+
+{% comment %} 3D card rotating card section end from here {% endcomment %}
+
+
+<!-- Cards for Remaining Items -->
+<div class="container mt-4">
+    <div class="row g-4">
+        {% for data in mydata %}
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+                <img src="{{ data.image.url }}" class="card-img-top img-fluid fixed-img" alt="...">
+                {% comment %} <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ data.name }}</h5>
+                    <p class="card-text">{{ data.description }}</p>
+                </div> {% endcomment %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% comment %} Second div for 3D slider start here  {% endcomment %}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto&display=swap" rel="stylesheet">
+
+<div class="container my-5">
+<div class="card bg-dark p-4 custom-card" style="color: #d1bfae;">
+    <div class="card-body">
+    <h2 class="card-title fw-bold mb-4" style="font-family: 'Playfair Display', serif; color: #00f7e1;">
+        Meghalaya – Where the Earth Breathes with the Sky
+    </h2>
+
+    <p style="font-family: 'Roboto', sans-serif; color: #e0dcd2; line-height: 1.7; margin-bottom: 1rem; text-shadow: 0 0 1px rgba(0, 0, 0, 0.6); transition: background-color 0.3s;"
+        onmouseover="this.style.backgroundColor='#226e521a';"
+        onmouseout="this.style.backgroundColor='transparent';">
+        Meghalaya, the "Abode of Clouds", is a mystical realm nestled in the highlands of Northeast India. A land where rain writes poetry on leaves and the wind whispers ancient tales. Let's explore its most enchanting destinations:
+    </p>
+
+    <h5 class="fw-bold mt-4" style="font-family: 'Playfair Display', serif; color: #00f7e1;">Cherrapunji – Symphony of Rain and Roots</h5>
+    <p style="font-family: 'Roboto', sans-serif; color: #e0dcd2; line-height: 1.7; margin-bottom: 1rem; text-shadow: 0 0 1px rgba(0, 0, 0, 0.6); transition: background-color 0.3s;"
+        onmouseover="this.style.backgroundColor='#226e521a';"
+        onmouseout="this.style.backgroundColor='transparent';">
+        Famed as one of the wettest places on Earth, Cherrapunji greets you with waterfalls like Nohkalikai and the famous living root bridges. It’s a place where every raindrop carries magic, and every path reveals nature’s secrets hidden in the clouds.
+    </p>
+
+    <h5 class="fw-bold mt-4" style="font-family: 'Playfair Display', serif; color: #00f7e1;">Mawlynnong – Asia’s Cleanest Village</h5>
+    <p style="font-family: 'Roboto', sans-serif; color: #e0dcd2; line-height: 1.7; margin-bottom: 1rem; text-shadow: 0 0 1px rgba(0, 0, 0, 0.6); transition: background-color 0.3s;"
+        onmouseover="this.style.backgroundColor='#226e521a';"
+        onmouseout="this.style.backgroundColor='transparent';">
+        In Mawlynnong, flowers bloom on fences, bamboo dustbins line the lanes, and the air is filled with the fragrance of harmony. This village is a living canvas of sustainable living, hospitality, and calm.
+    </p>
+
+    <h5 class="fw-bold mt-4" style="font-family: 'Playfair Display', serif; color: #00f7e1;">Umiam Lake – The Mirror of the Sky</h5>
+    <p style="font-family: 'Roboto', sans-serif; color: #e0dcd2; line-height: 1.7; margin-bottom: 1rem; text-shadow: 0 0 1px rgba(0, 0, 0, 0.6); transition: background-color 0.3s;"
+        onmouseover="this.style.backgroundColor='#226e521a';"
+        onmouseout="this.style.backgroundColor='transparent';">
+        Umiam Lake glistens like a sapphire nestled in pine-clad hills. Whether kayaking or simply watching the clouds drift over its still waters, the lake is a place of reflection—both literal and spiritual.
+    </p>
+
+    <h5 class="fw-bold mt-4" style="font-family: 'Playfair Display', serif; color: #00f7e1;">Mawsmai Caves – Echoes Beneath the Earth</h5>
+    <p style="font-family: 'Roboto', sans-serif; color: #e0dcd2; line-height: 1.7; margin-bottom: 1rem; text-shadow: 0 0 1px rgba(0, 0, 0, 0.6); transition: background-color 0.3s;"
+        onmouseover="this.style.backgroundColor='#226e521a';"
+        onmouseout="this.style.backgroundColor='transparent';">
+        The limestone tunnels of Mawsmai Cave are nature’s architecture at its finest. Step inside and witness the wonders of time carved in stone, as you journey through cool, echoing passageways lit with natural mystery.
+    </p>
+
+    <h5 class="fw-bold mt-4" style="font-family: 'Playfair Display', serif; color: #00f7e1;">Dawki – The Crystal Waters of the Umngot</h5>
+    <p style="font-family: 'Roboto', sans-serif; color: #e0dcd2; line-height: 1.7; margin-bottom: 1rem; text-shadow: 0 0 1px rgba(0, 0, 0, 0.6); transition: background-color 0.3s;"
+        onmouseover="this.style.backgroundColor='#226e521a';"
+        onmouseout="this.style.backgroundColor='transparent';">
+        At Dawki, the Umngot River flows so crystal-clear that boats appear to float on air. It’s not just a destination, but an experience—a serene glide through one of the most transparent waters on the planet.
+    </p>
+    </div>
+</div>
+</div>
+
+
+
+
+<div class="gallery">
+    <div class="gallery-container">
+        <img src="{% static "imagesVideo/img25.png" %}" alt="" class="gallery-item gallery-item1" data-index="1">
+        <img src="{% static "imagesVideo/img27.png" %}" alt="" class="gallery-item gallery-item2" data-index="2">
+        <img src="{% static "imagesVideo/img23.png" %}" alt="" class="gallery-item gallery-item3" data-index="3">
+        <img src="{% static "imagesVideo/img29.png" %}" alt="" class="gallery-item gallery-item4" data-index="4">
+        <img src="{% static "imagesVideo/img21.png" %}" alt="" class="gallery-item gallery-item5" data-index="5">
+        <img src="{% static "imagesVideo/img19.png" %}" alt="" class="gallery-item gallery-item6" data-index="6">
+        <img src="{% static "imagesVideo/img17.png" %}" alt="" class="gallery-item gallery-item7" data-index="7">
+        <img src="{% static "imagesVideo/img15.png" %}" alt="" class="gallery-item gallery-item8" data-index="8">
+        <img src="{% static "imagesVideo/img1.png" %}" alt="" class="gallery-item gallery-item9" data-index="9">
+        <img src="{% static "imagesVideo/img11.png" %}" alt="" class="gallery-item gallery-item10" data-index="11">
+        <img src="{% static "imagesVideo/img9.png" %}" alt="" class="gallery-item gallery-item10" data-index="12">
+        <img src="{% static "imagesVideo/img7.png" %}" alt="" class="gallery-item gallery-item10" data-index="13">
+        <img src="{% static "imagesVideo/img5.png" %}" alt="" class="gallery-item gallery-item10" data-index="14">
+        <img src="{% static "imagesVideo/img3.png" %}" alt="" class="gallery-item gallery-item10" data-index="15">
+    </div>
+    <div class="gallery-controls"></div>
+</div>
+
+
+{% comment %} Second div for 3D slider end here  {% endcomment %}
+
+
+<h2 class="text-center map-underline " style="margin-top:26px;"><span class="animated-underline">Map of {{ location }}</span></h2>
+<div id="map" style="height: 500px; width: 100%;"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28775.833961648466!2d91.89695755399316!3d25.638814339989796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375a81e1d743f523%3A0xe9b62edd40375fa5!2sUmiam%20Lake%20Viewpoint!5e0!3m2!1sen!2sin!4v1751114081478!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+{% comment %} {% include "includes/map_script.html" %} {% endcomment %}
+
+
+{% comment %} <script src="{% static 'js/script.js' %}"></script> {% endcomment %}
+
+<script>
+    const galleryContainer = document.querySelector('.gallery-container');
+    const galleryControlsContainer = document.querySelector('.gallery-controls');
+    const galleryControls = ['previous', 'next'];
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    class Carousel {
+        constructor(container, items, controls) {
+            this.carouselContainer = container;
+            this.carouselControls = controls;
+            this.carouselArray = [...items];
+        }
+
+        updateGallery() {
+            this.carouselArray.forEach(el => {
+                el.classList.remove('gallery-item-1');
+                el.classList.remove('gallery-item-2');
+                el.classList.remove('gallery-item-3');
+                el.classList.remove('gallery-item-4');
+                el.classList.remove('gallery-item-5');
+            });
+
+            this.carouselArray.slice(0, 5).forEach((el, i) => {
+                el.classList.add(`gallery-item-${i + 1}`);
+            });
+        }
+
+        setCurrentState(direction) {
+            if (direction.className == 'gallery-controls-previous') {
+                this.carouselArray.unshift(this.carouselArray.pop());  // Move last to front
+            } else {
+                this.carouselArray.push(this.carouselArray.shift());   // Move first to end
+            }
+            this.updateGallery();  // Refresh classes
+        }
+
+        setControls() {
+            this.carouselControls.forEach(control => {
+                galleryControlsContainer.appendChild(document.createElement('button')).className = `gallery-controls-${control}`;
+                document.querySelector(`.gallery-controls-${control}`).innerText = control;
+            });
+        }
+        
+        useControls() {
+            const triggers = [...galleryControlsContainer.childNodes];  // Get all button nodes
+        
+            triggers.forEach(control => {
+                control.addEventListener('click', e => {
+                    e.preventDefault();                        // Prevent default action
+                    this.setCurrentState(control);             // Change carousel state
+                });
+            });
+        }
+    
+}
+
+    const exampleCarousel = new Carousel(galleryContainer, galleryItems, galleryControls);
+
+    exampleCarousel.setControls();   // Dynamically create navigation buttons
+    exampleCarousel.useControls();   // Attach functionality (click events) to them
+
+</script>
+{% endblock %}

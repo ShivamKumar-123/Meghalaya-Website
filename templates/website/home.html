@@ -1,0 +1,1173 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% comment %} {% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="slider-box">
+    <video class="slider-video" autoplay muted loop playsinline>
+        <source src="{% static 'imagesVideo/v1.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+
+
+
+<h1 class="section-title">Top Places to Visit in Meghalaya</h1>
+
+<h2 class="place-heading">
+    <i class="fa-solid fa-circle dot-icon"></i> Cherrapunji
+</h2>
+
+<div class="grid-container-ch">
+    <div class="grid-cherr">
+        <video src="{% static 'imagesVideo/v2.mp4' %}" muted autoplay loop></video>
+    </div>
+    <div class="cherr-text">
+        <h2>Explore Cherrapunji</h2>
+        <p>
+            Cherrapunji, located in Meghalaya, India, is one of the wettest places on Earth.
+            Famous for its breathtaking waterfalls, lush green landscapes, and living root bridges,
+            it offers spectacular views of rolling hills and deep valleys —
+            truly a paradise for nature lovers and adventure seekers.
+        </p>
+    </div>
+</div>
+<br><br>
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Cherrapunji" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+
+
+<h2 class="place-heading" id="policbazar">
+    <i class="fa-solid fa-circle dot-icon"></i> Police Bazar
+</h2>
+
+<div class="pb-section">
+    <div class="pb-text">
+    <h2>Explore Police Bazar</h2>
+    <p>
+        Police Bazar, located in the heart of Shillong, is one of the most vibrant and bustling marketplaces in Meghalaya. 
+        It is a popular shopping hub where tradition meets modernity, offering a unique blend of local handicrafts, fashion stores, street food, and entertainment.
+    </p>
+    </div>
+    <video class="pb-video" src="{% static 'imagesVideo/v4.mp4' %}" autoplay muted loop></video>
+</div>
+
+<br>
+<br>
+
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Police Bazar" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+
+<div class="other-3-places">
+    <h2 class="place-heading" id="sevensisterfall">
+    <i class="fa-solid fa-circle dot-icon"></i>  Seven Sister Falls
+    </h2>
+    <div class="place-section left-align">
+    <video class="place-video" src="{% static "imagesVideo/v5.mp4" %} " autoplay muted loop></video>
+    <div class="place-text">
+        <h2 class="place-heading" id="sevensisterfall">
+            Explore Seven Sister Falls
+        </h2>
+        <p>
+        The Seven Sisters Falls, also known as Nohsngithiang Falls, is one of Meghalaya’s most spectacular natural wonders.
+        Located near Cherrapunji, this majestic waterfall is named after the seven streams that cascade down the limestone cliffs of the Khasi Hills, creating a mesmerizing sight.
+        </p>
+    </div>
+    </div>
+
+    <br><br>
+    <div class="container my-4">
+        <div class="row g-4">
+            {% for megha in meghaData %}
+            {% if megha.name == "Seven Sister Falls" %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 hover-effect">
+                    <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ megha.name }}</h5>
+                        <p class="card-text">{{ megha.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    
+
+<br><br>
+    <h2 class="place-heading">
+    <i class="fa-solid fa-circle dot-icon"></i>  Dawki River
+    </h2>
+    <div class="place-section right-align">
+        <video class="place-video" src="{% static "imagesVideo/v6.mp4" %}" autoplay muted loop></video>
+    <div class="place-text">
+        <h2 class="place-heading">
+            Explore Dawki River
+        </h2>
+        <p>
+        Nestled in the heart of Meghalaya, Dawki River is a breathtaking marvel known for its crystal-clear waters and picturesque surroundings. 
+        Flowing through the West Jaintia Hills, this river forms a natural border between India and Bangladesh.
+        The most fascinating feature of the Dawki River is its glass-like transparency, creating an illusion that boats are floating in the air.
+        </p>
+    </div>
+    
+    </div>
+
+    <br><br>
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Dawki River" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+    <br><br>
+
+    <h2 class="place-heading">
+    <i class="fa-solid fa-circle dot-icon"></i>  Cathedral of Mary
+    </h2>
+    <div class="place-section left-align">
+    <video class="place-video" src="{% static "imagesVideo/v3.mp4" %}" autoplay muted loop></video>
+    <div class="place-text">
+        <h2 class="place-heading">
+            Explore Cathedral of Mary
+        </h2>
+        <p>
+        Nestled in the heart of Shillong, the Cathedral of Mary Help of Christians is one of the most revered and architecturally stunning churches in Meghalaya. 
+        Built in 1936, this grand structure stands as a symbol of faith and heritage. The church is known for its beautiful stained-glass windows, high arches, and peaceful ambiance. 
+        Beneath the cathedral lies a grotto dedicated to Mother Mary, where visitors often come to offer prayers.
+        </p>
+    </div>
+    </div>
+</div>
+
+<br><br>
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Cathedral of Mary" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+<br><br>
+
+<h1 class="trip-heading text-center my-4 " id="planTrip">
+    Plan Your Trip 
+    <i class="fa-solid fa-arrow-turn-down arrow-icon"></i>
+</h1>
+
+
+<div class="container my-5">
+    <div class="row justify-content-center g-4">
+    <!-- IRCTC -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100">
+        <a href="https://example.com" target="_blank">
+            <img src="{% static 'imagesVideo/irctc.png' %}" class="card-img-top" alt="IRCTC Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">IRCTC Booking</h6>
+            <p class="card-text small">Tap to explore train bookings and services.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- REDBUS -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="redBus">
+        <a href="https://www.redbus.in/" target="_blank">
+            <img src="{% static 'imagesVideo/redbus.png' %}" class="card-img-top" alt="RedBus Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">RED-BUS</h6>
+            <p class="card-text small">Book bus tickets easily via RedBus.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- Confirm Ticket -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="confirmTicket">
+        <a href="https://www.confirmtkt.com/rbooking-d/" target="_blank">
+            <img src="{% static 'imagesVideo/confirmTic.png' %}" class="card-img-top" alt="ConfirmTkt Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">Confirm Ticket</h6>
+            <p class="card-text small">Check PNR & book tickets quickly.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- WEGO -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="wego">
+        <a href="https://www.wego.co.in/" target="_blank">
+            <img src="{% static 'imagesVideo/Wego.png' %}" class="card-img-top" alt="Wego Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">WEGO</h6>
+            <p class="card-text small">Search and compare flight options.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- Paytm Flights -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="paytemFlight">
+        <a href="https://tickets.paytm.com/flights/" target="_blank">
+            <img src="{% static 'imagesVideo/paytemF.png' %}" class="card-img-top" alt="Paytm Flights Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">PAYTM FLIGHT</h6>
+            <p class="card-text small">Affordable flight booking made simple.</p>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+<div class="three-section container my-5">
+    <div class="row g-4 align-items-start">
+        <!-- Regions of Meghalaya -->
+        <div class="col-md-4">
+            <div class="three-sec-div">
+                <h2 class="section-title">Regions Of Meghalaya</h2>
+                <ul class="styled-list" style="margin-left:60px">
+                    <li>Khasi Hills</li>
+                    <li>Garo Hills</li>
+                    <li>Jaintia Hills</li>
+                    <li>Ri Bhoi</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Travelling Around -->
+        <div class="col-md-4">
+            <div class="three-sec-div">
+                <h2 class="section-title">Travelling Around</h2>
+                <ul class="styled-list" style="margin-left:80px">
+                    <li>Assam</li>
+                    <li>Sikkim</li>
+                    <li>Arunachal Pradesh</li>
+                    <li>Tripura</li>
+                    <li>Mizoram</li>
+                    <li>Nagaland</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Festivals -->
+        <div class="col-md-4 fes">
+            <div class="three-sec-div">
+                <h2 class="section-title">Festivals</h2>
+                <ul class="styled-list "  style="margin-left:140px">
+                    <li>Garo Wangala Festival</li>
+                    <li>Shad Suk</li>
+                    <li>Mynsiem Dance</li>
+                    <li>Nongkrem Dance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %} {% endcomment %}
+
+
+
+
+
+{% block content %}
+
+<style>
+    .text-card {
+        background-color: #1c1c1c;
+        padding: 30px;
+        margin-left: -12%;
+        border-radius: 20px;
+        max-width: 500px;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .text-card h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #00ffd5;
+        font-weight: 700;
+    }
+    
+    .text-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        color: #e0e0e0;
+    }
+    
+
+    
+
+    .divbody{
+        background-color: black;
+        height: 80vh;
+        width: 108%;
+        display: flex;
+        flex-direction:row;
+        align-items: center;
+        justify-content: space-around;
+        overflow: hidden;
+        padding-right:220px;
+        gap:20px;
+    }
+    .sliderd{
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transform-style: preserve-3d;
+        animation: rotate 30s linear infinite;
+        
+    }
+    
+    @keyframes rotate{
+        0% {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        100% {
+            transform: perspective(1000px) rotateY(360deg);
+        }
+    }
+    
+    .sliderd span{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        transform-origin: center;
+        transform-style: preserve-3d;
+        transform: rotateY(calc(var(--i)*45deg)) translateZ(350px);
+    }
+    
+    .sliderd span img{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        border-radius:10px ;
+    }
+    
+    .sliderd span:hover img{
+        transform: translateY(-50px) scale(1.2);
+    }
+
+    @media screen and (max-width: 768px) {
+        .divbody {
+            flex-direction: column;
+            padding-right: 0;
+            height: auto;
+            padding-bottom: 72px;
+            align-items: center; /* centers children when stacked vertically */
+        }
+    
+        .text-card {
+            margin-left: 0;
+            width: 90%;
+            padding: 20px;
+            margin-right:8%;
+            box-sizing: border-box;
+        }
+    
+        .sliderd {
+            margin-top: 60px;
+            width: 180px;      /* slightly larger for small screens */
+            height: 180px;
+        }
+    }
+    
+    {% comment %} second slider 3D {% endcomment %}
+    .gallery {
+        width: 100%;
+    }
+    
+    .gallery-container {
+        align-items: center;
+        display: flex;
+        height: 400px;
+        margin: 0 auto;
+        max-width: 1000px;
+        position: relative;
+    }
+    
+    .gallery-item {
+        height: 200px;
+        opacity: 0;
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+        width: 330px;
+        z-index: 0;
+        border-radius: 15px;
+        background-size: contain;
+    }
+    
+    .gallery-item-1 {
+        left: 15%;
+        opacity: 0.4;
+        transform: translateX(-50%);
+    }
+    
+    .gallery-item-2,
+    .gallery-item-4 {
+        height: 250px;
+        opacity: 0.8;
+        width: 380px;
+        z-index: 1;
+    }
+    
+    .gallery-item-2 {
+        left: 30%;
+        transform: translateX(-50%);
+    }
+    
+    .gallery-item-3 {
+        box-shadow: -2px 5px 33px 6px rgba(0, 0, 0, 0.35);
+        height: 300px;
+        opacity: 1;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 430px;
+        z-index: 2;
+    }
+    
+    .gallery-item-4 {
+        left: 70%;
+        transform: translateX(-50%);
+    }
+    
+    .gallery-item-5 {
+        left: 85%;
+        opacity: 0.4;
+        transform: translateX(-50%);
+    }
+    
+    .gallery-controls {
+        display: flex;
+        justify-content: center;
+        margin: 25px 0;
+        height: 100px;
+    }
+    
+    .gallery-controls button {
+        background-color: transparent;
+        border: 0;
+        cursor: pointer;
+        font-size: 30px;
+        margin: 0 50px;
+        padding: 0 12px;
+        text-transform: capitalize;
+    }
+    
+    .gallery-controls-button:focus {
+        outline: none;
+    }
+    
+    .gallery-controls-previous {
+        position: relative;
+    }
+    
+    .gallery-controls-previous::before {
+        border: solid #51a4e8;
+        border-width: 0 5px 5px 0;
+        content: '';
+        display: inline-block;
+        height: 5px;
+        left: -30px;
+        padding: 10px;
+        position: absolute;
+        top: 25%;
+        transform: rotate(135deg) translateY(-50%);
+        transition: left 0.15s ease-in-out;
+        width: 5px;
+    }
+    
+    .gallery-controls-previous:hover::before {
+        left: -40px;
+    }
+    
+    .gallery-controls-next {
+        position: relative;
+    }
+    
+    .gallery-controls-next::before {
+        border: solid #51a4e8;
+        border-width: 0 5px 5px 0;
+        content: '';
+        display: inline-block;
+        height: 5px;
+        padding: 10px;
+        position: absolute;
+        right: -30px;
+        top: 45%;
+        transform: rotate(-45deg) translateY(-50%);
+        transition: right 0.15s ease-in-out;
+        width: 5px;
+    }
+    
+    .gallery-controls-next:hover::before {
+        right: -40px;
+    }
+    
+    .gallery-nav {
+        bottom: -15px;
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        position: absolute;
+        width: 100%;
+    }
+    
+    .gallery nav li {
+        background: #ccc;
+        border-radius: 50%;
+        height: 10px;
+        margin: 0 16px;
+        width: 10px;
+    }
+    
+    .gallery-nav li.gallery-item-selected {
+        background: #555;
+    }
+    
+    @media (max-width: 768px) {
+        .gallery-container {
+            height: 300px;
+        }
+    
+        .gallery-item {
+            height: 120px;
+            width: 200px;
+        }
+    
+        .gallery-item-1 {
+            left: 10%;
+        }
+    
+        .gallery-item-2,
+        .gallery-item-4 {
+            height: 150px;
+            width: 230px;
+        }
+    
+        .gallery-item-2 {
+            left: 30%;
+        }
+    
+        .gallery-item-3 {
+            height: 180px;
+            width: 260px;
+        }
+    
+        .gallery-item-4 {
+            left: 70%;
+        }
+    
+        .gallery-item-5 {
+            left: 90%;
+        }
+    
+        .gallery-controls {
+            height: 80px;
+            margin: 15px 0;
+        }
+    
+        .gallery-controls button {
+            font-size: 24px;
+            margin: 0 20px;
+        }
+    
+        .gallery-controls-previous::before {
+            left: -20px;
+        }
+    
+        .gallery-controls-previous:hover::before {
+            left: -30px;
+        }
+    
+        .gallery-controls-next::before {
+            right: -20px;
+        }
+    
+        .gallery-controls-next:hover::before {
+            right: -30px;
+        }
+    }
+</style>
+
+<div class="slider-box">
+    <video class="slider-video" autoplay muted loop playsinline>
+        <source src="{% static 'imagesVideo/v1.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+
+
+
+<h1 class="section-title">Top Places to Visit in Meghalaya</h1>
+
+<h2 class="place-heading">
+    <i class="fa-solid fa-circle dot-icon"></i> Cherrapunji
+</h2>
+
+<div class="grid-container-ch">
+    <div class="grid-cherr">
+        <video src="{% static 'imagesVideo/v2.mp4' %}" muted autoplay loop></video>
+    </div>
+    <div class="cherr-text">
+        <h2>Explore Cherrapunji</h2>
+        <p>
+            Cherrapunji, located in Meghalaya, India, is one of the wettest places on Earth.
+            Famous for its breathtaking waterfalls, lush green landscapes, and living root bridges,
+            it offers spectacular views of rolling hills and deep valleys —
+            truly a paradise for nature lovers and adventure seekers.
+        </p>
+    </div>
+</div>
+<br><br>
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Cherrapunji" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+
+
+<h2 class="place-heading" id="policbazar">
+    <i class="fa-solid fa-circle dot-icon"></i> Police Bazar
+</h2>
+
+<div class="pb-section">
+    <div class="pb-text">
+    <h2>Explore Police Bazar</h2>
+    <p>
+        Police Bazar, located in the heart of Shillong, is one of the most vibrant and bustling marketplaces in Meghalaya. 
+        It is a popular shopping hub where tradition meets modernity, offering a unique blend of local handicrafts, fashion stores, street food, and entertainment.
+    </p>
+    </div>
+    <video class="pb-video" src="{% static 'imagesVideo/v4.mp4' %}" autoplay muted loop></video>
+</div>
+
+<br>
+<br>
+
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Police Bazar" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% comment %} 3D card rotating card section start from here  {% endcomment %}
+
+<div class="divbody">
+    <div class="text-card">
+        <div class="text">
+            <h2>Meghalaya – Journey into the Heart of the Clouds</h2>
+            <p>
+                Meghalaya – the "Abode of Clouds" – is nature’s hidden jewel nestled in the lush hills of Northeast India. A land where every raindrop tells a story, where clouds gently kiss emerald-green valleys, and waterfalls tumble like poetry from the heavens.
+                From the living root bridges of Cherrapunji and Mawlynnong, Asia’s cleanest village, to the shimmering Umiam Lake and the mysterious Mawsmai Caves, Meghalaya offers an experience like no other. Wander through misty trails, listen to ancient Khasi legends, and breathe in the serenity of landscapes untouched by time.
+            </p>
+        </div>
+    </div>
+    
+    <div class="sliderd">
+        <span style="--i:1;"><img src="{% static "imagesVideo/img1.png" %} " alt=""></span>
+        <span style="--i:2;"><img src="{% static "imagesVideo/img7.png" %}" alt=""></span>
+        <span style="--i:3;"><img src="{% static "imagesVideo/img4.png" %}" alt=""></span>
+        <span style="--i:4;"><img src="{% static "imagesVideo/img11.png" %}" alt=""></span>
+        <span style="--i:5;"><img src="{% static "imagesVideo/img10.png" %}" alt=""></span>
+        <span style="--i:6;"><img src="{% static "imagesVideo/img5.png" %}" alt=""></span>
+        <span style="--i:7;"><img src="{% static "imagesVideo/img3.png" %}" alt=""></span> <!-- Corrected from "images/.jpg" -->
+        <span style="--i:8;"><img src="{% static "imagesVideo/img7.png" %}" alt=""></span>
+        {% comment %} <span style="--i:9;"><img src="{% static "imagesVideo/img8.png" %}" alt=""></span>
+        <span style="--i:10;"><img src="{% static "imagesVideo/img19.png" %}" alt=""></span> {% endcomment %}
+        
+    </div>
+</div>
+
+{% comment %} 3D card rotating card section end from here {% endcomment %}
+
+<div class="other-3-places">
+    <h2 class="place-heading" id="sevensisterfall">
+    <i class="fa-solid fa-circle dot-icon"></i>  Seven Sister Falls
+    </h2>
+    <div class="place-section left-align">
+    <video class="place-video" src="{% static "imagesVideo/v5.mp4" %} " autoplay muted loop></video>
+    <div class="place-text">
+        <h2 class="place-heading" id="sevensisterfall">
+            Explore Seven Sister Falls
+        </h2>
+        <p>
+        The Seven Sisters Falls, also known as Nohsngithiang Falls, is one of Meghalaya’s most spectacular natural wonders.
+        Located near Cherrapunji, this majestic waterfall is named after the seven streams that cascade down the limestone cliffs of the Khasi Hills, creating a mesmerizing sight.
+        </p>
+    </div>
+    </div>
+
+    <br><br>
+    <div class="container my-4">
+        <div class="row g-4">
+            {% for megha in meghaData %}
+            {% if megha.name == "Seven Sister Falls" %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4 hover-effect">
+                    <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ megha.name }}</h5>
+                        <p class="card-text">{{ megha.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    
+
+<br><br>
+    <h2 class="place-heading">
+    <i class="fa-solid fa-circle dot-icon"></i>  Dawki River
+    </h2>
+    <div class="place-section right-align">
+        <video class="place-video" src="{% static "imagesVideo/v6.mp4" %}" autoplay muted loop></video>
+    <div class="place-text">
+        <h2 class="place-heading">
+            Explore Dawki River
+        </h2>
+        <p>
+        Nestled in the heart of Meghalaya, Dawki River is a breathtaking marvel known for its crystal-clear waters and picturesque surroundings. 
+        Flowing through the West Jaintia Hills, this river forms a natural border between India and Bangladesh.
+        The most fascinating feature of the Dawki River is its glass-like transparency, creating an illusion that boats are floating in the air.
+        </p>
+    </div>
+    
+    </div>
+
+    <br><br>
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Dawki River" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% comment %} Second div for 3D slider start here  {% endcomment %}
+
+<div class="gallery">
+    <div class="gallery-container">
+        <img src="{% static "imagesVideo/img25.png" %}" alt="" class="gallery-item gallery-item1" data-index="1">
+        <img src="{% static "imagesVideo/img27.png" %}" alt="" class="gallery-item gallery-item2" data-index="2">
+        <img src="{% static "imagesVideo/img23.png" %}" alt="" class="gallery-item gallery-item3" data-index="3">
+        <img src="{% static "imagesVideo/img29.png" %}" alt="" class="gallery-item gallery-item4" data-index="4">
+        <img src="{% static "imagesVideo/img21.png" %}" alt="" class="gallery-item gallery-item5" data-index="5">
+        <img src="{% static "imagesVideo/img19.png" %}" alt="" class="gallery-item gallery-item6" data-index="6">
+        <img src="{% static "imagesVideo/img17.png" %}" alt="" class="gallery-item gallery-item7" data-index="7">
+        <img src="{% static "imagesVideo/img15.png" %}" alt="" class="gallery-item gallery-item8" data-index="8">
+        <img src="{% static "imagesVideo/img1.png" %}" alt="" class="gallery-item gallery-item9" data-index="9">
+        <img src="{% static "imagesVideo/img11.png" %}" alt="" class="gallery-item gallery-item10" data-index="11">
+        <img src="{% static "imagesVideo/img9.png" %}" alt="" class="gallery-item gallery-item10" data-index="12">
+        <img src="{% static "imagesVideo/img7.png" %}" alt="" class="gallery-item gallery-item10" data-index="13">
+        <img src="{% static "imagesVideo/img5.png" %}" alt="" class="gallery-item gallery-item10" data-index="14">
+        <img src="{% static "imagesVideo/img3.png" %}" alt="" class="gallery-item gallery-item10" data-index="15">
+    </div>
+    <div class="gallery-controls"></div>
+</div>
+
+
+{% comment %} Second div for 3D slider end here  {% endcomment %}
+
+    <br><br>
+
+    <h2 class="place-heading">
+    <i class="fa-solid fa-circle dot-icon"></i>  Cathedral of Mary
+    </h2>
+    <div class="place-section left-align">
+    <video class="place-video" src="{% static "imagesVideo/v3.mp4" %}" autoplay muted loop></video>
+    <div class="place-text">
+        <h2 class="place-heading">
+            Explore Cathedral of Mary
+        </h2>
+        <p>
+        Nestled in the heart of Shillong, the Cathedral of Mary Help of Christians is one of the most revered and architecturally stunning churches in Meghalaya. 
+        Built in 1936, this grand structure stands as a symbol of faith and heritage. The church is known for its beautiful stained-glass windows, high arches, and peaceful ambiance. 
+        Beneath the cathedral lies a grotto dedicated to Mother Mary, where visitors often come to offer prayers.
+        </p>
+    </div>
+    </div>
+</div>
+
+<br><br>
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Cathedral of Mary" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+<br><br>
+
+<h1 class="trip-heading text-center my-4 " id="planTrip">
+    Plan Your Trip 
+    <i class="fa-solid fa-arrow-turn-down arrow-icon"></i>
+</h1>
+
+
+<div class="container my-5">
+    <div class="row justify-content-center g-4">
+    <!-- IRCTC -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100">
+        <a href="https://example.com" target="_blank">
+            <img src="{% static 'imagesVideo/irctc.png' %}" class="card-img-top" alt="IRCTC Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">IRCTC Booking</h6>
+            <p class="card-text small">Tap to explore train bookings and services.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- REDBUS -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="redBus">
+        <a href="https://www.redbus.in/" target="_blank">
+            <img src="{% static 'imagesVideo/redbus.png' %}" class="card-img-top" alt="RedBus Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">RED-BUS</h6>
+            <p class="card-text small">Book bus tickets easily via RedBus.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- Confirm Ticket -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="confirmTicket">
+        <a href="https://www.confirmtkt.com/rbooking-d/" target="_blank">
+            <img src="{% static 'imagesVideo/confirmTic.png' %}" class="card-img-top" alt="ConfirmTkt Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">Confirm Ticket</h6>
+            <p class="card-text small">Check PNR & book tickets quickly.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- WEGO -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="wego">
+        <a href="https://www.wego.co.in/" target="_blank">
+            <img src="{% static 'imagesVideo/Wego.png' %}" class="card-img-top" alt="Wego Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">WEGO</h6>
+            <p class="card-text small">Search and compare flight options.</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- Paytm Flights -->
+    <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+        <div class="card image-card border-animated w-100" id="paytemFlight">
+        <a href="https://tickets.paytm.com/flights/" target="_blank">
+            <img src="{% static 'imagesVideo/paytemF.png' %}" class="card-img-top" alt="Paytm Flights Logo">
+        </a>
+        <div class="card-body text-center p-3">
+            <h6 class="card-title mb-2">PAYTM FLIGHT</h6>
+            <p class="card-text small">Affordable flight booking made simple.</p>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+<div class="three-section container my-5">
+    <div class="row g-4 align-items-start">
+        <!-- Regions of Meghalaya -->
+        <div class="col-md-4">
+            <div class="three-sec-div">
+                <h2 class="section-title">Regions Of Meghalaya</h2>
+                <ul class="styled-list" style="margin-left:60px">
+                    {% for region in regionName %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'regionOfMeghalay' region.name %}">
+                                        {{ region.name }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li class="dropdown-item text-muted">No places found</li>
+                            {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Travelling Around -->
+        <div class="col-md-4">
+            <div class="three-sec-div">
+                <h2 class="section-title">Travelling Around</h2>
+                <ul class="styled-list" style="margin-left:80px">
+                    {% for treval in trevalPlace %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'trevalAroundOfMeghalaya' treval.name %}">
+                                        {{ treval.name }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li class="dropdown-item text-muted">No places found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Festivals -->
+        <div class="col-md-4 fes">
+            <div class="three-sec-div">
+                <h2 class="section-title">Festivals</h2>
+                <ul class="styled-list "  style="margin-left:56px">
+                    {% for festival in festivalnames %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'festivalsOfMeghalaya' festival.festival_name %}">
+                                        {{ festival.festival_name }}
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li class="dropdown-item text-muted">No places found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const galleryContainer = document.querySelector('.gallery-container');
+    const galleryControlsContainer = document.querySelector('.gallery-controls');
+    const galleryControls = ['previous', 'next'];
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    class Carousel {
+        constructor(container, items, controls) {
+            this.carouselContainer = container;
+            this.carouselControls = controls;
+            this.carouselArray = [...items];
+        }
+
+        updateGallery() {
+            this.carouselArray.forEach(el => {
+                el.classList.remove('gallery-item-1');
+                el.classList.remove('gallery-item-2');
+                el.classList.remove('gallery-item-3');
+                el.classList.remove('gallery-item-4');
+                el.classList.remove('gallery-item-5');
+            });
+
+            this.carouselArray.slice(0, 5).forEach((el, i) => {
+                el.classList.add(`gallery-item-${i + 1}`);
+            });
+        }
+
+        setCurrentState(direction) {
+            if (direction.className == 'gallery-controls-previous') {
+                this.carouselArray.unshift(this.carouselArray.pop());  // Move last to front
+            } else {
+                this.carouselArray.push(this.carouselArray.shift());   // Move first to end
+            }
+            this.updateGallery();  // Refresh classes
+        }
+
+        setControls() {
+            this.carouselControls.forEach(control => {
+                galleryControlsContainer.appendChild(document.createElement('button')).className = `gallery-controls-${control}`;
+                document.querySelector(`.gallery-controls-${control}`).innerText = control;
+            });
+        }
+        
+        useControls() {
+            const triggers = [...galleryControlsContainer.childNodes];  // Get all button nodes
+        
+            triggers.forEach(control => {
+                control.addEventListener('click', e => {
+                    e.preventDefault();                        // Prevent default action
+                    this.setCurrentState(control);             // Change carousel state
+                });
+            });
+        }
+    
+}
+
+    const exampleCarousel = new Carousel(galleryContainer, galleryItems, galleryControls);
+
+    exampleCarousel.setControls();   // Dynamically create navigation buttons
+    exampleCarousel.useControls();   // Attach functionality (click events) to them
+
+</script>
+
+{% endblock %}

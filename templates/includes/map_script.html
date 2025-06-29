@@ -1,0 +1,29 @@
+{% if location %}
+<script>
+    window.initMap = function() {
+        const geocoder = new google.maps.Geocoder();
+        const placeName = "{{ location|escapejs }}";
+
+        geocoder.geocode({ address: placeName }, function(results, status) {
+            if (status === 'OK') {
+                const loc = results[0].geometry.location;
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 13,
+                    center: loc,
+                });
+                new google.maps.Marker({
+                    map: map,
+                    position: loc
+                });
+            } else {
+                alert("Geocode failed: " + status);
+                console.error("Geocode failed: " + status);
+            }
+        });
+    };
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_Irvv49HrjcFvN1EAQy_uaJ8lFNrk_xw&callback=initMap">
+</script>
+{% endif %}

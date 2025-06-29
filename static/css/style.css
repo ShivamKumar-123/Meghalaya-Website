@@ -1,0 +1,802 @@
+
+
+/* ********************** NavBar*************************************/
+header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-gradient {
+    background: linear-gradient(90deg, 
+      #000000 0%,       /* deep black */
+      #1e3c72 50%,      /* dark blue */
+      #4CAF50 100%      /* nature green */
+    );
+    background-size: 300% 300%;
+    animation: gradientMove 20s ease infinite;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    padding: 0.75rem 1rem;
+    border-radius: 0 0 10px 10px;
+    color: white;
+}
+
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.navbar-gradient .nav-link,
+.navbar-gradient .navbar-brand,
+.navbar-gradient .dropdown-menu a {
+    color: #ffffff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.navbar-gradient .nav-link:hover,
+.navbar-gradient .navbar-brand:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.navbar-gradient .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.96);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.navbar-gradient .dropdown-menu a {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.navbar-gradient .dropdown-menu a:hover {
+    background-color: rgba(153, 149, 149, 0.15);
+    color: #ffd700 !important; /* golden hover */
+}
+
+.navbar-gradient .btn-outline-primary {
+    color: white;
+    border-color: white;
+    transition: all 0.3s ease;
+}
+
+.navbar-gradient .btn-outline-primary:hover {
+    background-color: white;
+    color: black;
+}
+
+.navbar-gradient .btn-primary {
+    background-color: #ffffff;
+    color: #333;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.navbar-gradient .btn-primary:hover {
+    background-color: #ffeaa7;
+    color: #000;
+}
+
+.dropdown-menu.select-place-ol {
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE and Edge */
+    padding-left: 0.5rem;
+}
+
+/* Chrome, Safari, Opera - hide scrollbar */
+.dropdown-menu.select-place-ol::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+
+
+
+
+/*********************** Slider Box *************************************/
+
+/* Ensure the container takes up the full width and height of the viewport */
+.slider-box {
+    position: relative;
+    width: 100%; /* Full width of the parent container */
+    height: 100vh; /* Full height of the viewport */
+    overflow: hidden; /* Hide anything overflowing the container */
+}
+
+/* Make the video responsive */
+.slider-video {
+    width: 100%; /* Make video width 100% of the container */
+    height: 100%; /* Make video height 100% of the container */
+    object-fit: cover; /* Ensures the video covers the container without distortion */
+}
+
+/* Ensure the video remains responsive on smaller screens */
+@media only screen and (max-width: 1550px) {
+    .slider-video {
+        object-fit: cover; /* Ensure it keeps the cover aspect on larger screens */
+    }
+}
+
+@media screen and (max-width: 899px) {
+    .slider-box {
+        height: 60vh; /* Adjust the height for medium screens (tablets) */
+    }
+    .slider-video {
+        object-fit: cover; /* Maintain aspect ratio */
+    }
+}
+
+@media screen and (max-width: 649px) {
+    .slider-box {
+        height: 50vh; /* Adjust the height for smaller screens (mobiles) */
+    }
+    .slider-video {
+        object-fit: cover; /* Maintain aspect ratio */
+    }
+}
+
+
+
+/***************************** Chherapunji ******************************/
+
+.section-title {
+    font-size: 36px;
+    text-align: center;
+    margin: 40px 0 20px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.place-heading {
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin: 20px 0 40px 80px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dot-icon {
+    font-size: 10px;
+    color: #4da3c3;
+}
+
+
+.grid-container-ch {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 40px 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure grid-cherr has a defined layout */
+.grid-cherr {
+    width: 100%;
+    max-width: 600px;
+}
+
+.grid-cherr video {
+    width: 100%;
+    border-radius: 0.8rem;
+    object-fit: cover;
+    height: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cherr-text {
+    max-width: 600px;
+    background-color: transparent;
+    color: #fff;
+    padding: 0;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+.cherr-text h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #4da3c3;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Responsive layout for wider screens */
+@media (min-width: 768px) {
+    .grid-container-ch {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .grid-cherr,
+    .cherr-text {
+        flex: 1;
+    }
+
+    .cherr-text {
+        margin-left: 30px;
+    }
+}
+
+/******************* police bazar ***************************************/
+
+.place-heading {
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+    margin: 30px 0 40px 80px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dot-icon {
+    font-size: 10px;
+    color: #4da3c3;
+}
+
+.pb-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 40px 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.pb-text {
+    max-width: 600px;
+    color: #fff;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+.pb-text h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #4da3c3;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pb-text p {
+    font-size: 18px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.pb-video {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 0.8rem;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive layout */
+@media (min-width: 768px) {
+    .pb-section {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .pb-text,
+    .pb-video {
+        flex: 1;
+    }
+
+    .pb-text {
+        margin-right: 30px;
+    }
+    
+}
+
+@media (max-width:560px) {
+    .slider-video{
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}
+
+
+/********************************* Three section ****************************/
+
+.place-heading {
+    font-size: 26px;
+    color: #4da3c3;
+    font-weight: bold;
+    margin: 40px 0 25px 60px;
+    display: flex;
+    align-items: center;
+}
+
+.dot-icon {
+    font-size: 10px;
+    color: #4da3c3;
+    margin-right: 10px;
+}
+
+.place-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 20px;
+}
+
+.place-text {
+    max-width: 600px;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: 'Times New Roman', Times, serif;
+    text-align: justify;
+    line-height: 1.7;
+}
+
+.place-video {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    border-radius: 0.8rem;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Desktop layout alternation */
+@media (min-width: 768px) {
+    .place-section {
+    flex-direction: row;
+    justify-content: space-between;
+    }
+
+    .left-align {
+    flex-direction: row;
+    }
+
+    .right-align {
+    flex-direction: row-reverse;
+    }
+
+    .place-text,
+    .place-video {
+    flex: 1;
+    padding: 0 20px;
+    }
+}
+
+/********************** Ticket Booking ************************************/
+
+.trip-heading {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1f4e79;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    margin-left: 33px;
+}
+
+.arrow-icon {
+    margin-left: 10px;
+    color: #007bff;
+    animation: bounceDown 1.5s infinite;
+    font-size: 1.5rem;
+}
+
+@keyframes bounceDown {
+    0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+    }
+    40% {
+    transform: translateY(6px);
+    }
+    60% {
+    transform: translateY(3px);
+    }
+}
+
+
+.image-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: visible;
+    background-color: #fff;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 0;
+    height: 100%;
+}
+
+.image-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.image-card img {
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    transition: transform 0.4s ease;
+}
+
+.image-card .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.card-title {
+    font-weight: 600;
+    color: #1f4e79;
+}
+
+.card-text {
+    color: #444;
+}
+
+/* Outer Glow Animated Border */
+.border-animated::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border-radius: 18px;
+    background: linear-gradient(270deg, #00b4db, #0083b0, #00b4db);
+    background-size: 600% 600%;
+    filter: blur(8px);
+    opacity: 0.8;
+    z-index: -1;
+    animation: glowMove 4s ease infinite;
+}
+
+@keyframes glowMove {
+    0% {
+    background-position: 0% 50%;
+    }
+    50% {
+    background-position: 100% 50%;
+    }
+    100% {
+    background-position: 0% 50%;
+    }
+}
+
+/* Media Queries for Responsiveness */
+
+/* Medium screens (tablets) and larger */
+@media (max-width: 1200px) {
+    .image-card {
+        height: auto; /* Allow height to adjust to content */
+    }
+
+    .image-card img {
+        height: 160px; /* Reduce image height for medium screens */
+    }
+
+    .card-title {
+        font-size: 1.25rem; /* Slightly smaller title */
+    }
+
+    .card-text {
+        font-size: 0.9rem; /* Slightly smaller text */
+    }
+}
+
+/* Small screens (tablets and large mobile devices) */
+@media (max-width: 992px) {
+    .image-card {
+        height: auto;
+    }
+
+    .image-card img {
+        height: 140px; /* Further reduce image height */
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+    .image-card {
+        height: auto;
+        padding: 1rem; /* Add padding for mobile devices */
+    }
+
+    .image-card img {
+        height: 120px; /* Reduce image height for small screens */
+    }
+
+    .card-title {
+        font-size: 1rem; /* Even smaller title for mobile */
+    }
+
+    .card-text {
+        font-size: 0.8rem; /* Smaller text for mobile */
+    }
+}
+
+/* Very small mobile screens (phones) */
+@media (max-width: 576px) {
+    .image-card {
+        height: auto;
+        padding: 1rem; /* Adjust padding for small screens */
+    }
+
+    .image-card img {
+        height: 100px; /* Reduce image height even more */
+    }
+
+    .card-title {
+        font-size: 0.9rem; /* Adjust font size for very small screens */
+    }
+
+    .card-text {
+        font-size: 0.75rem; /* Further reduce text size */
+    }
+}
+
+
+/*************************** Another Three Section **********************************/
+/* Overall container background and text color */
+
+
+/* Headings */
+.three-section {
+    background-color: #0a0a0a; /* dark background */
+    color: white;
+    padding: 2rem;
+}
+
+.three-section ul {
+    list-style: none;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    color: #1e90ff; /* bright blue */
+    text-decoration: underline;
+    margin-bottom: 1rem;
+}
+
+.styled-list {
+    list-style-type: disc;
+    padding-left: 1.2rem;
+    color: white;
+    font-size: 1rem;
+}
+
+.styled-list li {
+    margin-bottom: 0.5rem;
+}
+
+/* Optional: Make links in titles blue and underlined as well */
+.section-title a {
+    color: #1e90ff;
+    text-decoration: underline;
+}
+
+/* Media queries for responsive layout */
+@media (max-width: 1200px) {
+    .three-section .col-md-4 {
+        /* Adjust column widths for medium screens */
+        flex: 0 0 33.33%;
+        max-width: 33.33%;
+    }
+}
+
+@media (max-width: 992px) {
+    .three-section .col-md-4 {
+        /* Adjust columns to take 50% width on smaller screens */
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .three-section .section-title {
+        font-size: 1.5rem; /* Slightly smaller titles */
+    }
+}
+
+@media (max-width: 768px) {
+    .three-section .col-md-4 {
+        /* Adjust columns to take full width on small screens */
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 1.5rem; /* Add spacing between sections */
+    }
+
+    .three-section .section-title {
+        font-size: 1.25rem; /* Further reduce title size */
+    }
+
+    .styled-list {
+        font-size: 0.9rem; /* Slightly smaller list items */
+    }
+
+    .styled-list li {
+        margin-bottom: 0.3rem;
+    }
+    .three-section ul{
+        padding-left: 22px;
+    }
+    .fes{
+        margin-left: -10%;
+    }
+    .fes ul{
+        margin-left: -4px;
+    }
+}
+
+@media (max-width: 576px) {
+    .three-section .col-md-4 {
+        /* Stack the columns on very small screens */
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 1.5rem; /* Add more spacing for clarity */
+    }
+
+    .three-section .section-title {
+        font-size: 1.1rem; /* Make the title even smaller on very small screens */
+    }
+
+    .styled-list {
+        font-size: 0.85rem; /* Reduce the font size on very small screens */
+    }
+
+    .styled-list li {
+        margin-bottom: 0.2rem; /* Tighten list spacing */
+    }
+    .three-section ul{
+        margin-left: 70px;
+    }
+}
+
+
+
+/************************** Footer Section **************************************/
+
+.footer {
+    height: 300px;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 10px;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(100,121,9,1) 35%, rgba(0,212,255,1) 100%);
+    overflow: hidden;
+    position: relative; /* Make footer relative to position absolute elements inside it */
+}
+
+#Contact ul li {
+    color: white;
+    margin-left: 23%;
+    margin-top: 14px;
+    font-size: 18px;
+}
+
+#feedback {
+    margin-left: 80%;
+}
+
+.footer p {
+    color: #fff;
+}
+
+@media only screen and (max-width: 1550px) and (min-width: 900px) {
+    .footer p {
+        margin-left: 40%;
+        font-size: 18px;
+        padding-top: 60px;
+    }
+
+    /* Adjust Social Media Icons */
+    .social-media {
+        top: 20px; /* Add a bit more spacing from the top */
+        right: 5%; /* Slightly adjusted right position */
+    }
+}
+
+@media screen and (max-width: 899px) and (min-width: 650px) {
+    .footer {
+        font-size: 18px;
+    }
+    #Contact {
+        margin-left: 5%;
+    }
+    #feedback {
+        margin-left: 52%;
+        margin-top: 24px;
+    }
+
+    .footer-p {
+        margin-top: 72px;
+        margin-left: 35%;
+    }
+
+    /* Adjust Social Media Icons */
+    .social-media {
+        top: 10px; /* Keeps the icons close to the top */
+        right: 15px; /* Adjust right positioning for better alignment */
+    }
+
+    .social-media a {
+        font-size: 20px; /* Slightly smaller icons for medium screens */
+    }
+}
+
+@media screen and (max-width: 649px) and (min-width: 320px) {
+    .footer {
+        font-size: 18px;
+    }
+
+    #feedback {
+        margin-left: 26%;
+        margin-top: 24px;
+    }
+
+    .footer-p {
+        margin-top: 72px;
+        margin-left: 22%;
+    }
+
+    /* Adjust Social Media Icons */
+    .social-media {
+        top: 5px; /* Adjust positioning to stay near the top */
+        
+        left: 86%;
+         /* Keep icons within the screen width */
+    }
+
+    .social-media a {
+        font-size: 18px;
+        padding-right: 5px; /* Even smaller icons for mobile */
+        display: block; /* Reduce spacing between icons for smaller screens */
+    }
+}
+
+/* Social Media Icons */
+.social-media {
+    position: absolute; /* Positions social media icons relative to the footer */
+    top: 10px; /* Aligns the icons to the top of the footer */
+    right: 10%; /* Aligns the icons to the right of the footer */
+}
+
+.social-media a {
+    font-size: 24px; /* Adjust icon size */
+    margin-left: 15px; /* Space between icons */
+    color: inherit; /* Inherits color from inline styles */
+    text-decoration: none; /* Removes underline */
+}
+
+.social-media a:hover {
+    opacity: 0.7; /* Adds a hover effect */
+}
+
+
+
+/************************************** for every card **************************/
+
+/* 3D card css here  */
+
+
+    
+    
+    
