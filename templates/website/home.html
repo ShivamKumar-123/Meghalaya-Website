@@ -688,6 +688,91 @@
             right: -30px;
         }
     }
+
+    {% comment %} map css here  {% endcomment %}
+    h2 span {
+        border-bottom: 2px solid #00ffd5;
+        padding-bottom: 6px;
+    }
+
+    .icon-wrapper {
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 1rem;
+    }
+
+    .location-icon {
+        font-size: 120px;
+        color: red;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+        z-index: 2;
+        filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    .pulse-ring {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.2);
+        animation: pulse 2s infinite;
+        z-index: 1;
+    }
+
+    @keyframes pulse {
+        0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+        }
+        70% {
+        transform: scale(1.5);
+        opacity: 0;
+        }
+        100% {
+        opacity: 0;
+        }
+    }
+
+    .icon-label {
+        color: #00ffd5;
+        font-size: 1.25rem;
+        text-shadow: 0 0 5px #00ffd5;
+        margin-top: 12px;
+        text-align: center;
+        padding: 0 1rem;
+    }
+
+    .icon-subtext {
+        font-size: 1rem;
+        color: #ccc;
+        margin-top: 10px;
+        text-align: center;
+        padding: 0 1.5rem;
+    }
+
+    .map-container {
+        {% comment %} height: 500px; {% endcomment %}
+        box-shadow: 0 0 20px #00ffd5;
+        border: 2px solid #00ffd5;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .map-iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
 </style>
 
 <div class="slider-box">
@@ -745,6 +830,47 @@
     {% endfor %}
 </div>
 
+<div class="container py-4">
+    <h2 class="text-center mt-4 mb-5 px-3">
+    <span class="animated-underline">Map of Cherrapunji</span>
+    </h2>
+
+    <div class="row gx-4 gy-5">
+    <!-- Icon Section -->
+    <div class="col-12 col-lg-6 icon-wrapper position-relative">
+        <div class="pulse-ring"></div>
+        <i class="fas fa-map-marker-alt location-icon" data-bs-toggle="modal" data-bs-target="#locationModal"></i>
+        <div class="icon-label">You're here!</div>
+        <div class="icon-subtext">
+        This marker points to the beautiful Cherrapunji.<br />
+        Click the icon to learn more about the location.
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="col-12 col-lg-6">
+        <div class="map-container">
+            <div class="embed-map-responsive"><div class="embed-map-container"><iframe class="embed-map-frame" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&height=400&hl=en&q=cherrapunji&t=k&z=10&ie=UTF8&iwloc=B&output=embed"></iframe><a href="https://cartoongames.io" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">Cartoon Games</a><a href="https://heygames.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">HeyGames</a><a href="https://map-embed.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">google maps generator</a></div><style>.embed-map-responsive{position:relative;text-align:right;width:100%;height:0;padding-bottom:66.66666666666666%;}.embed-map-container{overflow:hidden;background:none!important;width:100%;height:100%;position:absolute;top:0;left:0;}.embed-map-frame{width:100%!important;height:100%!important;position:absolute;top:0;left:0;}</style></div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+        <h5 class="modal-title" id="locationModalLabel">Location Info</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <p><strong>Umiam Lake Viewpoint</strong> is a popular tourist stop located just before reaching Shillong. It offers a panoramic view of the serene Umiam Lake, surrounded by lush green hills and blue waters.</p>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 
 <h2 class="place-heading" id="policbazar">
@@ -788,6 +914,48 @@
     {% endif %}
     {% endfor %}
 </div>
+
+<div class="container py-4">
+    <h2 class="text-center mt-4 mb-5 px-3">
+    <span class="animated-underline">Map of Police Bazar</span>
+    </h2>
+
+    <div class="row gx-4 gy-5">
+    <!-- Icon Section -->
+    <div class="col-12 col-lg-6 icon-wrapper position-relative">
+        <div class="pulse-ring"></div>
+        <i class="fas fa-map-marker-alt location-icon" data-bs-toggle="modal" data-bs-target="#locationModal"></i>
+        <div class="icon-label">You're here!</div>
+        <div class="icon-subtext">
+        This marker points to the beautiful Police Bazar.<br />
+        Click the icon to learn more about the location.
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="col-12 col-lg-6">
+        <div class="map-container">
+            <div class="embed-map-responsive"><div class="embed-map-container"><iframe class="embed-map-frame" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&height=400&hl=en&q=shillong%20center%20point&t=k&z=10&ie=UTF8&iwloc=B&output=embed"></iframe><a href="https://cartoongames.io" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">Cartoon Games</a><a href="https://heygames.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">HeyGames</a><a href="https://map-embed.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">google maps generator</a></div><style>.embed-map-responsive{position:relative;text-align:right;width:100%;height:0;padding-bottom:66.66666666666666%;}.embed-map-container{overflow:hidden;background:none!important;width:100%;height:100%;position:absolute;top:0;left:0;}.embed-map-frame{width:100%!important;height:100%!important;position:absolute;top:0;left:0;}</style></div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+        <h5 class="modal-title" id="locationModalLabel">Location Info</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <p><strong>Police Bazar</strong> is a popular tourist stop located just before reaching Shillong. It offers a panoramic view of the serene Umiam Lake, surrounded by lush green hills and blue waters.</p>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 {% comment %} 3D card rotating card section start from here  {% endcomment %}
 
@@ -855,6 +1023,47 @@
         </div>
     </div>
     
+    <div class="container py-4">
+        <h2 class="text-center mt-4 mb-5 px-3">
+        <span class="animated-underline">Map of Seven Sister Falls</span>
+        </h2>
+    
+        <div class="row gx-4 gy-5">
+        <!-- Icon Section -->
+        <div class="col-12 col-lg-6 icon-wrapper position-relative">
+            <div class="pulse-ring"></div>
+            <i class="fas fa-map-marker-alt location-icon" data-bs-toggle="modal" data-bs-target="#locationModal"></i>
+            <div class="icon-label">You're here!</div>
+            <div class="icon-subtext">
+            This marker points to the beautiful Seven Sister Falls.<br />
+            Click the icon to learn more about the location.
+            </div>
+        </div>
+    
+        <!-- Map Section -->
+        <div class="col-12 col-lg-6">
+            <div class="map-container">
+                <div class="embed-map-responsive"><div class="embed-map-container"><iframe class="embed-map-frame" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&height=400&hl=en&q=Seven%20Sister%20Falls&t=k&z=10&ie=UTF8&iwloc=B&output=embed"></iframe><a href="https://cartoongames.io" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">Cartoon Games</a><a href="https://heygames.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">HeyGames</a><a href="https://map-embed.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">google maps generator</a></div><style>.embed-map-responsive{position:relative;text-align:right;width:100%;height:0;padding-bottom:66.66666666666666%;}.embed-map-container{overflow:hidden;background:none!important;width:100%;height:100%;position:absolute;top:0;left:0;}.embed-map-frame{width:100%!important;height:100%!important;position:absolute;top:0;left:0;}</style></div>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+            <h5 class="modal-title" id="locationModalLabel">Location Info</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <p><strong>Seven Sister Falls</strong> is a popular tourist stop located just before reaching Shillong. It offers a panoramic view of the serene Umiam Lake, surrounded by lush green hills and blue waters.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    
 
 <br><br>
     <h2 class="place-heading">
@@ -899,6 +1108,48 @@
     {% endif %}
     {% endfor %}
 </div>
+
+<div class="container py-4">
+    <h2 class="text-center mt-4 mb-5 px-3">
+    <span class="animated-underline">Map of Dawki River</span>
+    </h2>
+
+    <div class="row gx-4 gy-5">
+    <!-- Icon Section -->
+    <div class="col-12 col-lg-6 icon-wrapper position-relative">
+        <div class="pulse-ring"></div>
+        <i class="fas fa-map-marker-alt location-icon" data-bs-toggle="modal" data-bs-target="#locationModal"></i>
+        <div class="icon-label">You're here!</div>
+        <div class="icon-subtext">
+        This marker points to the beautiful Dawki River.<br />
+        Click the icon to learn more about the location.
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="col-12 col-lg-6">
+        <div class="map-container">
+            <div class="embed-map-responsive"><div class="embed-map-container"><iframe class="embed-map-frame" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&height=400&hl=en&q=Dawki%20River&t=k&z=10&ie=UTF8&iwloc=B&output=embed"></iframe><a href="https://cartoongames.io" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">Cartoon Games</a><a href="https://heygames.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">HeyGames</a><a href="https://map-embed.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">google maps generator</a></div><style>.embed-map-responsive{position:relative;text-align:right;width:100%;height:0;padding-bottom:66.66666666666666%;}.embed-map-container{overflow:hidden;background:none!important;width:100%;height:100%;position:absolute;top:0;left:0;}.embed-map-frame{width:100%!important;height:100%!important;position:absolute;top:0;left:0;}</style></div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+        <h5 class="modal-title" id="locationModalLabel">Location Info</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <p><strong>Dawki River</strong> is a popular tourist stop located just before reaching Shillong. It offers a panoramic view of the serene Umiam Lake, surrounded by lush green hills and blue waters.</p>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 {% comment %} Second div for 3D slider start here  {% endcomment %}
 
@@ -969,6 +1220,48 @@
     {% endif %}
     {% endfor %}
 </div>
+
+<div class="container py-4">
+    <h2 class="text-center mt-4 mb-5 px-3">
+    <span class="animated-underline">Map of Cathedral of Mary</span>
+    </h2>
+
+    <div class="row gx-4 gy-5">
+    <!-- Icon Section -->
+    <div class="col-12 col-lg-6 icon-wrapper position-relative">
+        <div class="pulse-ring"></div>
+        <i class="fas fa-map-marker-alt location-icon" data-bs-toggle="modal" data-bs-target="#locationModal"></i>
+        <div class="icon-label">You're here!</div>
+        <div class="icon-subtext">
+        This marker points to the beautiful Cathedral of Mary.<br />
+        Click the icon to learn more about the location.
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="col-12 col-lg-6">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2961.753462216718!2d91.88861737448624!3d25.56857867747381!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x37507ebd3602b657%3A0x8ea57540c3d12d4e!2sCathedral%20of%20Mary%20Help%20of%20Christians!5e1!3m2!1sen!2sin!4v1752482922247!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+        <h5 class="modal-title" id="locationModalLabel">Location Info</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <p><strong>Umiam Lake Viewpoint</strong> is a popular tourist stop located just before reaching Shillong. It offers a panoramic view of the serene Umiam Lake, surrounded by lush green hills and blue waters.</p>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 <br><br>
 

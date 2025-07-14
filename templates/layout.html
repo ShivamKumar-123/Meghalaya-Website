@@ -245,10 +245,16 @@
                             </li>
                     </ul>
             
-                    <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary" type="button">Login</button>
-                    <a href="{% url "register" %}"><button class="btn btn-primary" type="button">Register</button></a>
-                    </div>
+                    {% if not user.is_authenticated %}
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+                            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+                        </div>
+
+                    {% else %}
+
+                    {% endif %}
+
                 </div>
                 </div>
             </nav>

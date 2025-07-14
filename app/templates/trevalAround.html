@@ -373,9 +373,90 @@
         transform:scale(1.03);
         transition-duration:0.4s;
     }
+
+
+
+    {% comment %} for map {% endcomment %}
+    h2 span {
+        border-bottom: 2px solid #00ffd5;
+        padding-bottom: 4px;
+    }
+
+    /* Icon wrapper with center alignment */
+    .icon-wrapper {
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Bouncing location icon */
+    .location-icon {
+        font-size: 120px;
+        color: red;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+        z-index: 2;
+        filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    /* Pulsing ring */
+    .pulse-ring {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.2);
+        animation: pulse 2s infinite;
+        z-index: 1;
+    }
+
+    @keyframes pulse {
+        0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+        }
+        70% {
+        transform: scale(1.5);
+        opacity: 0;
+        }
+        100% {
+        opacity: 0;
+        }
+    }
+
+    .icon-label {
+        color: #00ffd5;
+        font-size: 1.25rem;
+        text-shadow: 0 0 5px #00ffd5;
+        margin-top: 10px;
+    }
+
+    /* Map styling */
+    .map-container {
+        height: 500px;
+        box-shadow: 0 0 20px #00ffd5;
+        border: 2px solid #00ffd5;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .map-iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+    </style>
 </style>
 <!-- Carousel -->
-<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" style="height: 60vh; overflow: hidden;">
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" style="height: 60vh; overflow: hidden;margin-top:10px;">
     <div class="carousel-inner h-100">
         
         <div class="carousel-item active h-100">
@@ -491,7 +572,48 @@
 
 {% comment %} Second div for 3D slider end here  {% endcomment %}
 
+<div class="container">
+    <h2 class="text-center mt-4">
+      <span class="animated-underline">Map of {{ location }}</span>
+    </h2>
 
+    <div class="row mt-4">
+      <!-- Icon Section -->
+      <div class="col-12 col-lg-6 icon-wrapper position-relative">
+        <div class="pulse-ring"></div>
+        <i class="fas fa-map-marker-alt location-icon" data-bs-toggle="modal" data-bs-target="#locationModal"></i>
+        <div class="icon-label">You're here!</div>
+      </div>
+
+      <!-- Map Section -->
+      <div class="col-12 col-lg-6">
+        <div class="map-container">
+          <iframe
+            class="map-iframe"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28775.833961648466!2d91.89695755399316!3d25.638814339989796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375a81e1d743f523%3A0xe9b62edd40375fa5!2sUmiam%20Lake%20Viewpoint!5e0!3m2!1sen!2sin!4v1751114081478!5m2!1sen!2sin"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title" id="locationModalLabel">Location Info</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          This is the marker for <strong>Umiam Lake Viewpoint</strong> — a scenic stop on the way to Shillong, known for its beautiful views.
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
