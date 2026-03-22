@@ -1,0 +1,151 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">Overview</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Welcome back, {{ user.username }}!</h1>
+    <p class="page-subtitle">Here's what's happening with your tourism website today.</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card nm-flat cascade-in">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ places_count }}</div>
+            <div class="stat-label">Total Places</div>
+        </div>
+    </div>
+    
+    <div class="stat-card nm-flat cascade-in">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ regions_count }}</div>
+            <div class="stat-label">Regions</div>
+        </div>
+    </div>
+    
+    <div class="stat-card nm-flat cascade-in">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ festivals_count }}</div>
+            <div class="stat-label">Festivals</div>
+        </div>
+    </div>
+    
+    <div class="stat-card nm-flat cascade-in">
+        <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ users_count }}</div>
+            <div class="stat-label">Users</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="cards-container">
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Quick Actions</h2>
+        </div>
+        <div class="quick-actions-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <a href="{% url 'dashboard_places_add' %}" class="btn-primary" style="justify-content: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add New Place
+            </a>
+            <a href="{% url 'dashboard_regions_add' %}" class="btn-primary" style="justify-content: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add New Region
+            </a>
+            <a href="{% url 'dashboard_festivals_add' %}" class="btn-primary" style="justify-content: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add New Festival
+            </a>
+            <a href="{% url 'dashboard_images_add' %}" class="btn-primary" style="justify-content: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Upload Image
+            </a>
+        </div>
+    </div>
+    
+    <!-- Recent Places -->
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Recent Places</h2>
+            <a href="{% url 'dashboard_places' %}" class="btn-secondary">View All</a>
+        </div>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for place in recent_places %}
+                    <tr>
+                        <td>{{ place.name }}</td>
+                        <td>{{ place.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <div class="table-actions">
+                                <a href="{% url 'dashboard_places_edit' place.id %}" class="action-btn nm-button edit" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-muted);">No places added yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

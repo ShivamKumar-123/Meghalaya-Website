@@ -1,0 +1,635 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Accommodation Owner{% endblock %} | Meghalaya Tourism</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a1628;
+            --bg-secondary: #f0f4f8;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent-primary: #00ffd5;
+            --accent-secondary: #00b4db;
+            --accent-gradient: linear-gradient(135deg, #00ffd5, #00b4db);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border-radius: 16px;
+            --border-radius-sm: 10px;
+            --transition: all 0.3s ease;
+            --nm-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);
+            --nm-shadow-sm: 4px 4px 8px rgba(0, 0, 0, 0.06), -4px -4px 8px rgba(255, 255, 255, 0.6);
+            --nm-shadow-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0d2137 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: floatOrb 20s ease-in-out infinite;
+        }
+        
+        .bg-orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #00ffd5 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        
+        .bg-orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #4ecdc4 0%, transparent 70%);
+            top: 50%;
+            right: -50px;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+        
+        .bg-orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #1e3c72 0%, transparent 70%);
+            bottom: -100px;
+            left: 30%;
+            animation-delay: -10s;
+            animation-duration: 22s;
+        }
+        
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 10px) scale(1.02); }
+        }
+        
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, #00ffd5, transparent);
+            animation: shoot 8s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes shoot {
+            0% { transform: translateX(-100px) translateY(0); opacity: 0; }
+            5% { opacity: 1; }
+            15% { transform: translateX(100vw) translateY(100px); opacity: 0; }
+            100% { opacity: 0; }
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: var(--bg-primary);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-inner {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon i {
+            font-size: 20px;
+            color: var(--bg-primary);
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .owner-profile-card {
+            padding: 20px;
+            margin: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .owner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--bg-primary);
+        }
+        
+        .owner-info h4 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .owner-info p {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .verification-badge.verified {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .verification-badge.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .sidebar-nav {
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+        
+        .sidebar-link.active {
+            background: var(--accent-gradient);
+            color: var(--bg-primary);
+        }
+        
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-link .badge {
+            margin-left: auto;
+            padding: 2px 8px;
+            background: var(--danger);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px 24px;
+            background: rgba(15, 30, 50, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            border-radius: var(--border-radius);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-link {
+            color: #a0aec0;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-link:hover {
+            color: #00ffd5;
+        }
+        
+        .breadcrumb-separator {
+            color: #a0aec0;
+        }
+        
+        .breadcrumb-current {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .owner-badge {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 180, 219, 0.1));
+            color: #00ffd5;
+            border: 1px solid rgba(0, 255, 213, 0.3);
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--bg-primary);
+            font-size: 14px;
+        }
+        
+        .content-wrapper {
+            padding: 0;
+        }
+        
+        /* Messages */
+        .messages-container {
+            margin-bottom: 24px;
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+        }
+        
+        .alert-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: inherit;
+        }
+        
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .owner-badge {
+                display: none;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="star" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+        <div class="star" style="top: 20%; left: 80%; animation-delay: 0.5s;"></div>
+        <div class="star" style="top: 30%; left: 40%; animation-delay: 1s;"></div>
+        <div class="star" style="top: 40%; left: 60%; animation-delay: 1.5s;"></div>
+        <div class="star" style="top: 50%; left: 10%; animation-delay: 2s;"></div>
+        <div class="star" style="top: 60%; left: 90%; animation-delay: 0.3s;"></div>
+        <div class="star" style="top: 70%; left: 30%; animation-delay: 0.8s;"></div>
+        <div class="star" style="top: 80%; left: 70%; animation-delay: 1.3s;"></div>
+        <div class="shooting-star" style="top: 15%; left: 0; animation-delay: 0s;"></div>
+        <div class="shooting-star" style="top: 45%; left: 0; animation-delay: 3s;"></div>
+        <div class="shooting-star" style="top: 75%; left: 0; animation-delay: 6s;"></div>
+    </div>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-hotel"></i>
+                </div>
+                <span class="logo-text">Accommodation</span>
+            </div>
+            
+            <div class="owner-profile-card">
+                <div class="owner-avatar">
+                    {% if owner.profile_photo %}
+                    <img src="{{ owner.profile_photo.url }}" alt="{{ owner.business_name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                    {{ owner.business_name|slice:":2"|upper }}
+                    {% endif %}
+                </div>
+                <div class="owner-info">
+                    <h4>{{ owner.business_name }}</h4>
+                    <p>{{ owner.user.email }}</p>
+                    {% if owner.is_verified %}
+                    <span class="verification-badge verified"><i class="fas fa-check-circle"></i> Verified</span>
+                    {% else %}
+                    <span class="verification-badge pending"><i class="fas fa-clock"></i> Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{% url 'accommodation_owner_dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'accommodation_owner_dashboard' %}active{% endif %}">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'accommodation_owner_accommodations' %}" class="sidebar-link {% if request.resolver_match.url_name == 'accommodation_owner_accommodations' or request.resolver_match.url_name == 'add_accommodation' or request.resolver_match.url_name == 'edit_accommodation' %}active{% endif %}">
+                    <i class="fas fa-building"></i>
+                    <span>My Properties</span>
+                </a>
+                <a href="{% url 'accommodation_owner_bookings' %}" class="sidebar-link {% if request.resolver_match.url_name == 'accommodation_owner_bookings' or request.resolver_match.url_name == 'manage_accommodation_booking' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Bookings</span>
+                    {% if pending_count > 0 %}
+                    <span class="badge">{{ pending_count }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'accommodation_owner_profile' %}" class="sidebar-link {% if request.resolver_match.url_name == 'accommodation_owner_profile' %}active{% endif %}">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="{% url 'home' %}" class="logout-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Website</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="breadcrumb">
+                    <a href="{% url 'accommodation_owner_dashboard' %}" class="breadcrumb-link">Dashboard</a>
+                    {% block breadcrumb %}{% endblock %}
+                </nav>
+            </div>
+            <div class="header-right">
+                <span class="owner-badge">Property Owner</span>
+                <div class="profile-avatar">
+                    {{ owner.business_name|slice:":2"|upper }}
+                </div>
+            </div>
+        </header>
+        
+        <div class="content-wrapper">
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span>{{ message }}</span>
+                    <button class="alert-close">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <script>
+        // Mobile sidebar toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+        }
+        
+        // Alert close
+        document.querySelectorAll('.alert-close').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.remove();
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

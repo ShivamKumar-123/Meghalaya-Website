@@ -1,0 +1,76 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}{% if region %}Edit{% else %}Add{% endif %} Region{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<a href="{% url 'dashboard_regions' %}" class="breadcrumb-link">Regions</a>
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">{% if region %}Edit{% else %}Add{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">{% if region %}Edit Region{% else %}Add New Region{% endif %}</h1>
+    <p class="page-subtitle">{% if region %}Update the region information{% else %}Add a new region to your website{% endif %}</p>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <form method="post" enctype="multipart/form-data" data-validate>
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="form-label">Name *</label>
+                <input type="text" name="name" class="nm-input" value="{{ region.name|default:'' }}" placeholder="Enter name" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Region Name</label>
+                <input type="text" name="region_name" class="nm-input" value="{{ region.region_name|default:'' }}" placeholder="Enter region name">
+            </div>
+            
+            <div class="form-group full-width">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="nm-input nm-textarea" placeholder="Enter description">{{ region.description|default:'' }}</textarea>
+            </div>
+            
+            <div class="form-group full-width">
+                <label class="form-label">Image {% if not region %}*{% endif %}</label>
+                <div class="file-upload">
+                    <input type="file" name="image" class="file-upload-input" accept="image/*" {% if not region %}required{% endif %}>
+                    <label class="file-upload-label">
+                        <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span class="file-upload-text">Click to upload or drag and drop</span>
+                        <span class="file-upload-hint">PNG, JPG, GIF up to 10MB</span>
+                    </label>
+                </div>
+                <div class="image-preview-container">
+                    {% if region.image %}
+                    <img src="{{ region.image.url }}" alt="{{ region.name }}" class="image-preview">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                {% if region %}Update Region{% else %}Save Region{% endif %}
+            </button>
+            <a href="{% url 'dashboard_regions' %}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

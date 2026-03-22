@@ -1,0 +1,399 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Support{% endblock %}
+
+{% block content %}
+
+<style>
+    .support-hero {
+        background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(30,60,114,0.9) 100%);
+        min-height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .support-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.1) 0%, transparent 50%);
+    }
+    
+    .support-hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00ffd5 0%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .support-hero p {
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.7);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .support-content {
+        background: linear-gradient(180deg, #0a0a14 0%, #1a1a2e 100%);
+        padding: 60px 20px;
+        min-height: 60vh;
+    }
+    
+    .support-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .support-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+    
+    .support-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(124,58,237,0.2);
+        border-radius: 20px;
+        padding: 35px;
+        text-align: center;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .support-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #00ffd5, #7c3aed);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+    
+    .support-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .support-card:hover {
+        border-color: rgba(124,58,237,0.5);
+        box-shadow: 0 15px 40px rgba(124,58,237,0.15);
+        transform: translateY(-8px);
+    }
+    
+    .support-card .icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, rgba(0,255,213,0.1), rgba(124,58,237,0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .support-card:hover .icon {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, rgba(0,255,213,0.2), rgba(124,58,237,0.2));
+    }
+    
+    .support-card .icon i {
+        font-size: 1.8rem;
+        background: linear-gradient(135deg, #00ffd5, #7c3aed);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .support-card h3 {
+        font-size: 1.3rem;
+        color: #ffffff;
+        margin-bottom: 12px;
+    }
+    
+    .support-card p {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .support-card a {
+        display: inline-block;
+        padding: 10px 25px;
+        background: linear-gradient(135deg, #00ffd5, #00b4d8);
+        color: #0a0a14;
+        font-weight: 600;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .support-card a:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(0,255,213,0.3);
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+        margin-top: 50px;
+    }
+    
+    .faq-title {
+        text-align: center;
+        font-size: 2rem;
+        color: #00ffd5;
+        margin-bottom: 30px;
+    }
+    
+    .faq-item {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        border-color: rgba(0,255,213,0.3);
+    }
+    
+    .faq-question {
+        padding: 20px 25px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #ffffff;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-question:hover {
+        background: rgba(0,255,213,0.05);
+    }
+    
+    .faq-question i {
+        color: #00ffd5;
+        transition: transform 0.3s ease;
+    }
+    
+    .faq-item.active .faq-question i {
+        transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+        padding: 0 25px;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        color: rgba(255,255,255,0.7);
+        line-height: 1.7;
+    }
+    
+    .faq-item.active .faq-answer {
+        padding: 0 25px 20px;
+        max-height: 500px;
+    }
+    
+    /* Contact Info */
+    .contact-info {
+        background: linear-gradient(135deg, rgba(0,255,213,0.05), rgba(124,58,237,0.05));
+        border: 1px solid rgba(0,255,213,0.2);
+        border-radius: 20px;
+        padding: 40px;
+        margin-top: 50px;
+        text-align: center;
+    }
+    
+    .contact-info h3 {
+        color: #00ffd5;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .contact-methods {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 25px;
+    }
+    
+    .contact-method {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255,255,255,0.8);
+    }
+    
+    .contact-method i {
+        font-size: 1.3rem;
+        color: #00ffd5;
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="support-hero">
+    <div>
+        <h1><i class="fas fa-headset me-3"></i>Support Center</h1>
+        <p>We're here to help you with any questions or issues.</p>
+    </div>
+</section>
+
+<!-- Support Content -->
+<section class="support-content">
+    <div class="support-container">
+        
+        <!-- Support Cards -->
+        <div class="support-grid">
+            <div class="support-card">
+                <div class="icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Live Chat</h3>
+                <p>Chat with our AI assistant for instant answers to your questions about Meghalaya tourism.</p>
+                <a href="#" onclick="openChatbot(); return false;">Start Chat</a>
+            </div>
+            
+            <div class="support-card">
+                <div class="icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Email Support</h3>
+                <p>Send us an email and we'll get back to you within 24 hours with a detailed response.</p>
+                <a href="{% url 'contact' %}">Contact Us</a>
+            </div>
+            
+            <div class="support-card">
+                <div class="icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3>Phone Support</h3>
+                <p>Call our support team for immediate assistance with urgent matters.</p>
+                <a href="tel:+91XXXXXXXXXX">Call Now</a>
+            </div>
+            
+            <div class="support-card">
+                <div class="icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Travel Guide</h3>
+                <p>Explore our comprehensive travel guides for planning your Meghalaya adventure.</p>
+                <a href="{% url 'home' %}">Explore</a>
+            </div>
+        </div>
+        
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2 class="faq-title"><i class="fas fa-question-circle me-2"></i>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What is the best time to visit Meghalaya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    The best time to visit Meghalaya is from October to May. The monsoon season (June-September) brings heavy rainfall, especially in Cherrapunji and Mawsynram. However, if you want to experience the lush green landscapes and waterfalls at their best, the post-monsoon period (October-November) is ideal.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I reach Meghalaya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    You can reach Meghalaya by air through Shillong Airport (Umroi) or Guwahati Airport (Assam). From Guwahati, Shillong is about 100 km by road (3-4 hours). Regular bus services and taxis are available from Guwahati to Shillong.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is it safe to travel to Meghalaya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, Meghalaya is generally safe for tourists. The locals are friendly and hospitable. However, like any travel destination, it's advisable to take standard precautions, especially when trekking or visiting remote areas.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What are the must-visit places in Meghalaya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Must-visit places include: Living Root Bridges in Cherrapunji, Dawki River, Mawlynnong Village (Asia's cleanest village), Elephant Falls, Umiam Lake, Mawsmai Caves, Nohkalikai Falls, and the capital city Shillong.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Do I need any permits to visit Meghalaya?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Indian nationals do not need any special permits to visit Meghalaya. Foreign nationals may need an Inner Line Permit (ILP) for certain restricted areas. It's best to check the latest requirements before your trip.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <h3>Still Need Help?</h3>
+            <p style="color: rgba(255,255,255,0.7);">Our support team is available to assist you.</p>
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <i class="fas fa-envelope"></i>
+                    <span>support@meghalayatourism.com</span>
+                </div>
+                <div class="contact-method">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 XXX XXX XXXX</span>
+                </div>
+                <div class="contact-method">
+                    <i class="fas fa-clock"></i>
+                    <span>Mon-Sat: 9AM - 6PM IST</span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<script>
+function toggleFaq(element) {
+    const faqItem = element.parentElement;
+    faqItem.classList.toggle('active');
+}
+
+function openChatbot() {
+    // This will open the chatbot
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    if (chatbotToggle) {
+        chatbotToggle.click();
+    }
+}
+</script>
+
+{% endblock %}

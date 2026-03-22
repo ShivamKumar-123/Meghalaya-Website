@@ -1,0 +1,123 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Regions{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">Regions</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Regions Management</h1>
+    <p class="page-subtitle">Manage all regions of Meghalaya</p>
+</div>
+
+<div class="toolbar cascade-in">
+    <div class="toolbar-left">
+        <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="nm-input search-input" placeholder="Search regions...">
+        </div>
+    </div>
+    <div class="toolbar-right">
+        <a href="{% url 'dashboard_regions_add' %}" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Region
+        </a>
+    </div>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Region Name</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for region in regions %}
+                <tr>
+                    <td>
+                        {% if region.image %}
+                        <img src="{{ region.image.url }}" alt="{{ region.name }}" class="table-image">
+                        {% else %}
+                        <div class="table-image" style="background: var(--bg-secondary); display: flex; align-items: center; justify-content: center;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ region.name }}</strong></td>
+                    <td>{{ region.region_name|default:"-" }}</td>
+                    <td>{{ region.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="{% url 'dashboard_regions_edit' region.id %}" class="action-btn nm-button edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="action-btn nm-button delete" title="Delete" 
+                                    data-delete="{% url 'dashboard_regions_delete' region.id %}"
+                                    data-name="{{ region.name }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <h3 class="empty-state-title">No regions found</h3>
+                            <p class="empty-state-text">Get started by adding your first region.</p>
+                            <a href="{% url 'dashboard_regions_add' %}" class="btn-primary">Add Region</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Confirm Delete</h3>
+            <button class="modal-close" id="cancelDelete">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete <strong id="deleteItemName"></strong>? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelDelete">Cancel</button>
+            <form id="deleteForm" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

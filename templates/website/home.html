@@ -15,6 +15,9 @@
 
 
 
+<!-- Wave Separator after Hero -->
+{% include 'components/wave_separator.html' with wave_type='teal' %}
+
 <h1 class="section-title">Top Places to Visit in Meghalaya</h1>
 
 <h2 class="place-heading">
@@ -62,6 +65,9 @@
 
 
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='blue' %}
+
 <h2 class="place-heading" id="policbazar">
     <i class="fa-solid fa-circle dot-icon"></i> Police Bazar
 </h2>
@@ -104,6 +110,9 @@
     {% endfor %}
 </div>
 
+
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='dark' %}
 
 <div class="other-3-places">
     <h2 class="place-heading" id="sevensisterfall">
@@ -310,6 +319,9 @@
 
 
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='blue' %}
+
 <div class="three-section container my-5">
     <div class="row g-4 align-items-start">
         <!-- Regions of Meghalaya -->
@@ -365,15 +377,37 @@
 
 {% block content %}
 
+<!-- HOME PAGE Background Animation - Particles & Nebula -->
+<div class="bg-home">
+    <div class="nebula"></div>
+    <div class="particles-container">
+        <div class="particle-dot" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="particle-dot" style="top: 40%; left: 25%; animation-delay: 1s;"></div>
+        <div class="particle-dot" style="top: 60%; left: 15%; animation-delay: 2s;"></div>
+        <div class="particle-dot" style="top: 30%; left: 80%; animation-delay: 0.5s;"></div>
+        <div class="particle-dot" style="top: 70%; left: 70%; animation-delay: 1.5s;"></div>
+        <div class="particle-dot" style="top: 50%; left: 50%; animation-delay: 2.5s;"></div>
+        <div class="particle-dot" style="top: 80%; left: 30%; animation-delay: 3s;"></div>
+        <div class="particle-dot" style="top: 15%; left: 60%; animation-delay: 0.8s;"></div>
+        <div class="particle-dot" style="top: 85%; left: 85%; animation-delay: 1.8s;"></div>
+        <div class="particle-dot" style="top: 45%; left: 5%; animation-delay: 2.8s;"></div>
+        <div class="particle-dot" style="top: 25%; left: 45%; animation-delay: 0.3s;"></div>
+        <div class="particle-dot" style="top: 65%; left: 90%; animation-delay: 1.3s;"></div>
+    </div>
+</div>
+
 <style>
     .text-card {
         background-color: #1c1c1c;
-        padding: 30px;
-        margin-left: -12%;
+        margin-left: 0;
         border-radius: 20px;
-        max-width: 500px;
+        max-width: 400px;
         box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
         font-family: 'Playfair Display', serif;
+    }
+
+    .text{
+        padding: 15px;
     }
     
     .text-card h2 {
@@ -396,7 +430,7 @@
     .divbody{
         background-color: black;
         height: 80vh;
-        width: 108%;
+        width: 100%;
         display: flex;
         flex-direction:row;
         align-items: center;
@@ -409,6 +443,7 @@
         position: relative;
         width: 200px;
         height: 200px;
+        margin-left:18%;
         transform-style: preserve-3d;
         animation: rotate 30s linear infinite;
         
@@ -474,133 +509,208 @@
     {% comment %} second slider 3D {% endcomment %}
     .gallery {
         width: 100%;
+        padding: 40px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .gallery::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(0,255,213,0.08) 0%, transparent 70%);
+        pointer-events: none;
+        animation: galleryGlow 4s ease-in-out infinite;
+    }
+    
+    @keyframes galleryGlow {
+        0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
     }
     
     .gallery-container {
         align-items: center;
         display: flex;
-        height: 400px;
+        height: 450px;
         margin: 0 auto;
-        max-width: 1000px;
+        max-width: 1100px;
         position: relative;
+        perspective: 1500px;
     }
     
     .gallery-item {
-        height: 200px;
+        height: 220px;
         opacity: 0;
         position: absolute;
-        transition: all 0.3s ease-in-out;
-        width: 330px;
+        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        width: 350px;
         z-index: 0;
-        border-radius: 15px;
-        background-size: contain;
+        border-radius: 20px;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        border: 2px solid rgba(255,255,255,0.1);
+        filter: brightness(0.7) saturate(0.8);
+    }
+    
+    .gallery-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.6) 100%);
+        border-radius: 18px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
     
     .gallery-item-1 {
-        left: 15%;
-        opacity: 0.4;
-        transform: translateX(-50%);
+        left: 10%;
+        opacity: 0.5;
+        transform: translateX(-50%) rotateY(25deg) scale(0.85);
+        filter: brightness(0.5) blur(1px);
     }
     
     .gallery-item-2,
     .gallery-item-4 {
-        height: 250px;
-        opacity: 0.8;
-        width: 380px;
+        height: 280px;
+        opacity: 0.85;
+        width: 400px;
         z-index: 1;
+        filter: brightness(0.8);
     }
     
     .gallery-item-2 {
-        left: 30%;
-        transform: translateX(-50%);
+        left: 28%;
+        transform: translateX(-50%) rotateY(15deg) scale(0.95);
     }
     
     .gallery-item-3 {
-        box-shadow: -2px 5px 33px 6px rgba(0, 0, 0, 0.35);
-        height: 300px;
+        height: 340px;
         opacity: 1;
         left: 50%;
-        transform: translateX(-50%);
-        width: 430px;
-        z-index: 2;
+        transform: translateX(-50%) rotateY(0deg) scale(1);
+        width: 460px;
+        z-index: 3;
+        border: 3px solid rgba(0,255,213,0.4);
+        box-shadow: 
+            0 25px 80px rgba(0,0,0,0.5),
+            0 0 40px rgba(0,255,213,0.2),
+            inset 0 0 60px rgba(0,255,213,0.05);
+        filter: brightness(1) saturate(1.1);
+    }
+    
+    .gallery-item-3::before {
+        opacity: 1;
+        background: linear-gradient(180deg, transparent 50%, rgba(0,255,213,0.1) 100%);
+    }
+    
+    .gallery-item-3::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, transparent, rgba(0,255,213,0.3), transparent);
+        border-radius: 22px;
+        z-index: -1;
+        animation: borderGlow 3s linear infinite;
+    }
+    
+    @keyframes borderGlow {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
     }
     
     .gallery-item-4 {
-        left: 70%;
-        transform: translateX(-50%);
+        left: 72%;
+        transform: translateX(-50%) rotateY(-15deg) scale(0.95);
     }
     
     .gallery-item-5 {
-        left: 85%;
-        opacity: 0.4;
-        transform: translateX(-50%);
+        left: 90%;
+        opacity: 0.5;
+        transform: translateX(-50%) rotateY(-25deg) scale(0.85);
+        filter: brightness(0.5) blur(1px);
     }
     
     .gallery-controls {
         display: flex;
         justify-content: center;
-        margin: 25px 0;
-        height: 100px;
+        align-items: center;
+        margin: 40px 0;
+        gap: 40px;
     }
     
     .gallery-controls button {
-        background-color: transparent;
-        border: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(0,255,213,0.15), rgba(102,126,234,0.15));
+        border: 2px solid rgba(0,255,213,0.4);
         cursor: pointer;
-        font-size: 30px;
-        margin: 0 50px;
-        padding: 0 12px;
-        text-transform: capitalize;
-    }
-    
-    .gallery-controls-button:focus {
-        outline: none;
-    }
-    
-    .gallery-controls-previous {
+        font-size: 20px;
+        color: #00ffd5;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(15px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,255,213,0.1);
     }
     
-    .gallery-controls-previous::before {
-        border: solid #51a4e8;
-        border-width: 0 5px 5px 0;
+    .gallery-controls button::before {
         content: '';
-        display: inline-block;
-        height: 5px;
-        left: -30px;
-        padding: 10px;
         position: absolute;
-        top: 25%;
-        transform: rotate(135deg) translateY(-50%);
-        transition: left 0.15s ease-in-out;
-        width: 5px;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, rgba(0,255,213,0.4) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s ease;
     }
     
-    .gallery-controls-previous:hover::before {
-        left: -40px;
+    .gallery-controls button:hover::before {
+        width: 150%;
+        height: 150%;
     }
     
-    .gallery-controls-next {
+    .gallery-controls button:hover {
+        background: linear-gradient(135deg, rgba(0,255,213,0.3), rgba(102,126,234,0.25));
+        border-color: #00ffd5;
+        transform: scale(1.15);
+        box-shadow: 0 10px 40px rgba(0,255,213,0.4), 0 0 30px rgba(0,255,213,0.2);
+        color: #fff;
+    }
+    
+    .gallery-controls button:active {
+        transform: scale(0.95);
+    }
+    
+    .gallery-controls button i {
         position: relative;
+        z-index: 1;
+        transition: transform 0.3s ease;
     }
     
-    .gallery-controls-next::before {
-        border: solid #51a4e8;
-        border-width: 0 5px 5px 0;
-        content: '';
-        display: inline-block;
-        height: 5px;
-        padding: 10px;
-        position: absolute;
-        right: -30px;
-        top: 45%;
-        transform: rotate(-45deg) translateY(-50%);
-        transition: right 0.15s ease-in-out;
-        width: 5px;
+    .gallery-controls-previous:hover i {
+        transform: translateX(-3px);
     }
     
-    .gallery-controls-next:hover::before {
-        right: -40px;
+    .gallery-controls-next:hover i {
+        transform: translateX(3px);
     }
     
     .gallery-nav {
@@ -613,16 +723,19 @@
         width: 100%;
     }
     
-    .gallery nav li {
-        background: #ccc;
+    .gallery-nav li {
+        background: rgba(0,255,213,0.3);
         border-radius: 50%;
-        height: 10px;
-        margin: 0 16px;
-        width: 10px;
+        height: 12px;
+        margin: 0 10px;
+        width: 12px;
+        transition: all 0.3s ease;
     }
     
     .gallery-nav li.gallery-item-selected {
-        background: #555;
+        background: #00ffd5;
+        box-shadow: 0 0 15px rgba(0,255,213,0.6);
+        transform: scale(1.2);
     }
     
     @media (max-width: 768px) {
@@ -785,13 +898,16 @@
 
 
 
+<!-- Wave Separator after Hero -->
+{% include 'components/wave_separator.html' with wave_type='teal' %}
+
 <h1 class="section-title">Top Places to Visit in Meghalaya</h1>
 
 <h2 class="place-heading">
     <i class="fa-solid fa-circle dot-icon"></i> Cherrapunji
 </h2>
 
-<div class="grid-container-ch">
+<div class="grid-container-ch side">
     <div class="grid-cherr">
         <video src="{% static 'imagesVideo/v2.mp4' %}" muted autoplay loop></video>
     </div>
@@ -806,7 +922,7 @@
     </div>
 </div>
 <br><br>
-<div class="container">
+{% comment %} <div class="container">
     {% for megha in meghaData %}
     {% if megha.name == "Cherrapunji" %}
         {% if forloop.first or forloop.counter0|divisibleby:3 %}
@@ -828,7 +944,63 @@
         {% endif %}
     {% endif %}
     {% endfor %}
-</div>
+</div> {% endcomment %}
+
+{% comment %} <div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Cherrapunji" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+        <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect animate__animated animate__zoomIn">
+            <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+            <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ megha.name }}</h5>
+            <p class="card-text">{{ megha.description }}</p>
+            </div>
+        </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div> {% endcomment %}
+
+
+<!-- ✅ Add Animate.css in your <head> -->
+    
+
+    <div class="container">
+        {% for megha in meghaData %}
+        {% if megha.name == "Cherrapunji" %}
+            {% if forloop.first or forloop.counter0|divisibleby:3 %}
+            <div class="row">
+            {% endif %}
+    
+            <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+            <!-- 👇 only custom class added -->
+            <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect reveal-card">
+                <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ megha.name }}</h5>
+                <p class="card-text">{{ megha.description }}</p>
+                </div>
+            </div>
+            </div>
+    
+            {% if forloop.counter|divisibleby:3 or forloop.last %}
+            </div>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+    </div>
+    
+    
+    
 
 <div class="container py-4">
     <h2 class="text-center mt-4 mb-5 px-3">
@@ -873,11 +1045,14 @@
 
 
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='blue' %}
+
 <h2 class="place-heading" id="policbazar">
     <i class="fa-solid fa-circle dot-icon"></i> Police Bazar
 </h2>
 
-<div class="pb-section">
+<div class="pb-section side">
     <div class="pb-text">
     <h2>Explore Police Bazar</h2>
     <p>
@@ -891,7 +1066,7 @@
 <br>
 <br>
 
-<div class="container">
+{% comment %} <div class="container">
     {% for megha in meghaData %}
     {% if megha.name == "Police Bazar" %}
         {% if forloop.first or forloop.counter0|divisibleby:3 %}
@@ -906,6 +1081,31 @@
             <p class="card-text">{{ megha.description }}</p>
             </div>
         </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</div> {% endcomment %}
+
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Police Bazar" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+            <!-- 👇 Added "reveal-card" so JS can target it -->
+            <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect reveal-card">
+                <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ megha.name }}</h5>
+                    <p class="card-text">{{ megha.description }}</p>
+                </div>
+            </div>
         </div>
 
         {% if forloop.counter|divisibleby:3 or forloop.last %}
@@ -959,6 +1159,9 @@
 
 {% comment %} 3D card rotating card section start from here  {% endcomment %}
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='green' %}
+
 <div class="divbody">
     <div class="text-card">
         <div class="text">
@@ -987,12 +1190,15 @@
 
 {% comment %} 3D card rotating card section end from here {% endcomment %}
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='dark' %}
+
 <div class="other-3-places">
     <h2 class="place-heading" id="sevensisterfall">
     <i class="fa-solid fa-circle dot-icon"></i>  Seven Sister Falls
     </h2>
-    <div class="place-section left-align">
-    <video class="place-video" src="{% static "imagesVideo/v5.mp4" %} " autoplay muted loop></video>
+    <div class="place-section left-align side">
+        <video class="place-video" src="{% static "imagesVideo/v5.mp4" %} " autoplay muted loop></video>
     <div class="place-text">
         <h2 class="place-heading" id="sevensisterfall">
             Explore Seven Sister Falls
@@ -1005,7 +1211,7 @@
     </div>
 
     <br><br>
-    <div class="container my-4">
+    {% comment %} <div class="container my-4">
         <div class="row g-4">
             {% for megha in meghaData %}
             {% if megha.name == "Seven Sister Falls" %}
@@ -1021,8 +1227,28 @@
             {% endif %}
             {% endfor %}
         </div>
+    </div> {% endcomment %}
+    
+    <div class="container my-4">
+        <div class="row g-4">
+            {% for megha in meghaData %}
+            {% if megha.name == "Seven Sister Falls" %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <!-- 👇 added reveal-card -->
+                <div class="card h-100 shadow-sm border-0 rounded-4 hover-effect reveal-card">
+                    <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ megha.name }}</h5>
+                        <p class="card-text">{{ megha.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
     
+
     <div class="container py-4">
         <h2 class="text-center mt-4 mb-5 px-3">
         <span class="animated-underline">Map of Seven Sister Falls</span>
@@ -1069,7 +1295,7 @@
     <h2 class="place-heading">
     <i class="fa-solid fa-circle dot-icon"></i>  Dawki River
     </h2>
-    <div class="place-section right-align">
+    <div class="place-section right-align side">
         <video class="place-video" src="{% static "imagesVideo/v6.mp4" %}" autoplay muted loop></video>
     <div class="place-text">
         <h2 class="place-heading">
@@ -1085,7 +1311,7 @@
     </div>
 
     <br><br>
-<div class="container">
+{% comment %} <div class="container">
     {% for megha in meghaData %}
     {% if megha.name == "Dawki River" %}
         {% if forloop.first or forloop.counter0|divisibleby:3 %}
@@ -1107,7 +1333,33 @@
         {% endif %}
     {% endif %}
     {% endfor %}
+</div> {% endcomment %}
+
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Dawki River" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+            <!-- 👇 added reveal-card -->
+            <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect reveal-card">
+                <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ megha.name }}</h5>
+                    <p class="card-text">{{ megha.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
 </div>
+
 
 <div class="container py-4">
     <h2 class="text-center mt-4 mb-5 px-3">
@@ -1153,22 +1405,25 @@
 
 {% comment %} Second div for 3D slider start here  {% endcomment %}
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='teal' %}
+
 <div class="gallery">
     <div class="gallery-container">
-        <img src="{% static "imagesVideo/img25.png" %}" alt="" class="gallery-item gallery-item1" data-index="1">
-        <img src="{% static "imagesVideo/img27.png" %}" alt="" class="gallery-item gallery-item2" data-index="2">
-        <img src="{% static "imagesVideo/img23.png" %}" alt="" class="gallery-item gallery-item3" data-index="3">
-        <img src="{% static "imagesVideo/img29.png" %}" alt="" class="gallery-item gallery-item4" data-index="4">
-        <img src="{% static "imagesVideo/img21.png" %}" alt="" class="gallery-item gallery-item5" data-index="5">
-        <img src="{% static "imagesVideo/img19.png" %}" alt="" class="gallery-item gallery-item6" data-index="6">
-        <img src="{% static "imagesVideo/img17.png" %}" alt="" class="gallery-item gallery-item7" data-index="7">
-        <img src="{% static "imagesVideo/img15.png" %}" alt="" class="gallery-item gallery-item8" data-index="8">
-        <img src="{% static "imagesVideo/img1.png" %}" alt="" class="gallery-item gallery-item9" data-index="9">
-        <img src="{% static "imagesVideo/img11.png" %}" alt="" class="gallery-item gallery-item10" data-index="11">
-        <img src="{% static "imagesVideo/img9.png" %}" alt="" class="gallery-item gallery-item10" data-index="12">
-        <img src="{% static "imagesVideo/img7.png" %}" alt="" class="gallery-item gallery-item10" data-index="13">
-        <img src="{% static "imagesVideo/img5.png" %}" alt="" class="gallery-item gallery-item10" data-index="14">
-        <img src="{% static "imagesVideo/img3.png" %}" alt="" class="gallery-item gallery-item10" data-index="15">
+        <img src="{% static "imagesVideo/img25.png" %}" alt="" class="gallery-item gallery-item-1" data-index="1">
+        <img src="{% static "imagesVideo/img27.png" %}" alt="" class="gallery-item gallery-item-2" data-index="2">
+        <img src="{% static "imagesVideo/img23.png" %}" alt="" class="gallery-item gallery-item-3" data-index="3">
+        <img src="{% static "imagesVideo/img29.png" %}" alt="" class="gallery-item gallery-item-4" data-index="4">
+        <img src="{% static "imagesVideo/img21.png" %}" alt="" class="gallery-item gallery-item-5" data-index="5">
+        <img src="{% static "imagesVideo/img19.png" %}" alt="" class="gallery-item" data-index="6">
+        <img src="{% static "imagesVideo/img17.png" %}" alt="" class="gallery-item" data-index="7">
+        <img src="{% static "imagesVideo/img15.png" %}" alt="" class="gallery-item" data-index="8">
+        <img src="{% static "imagesVideo/img1.png" %}" alt="" class="gallery-item" data-index="9">
+        <img src="{% static "imagesVideo/img11.png" %}" alt="" class="gallery-item" data-index="10">
+        <img src="{% static "imagesVideo/img9.png" %}" alt="" class="gallery-item" data-index="11">
+        <img src="{% static "imagesVideo/img7.png" %}" alt="" class="gallery-item" data-index="12">
+        <img src="{% static "imagesVideo/img5.png" %}" alt="" class="gallery-item" data-index="13">
+        <img src="{% static "imagesVideo/img3.png" %}" alt="" class="gallery-item" data-index="14">
     </div>
     <div class="gallery-controls"></div>
 </div>
@@ -1181,7 +1436,7 @@
     <h2 class="place-heading">
     <i class="fa-solid fa-circle dot-icon"></i>  Cathedral of Mary
     </h2>
-    <div class="place-section left-align">
+    <div class="place-section left-align side">
     <video class="place-video" src="{% static "imagesVideo/v3.mp4" %}" autoplay muted loop></video>
     <div class="place-text">
         <h2 class="place-heading">
@@ -1197,7 +1452,7 @@
 </div>
 
 <br><br>
-<div class="container">
+{% comment %} <div class="container">
     {% for megha in meghaData %}
     {% if megha.name == "Cathedral of Mary" %}
         {% if forloop.first or forloop.counter0|divisibleby:3 %}
@@ -1219,7 +1474,33 @@
         {% endif %}
     {% endif %}
     {% endfor %}
+</div> {% endcomment %}
+
+<div class="container">
+    {% for megha in meghaData %}
+    {% if megha.name == "Cathedral of Mary" %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+        <div class="row">
+        {% endif %}
+
+        <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
+            <!-- 👇 added reveal-card -->
+            <div class="card h-100 shadow-sm border-0 rounded-4 w-100 hover-effect reveal-card">
+                <img src="{{ megha.image.url }}" class="card-img-top rounded-top-4 fixed-img" alt="{{ megha.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ megha.name }}</h5>
+                    <p class="card-text">{{ megha.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+        </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
 </div>
+
 
 <div class="container py-4">
     <h2 class="text-center mt-4 mb-5 px-3">
@@ -1264,7 +1545,7 @@
 
 
 <br><br>
-
+{% comment %} 
 <h1 class="trip-heading text-center my-4 " id="planTrip">
     Plan Your Trip 
     <i class="fa-solid fa-arrow-turn-down arrow-icon"></i>
@@ -1342,6 +1623,9 @@
 
 
 
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='blue' %}
+
 <div class="three-section container my-5">
     <div class="row g-4 align-items-start">
         <!-- Regions of Meghalaya -->
@@ -1398,7 +1682,158 @@
             </div>
         </div>
     </div>
+</div> {% endcomment %}
+
+<h1 class="trip-heading text-center my-4 " id="planTrip">
+    Plan Your Trip 
+    <i class="fa-solid fa-arrow-turn-down arrow-icon"></i>
+</h1>
+
+<div class="container my-5">
+    <div class="row justify-content-center g-4">
+        <!-- IRCTC -->
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card image-card border-animated w-100 reveal-card">
+                <a href="https://example.com" target="_blank">
+                    <img src="{% static 'imagesVideo/irctc.png' %}" class="card-img-top" alt="IRCTC Logo">
+                </a>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title mb-2">IRCTC Booking</h6>
+                    <p class="card-text small">Tap to explore train bookings and services.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- REDBUS -->
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card image-card border-animated w-100 reveal-card" id="redBus">
+                <a href="https://www.redbus.in/" target="_blank">
+                    <img src="{% static 'imagesVideo/redbus.png' %}" class="card-img-top" alt="RedBus Logo">
+                </a>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title mb-2">RED-BUS</h6>
+                    <p class="card-text small">Book bus tickets easily via RedBus.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirm Ticket -->
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card image-card border-animated w-100 reveal-card" id="confirmTicket">
+                <a href="https://www.confirmtkt.com/rbooking-d/" target="_blank">
+                    <img src="{% static 'imagesVideo/confirmTic.png' %}" class="card-img-top" alt="ConfirmTkt Logo">
+                </a>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title mb-2">Confirm Ticket</h6>
+                    <p class="card-text small">Check PNR & book tickets quickly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEGO -->
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card image-card border-animated w-100 reveal-card" id="wego">
+                <a href="https://www.wego.co.in/" target="_blank">
+                    <img src="{% static 'imagesVideo/Wego.png' %}" class="card-img-top" alt="Wego Logo">
+                </a>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title mb-2">WEGO</h6>
+                    <p class="card-text small">Search and compare flight options.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paytm Flights -->
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card image-card border-animated w-100 reveal-card" id="paytemFlight">
+                <a href="https://tickets.paytm.com/flights/" target="_blank">
+                    <img src="{% static 'imagesVideo/paytemF.png' %}" class="card-img-top" alt="Paytm Flights Logo">
+                </a>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title mb-2">PAYTM FLIGHT</h6>
+                    <p class="card-text small">Affordable flight booking made simple.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Local Transport -->
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card image-card border-animated w-100 reveal-card" id="localTransport" style="background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 180, 219, 0.1)); border: 2px solid rgba(0, 255, 213, 0.4);">
+                <a href="{% url 'vehicle_list' %}">
+                    <div style="height: 140px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0a1628, #1a3a5c);">
+                        <i class="fas fa-car-side" style="font-size: 4rem; color: #00ffd5;"></i>
+                    </div>
+                </a>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title mb-2" style="color: #00ffd5;">LOCAL TRANSPORT</h6>
+                    <p class="card-text small">Book Rickshaw, Taxi, Car, Bus & Bike locally.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='blue' %}
+
+<div class="three-section container my-5">
+    <div class="row g-4 align-items-stretch">
+        <!-- Regions of Meghalaya -->
+        <div class="col-md-4">
+            <div class="three-sec-div reveal-card">
+                <h2 class="section-title">Regions Of Meghalaya</h2>
+                <ul class="styled-list">
+                    {% for region in regionName %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'regionOfMeghalay' region.name %}">
+                                {{ region.name }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="dropdown-item text-muted">No places found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Travelling Around -->
+        <div class="col-md-4">
+            <div class="three-sec-div reveal-card">
+                <h2 class="section-title">Travelling Around</h2>
+                <ul class="styled-list">
+                    {% for treval in trevalPlace %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'trevalAroundOfMeghalaya' treval.name %}">
+                                {{ treval.name }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="dropdown-item text-muted">No places found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Festivals -->
+        <div class="col-md-4">
+            <div class="three-sec-div reveal-card">
+                <h2 class="section-title">Festivals</h2>
+                <ul class="styled-list">
+                    {% for festival in festivalnames %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'festivalsOfMeghalaya' festival.festival_name %}">
+                                {{ festival.festival_name }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="dropdown-item text-muted">No places found</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     const galleryContainer = document.querySelector('.gallery-container');
@@ -1428,39 +1863,39 @@
         }
 
         setCurrentState(direction) {
-            if (direction.className == 'gallery-controls-previous') {
-                this.carouselArray.unshift(this.carouselArray.pop());  // Move last to front
+            if (direction.className.includes('gallery-controls-previous')) {
+                this.carouselArray.unshift(this.carouselArray.pop());
             } else {
-                this.carouselArray.push(this.carouselArray.shift());   // Move first to end
+                this.carouselArray.push(this.carouselArray.shift());
             }
-            this.updateGallery();  // Refresh classes
+            this.updateGallery();
         }
 
         setControls() {
             this.carouselControls.forEach(control => {
-                galleryControlsContainer.appendChild(document.createElement('button')).className = `gallery-controls-${control}`;
-                document.querySelector(`.gallery-controls-${control}`).innerText = control;
+                const btn = document.createElement('button');
+                btn.className = `gallery-controls-${control}`;
+                btn.innerHTML = control === 'previous' 
+                    ? '<i class="fas fa-chevron-left"></i>' 
+                    : '<i class="fas fa-chevron-right"></i>';
+                galleryControlsContainer.appendChild(btn);
             });
         }
         
         useControls() {
-            const triggers = [...galleryControlsContainer.childNodes];  // Get all button nodes
-        
+            const triggers = [...galleryControlsContainer.childNodes];
             triggers.forEach(control => {
                 control.addEventListener('click', e => {
-                    e.preventDefault();                        // Prevent default action
-                    this.setCurrentState(control);             // Change carousel state
+                    e.preventDefault();
+                    this.setCurrentState(control);
                 });
             });
         }
-    
-}
+    }
 
     const exampleCarousel = new Carousel(galleryContainer, galleryItems, galleryControls);
-
-    exampleCarousel.setControls();   // Dynamically create navigation buttons
-    exampleCarousel.useControls();   // Attach functionality (click events) to them
-
+    exampleCarousel.setControls();
+    exampleCarousel.useControls();
 </script>
 
 {% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Vehicles{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">Vehicles</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Vehicles</h1>
+    <p class="page-subtitle">Manage all registered vehicles and their verification status.</p>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <div class="card-header">
+        <h2 class="card-title">All Vehicles ({{ vehicles.count }})</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Category</th>
+                    <th>Number</th>
+                    <th>Owner</th>
+                    <th>Price/km</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td><strong>{{ vehicle.vehicle_name }}</strong></td>
+                    <td>{{ vehicle.get_category_display }}</td>
+                    <td>{{ vehicle.vehicle_number }}</td>
+                    <td>{{ vehicle.owner.business_name }}</td>
+                    <td>₹{{ vehicle.price_per_km }}</td>
+                    <td>
+                        {% if vehicle.is_verified %}
+                        <span class="status-badge status-success">Verified</span>
+                        {% else %}
+                        <span class="status-badge status-warning">Pending</span>
+                        {% endif %}
+                        {% if vehicle.is_available %}
+                        <span class="status-badge status-info">Available</span>
+                        {% else %}
+                        <span class="status-badge status-danger">Unavailable</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            {% if not vehicle.is_verified %}
+                            <a href="{% url 'dashboard_vehicle_verify' vehicle.pk %}?action=verify" class="action-btn nm-button" title="Verify" style="color: #28a745;">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'dashboard_vehicle_verify' vehicle.pk %}?action=unverify" class="action-btn nm-button" title="Unverify" style="color: #ffc107;">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted);">No vehicles registered yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

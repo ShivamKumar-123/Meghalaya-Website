@@ -1,0 +1,124 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Booking {{ booking.booking_id }}{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<a href="{% url 'dashboard_bookings' %}" class="breadcrumb-link">Bookings</a>
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">{{ booking.booking_id }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Booking Details</h1>
+    <p class="page-subtitle">Booking ID: {{ booking.booking_id }}</p>
+</div>
+
+<div class="cards-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Trip Information</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Vehicle:</strong> {{ booking.vehicle.vehicle_name }} ({{ booking.vehicle.get_category_display }})</p>
+            <p><strong>Vehicle Number:</strong> {{ booking.vehicle.vehicle_number }}</p>
+            <p><strong>Owner:</strong> {{ booking.vehicle.owner.business_name }}</p>
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <p><strong>Pickup:</strong> {{ booking.pickup_location }}</p>
+            <p><strong>Destination:</strong> {{ booking.destination }}</p>
+            <p><strong>Date:</strong> {{ booking.pickup_date }}</p>
+            <p><strong>Time:</strong> {{ booking.pickup_time }}</p>
+            {% if booking.return_trip %}
+            <p><strong>Return Date:</strong> {{ booking.return_date }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Customer Information</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Name:</strong> {{ booking.passenger_name }}</p>
+            <p><strong>Phone:</strong> {{ booking.passenger_phone }}</p>
+            <p><strong>Email:</strong> {{ booking.passenger_email|default:"Not provided" }}</p>
+            <p><strong>Passengers:</strong> {{ booking.number_of_passengers }}</p>
+            {% if booking.special_requests %}
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <p><strong>Special Requests:</strong></p>
+            <p>{{ booking.special_requests }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Payment & Status</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Total Amount:</strong> <span style="font-size: 1.5rem; color: var(--accent-primary);">₹{{ booking.total_amount }}</span></p>
+            <p><strong>Booking Status:</strong> 
+                {% if booking.booking_status == 'pending' %}
+                <span class="status-badge status-warning">Pending</span>
+                {% elif booking.booking_status == 'confirmed' %}
+                <span class="status-badge status-success">Confirmed</span>
+                {% elif booking.booking_status == 'completed' %}
+                <span class="status-badge status-info">Completed</span>
+                {% elif booking.booking_status == 'cancelled' %}
+                <span class="status-badge status-danger">Cancelled</span>
+                {% endif %}
+            </p>
+            <p><strong>Payment Status:</strong> 
+                {% if booking.payment_status == 'pending' %}
+                <span class="status-badge status-warning">Pending</span>
+                {% elif booking.payment_status == 'submitted' %}
+                <span class="status-badge status-info">Submitted</span>
+                {% elif booking.payment_status == 'verified' %}
+                <span class="status-badge status-success">Verified</span>
+                {% elif booking.payment_status == 'failed' %}
+                <span class="status-badge status-danger">Failed</span>
+                {% endif %}
+            </p>
+            {% if booking.payment_screenshot %}
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <p><strong>Payment Screenshot:</strong></p>
+            <img src="{{ booking.payment_screenshot.url }}" alt="Payment Screenshot" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Actions</h2>
+        </div>
+        <div style="padding: 20px;">
+            <form method="post">
+                {% csrf_token %}
+                {% if booking.booking_status == 'pending' %}
+                <button type="submit" name="action" value="confirm" class="btn-primary" style="margin-right: 10px;">
+                    <i class="fas fa-check"></i> Confirm Booking
+                </button>
+                <button type="submit" name="action" value="cancel" class="btn-secondary" style="background: #dc3545; border-color: #dc3545;">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+                {% elif booking.booking_status == 'confirmed' %}
+                <p style="color: var(--text-muted);">This booking is confirmed. The vehicle owner will manage the trip.</p>
+                {% elif booking.booking_status == 'completed' %}
+                <p style="color: var(--success-color);">This booking has been completed.</p>
+                {% elif booking.booking_status == 'cancelled' %}
+                <p style="color: var(--danger-color);">This booking was cancelled.</p>
+                {% endif %}
+            </form>
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <a href="{% url 'dashboard_bookings' %}" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Bookings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

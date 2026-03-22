@@ -1,0 +1,314 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Payment - {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+<style>
+    .payment-container {
+        background: linear-gradient(180deg, #0a1628 0%, #0d1f35 100%);
+        min-height: 100vh;
+        padding: 100px 20px 40px 20px;
+    }
+    
+    .payment-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    .payment-header {
+        background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 180, 219, 0.1));
+        padding: 25px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .payment-header h1 {
+        color: #00ffd5;
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .booking-id {
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .payment-body {
+        padding: 30px;
+    }
+    
+    .booking-summary {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .summary-row:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-row span:first-child {
+        color: #a0a0a0;
+    }
+    
+    .summary-row span:last-child {
+        color: #fff;
+        font-weight: 500;
+    }
+    
+    .total-row {
+        background: rgba(0, 255, 213, 0.1);
+        margin: 15px -20px -20px;
+        padding: 15px 20px;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .total-row span:first-child {
+        color: #fff;
+        font-weight: 600;
+    }
+    
+    .total-row span:last-child {
+        color: #00ffd5;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .qr-section {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    
+    .qr-section h3 {
+        color: #00ffd5;
+        margin-bottom: 15px;
+    }
+    
+    .qr-code-box {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    
+    .qr-code-box img {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+    }
+    
+    .qr-placeholder {
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .upi-id {
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .upi-id strong {
+        color: #00ffd5;
+    }
+    
+    .payment-instructions {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .payment-instructions h4 {
+        color: #ffc107;
+        margin-bottom: 10px;
+    }
+    
+    .payment-instructions ol {
+        color: #a0a0a0;
+        padding-left: 20px;
+        margin: 0;
+    }
+    
+    .payment-instructions li {
+        margin-bottom: 8px;
+    }
+    
+    .upload-section {
+        margin-bottom: 25px;
+    }
+    
+    .upload-section h3 {
+        color: #00ffd5;
+        margin-bottom: 15px;
+    }
+    
+    .upload-box {
+        border: 2px dashed rgba(0, 255, 213, 0.3);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-box:hover {
+        border-color: #00ffd5;
+        background: rgba(0, 255, 213, 0.05);
+    }
+    
+    .upload-box i {
+        font-size: 3rem;
+        color: #00ffd5;
+        margin-bottom: 15px;
+    }
+    
+    .upload-box p {
+        color: #a0a0a0;
+        margin-bottom: 15px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1rem;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 255, 213, 0.4);
+    }
+    
+    .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    @media (max-width: 768px) {
+        .payment-card {
+            margin: 0 10px;
+        }
+        
+        .qr-code-box img,
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+        }
+    }
+</style>
+
+<div class="payment-container">
+    <div class="payment-card">
+        <div class="payment-header">
+            <h1><i class="fas fa-credit-card"></i> Complete Payment</h1>
+            <p class="booking-id">Booking ID: {{ booking.booking_id }}</p>
+        </div>
+        
+        <div class="payment-body">
+            <div class="booking-summary">
+                <div class="summary-row">
+                    <span>Vehicle</span>
+                    <span>{{ booking.vehicle.vehicle_name }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Route</span>
+                    <span>{{ booking.pickup_location }} → {{ booking.destination }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Date & Time</span>
+                    <span>{{ booking.pickup_date }} at {{ booking.pickup_time }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Passengers</span>
+                    <span>{{ booking.number_of_passengers }}</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total Amount</span>
+                    <span>₹{{ booking.total_amount }}</span>
+                </div>
+            </div>
+            
+            <div class="qr-section">
+                <h3><i class="fas fa-qrcode"></i> Scan to Pay</h3>
+                <div class="qr-code-box">
+                    {% if booking.vehicle.owner.qr_code %}
+                    <img src="{{ booking.vehicle.owner.qr_code.url }}" alt="Payment QR Code">
+                    {% else %}
+                    <div class="qr-placeholder">
+                        <span>QR Code not available.<br>Use UPI ID below.</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if booking.vehicle.owner.upi_id %}
+                <p class="upi-id">UPI ID: <strong>{{ booking.vehicle.owner.upi_id }}</strong></p>
+                {% endif %}
+            </div>
+            
+            <div class="payment-instructions">
+                <h4><i class="fas fa-info-circle"></i> Payment Instructions</h4>
+                <ol>
+                    <li>Scan the QR code or use the UPI ID to make payment</li>
+                    <li>Pay the exact amount: <strong>₹{{ booking.total_amount }}</strong></li>
+                    <li>Take a screenshot of the payment confirmation</li>
+                    <li>Upload the screenshot below</li>
+                    <li>Wait for the vehicle owner to confirm your booking</li>
+                </ol>
+            </div>
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="upload-section">
+                    <h3><i class="fas fa-upload"></i> Upload Payment Screenshot</h3>
+                    <div class="upload-box">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Select your payment screenshot</p>
+                        {{ form.payment_screenshot }}
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-check-circle"></i> Submit Payment Proof
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

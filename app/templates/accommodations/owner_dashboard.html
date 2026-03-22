@@ -1,0 +1,470 @@
+{% extends 'accommodations/acc_owner_base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block content %}
+<style>
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .stat-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: var(--border-radius);
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+    
+    .stat-icon.properties {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.2));
+        color: #8b5cf6;
+    }
+    
+    .stat-icon.pending {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2));
+        color: var(--warning);
+    }
+    
+    .stat-icon.confirmed {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+        color: var(--success);
+    }
+    
+    .stat-icon.checkedin {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+        color: var(--info);
+    }
+    
+    .stat-content h3 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+    }
+    
+    .stat-content p {
+        font-size: 13px;
+        color: #a0aec0;
+    }
+    
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 24px;
+    }
+    
+    .section-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+    
+    .section-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .section-header h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-header h2 i {
+        color: #00ffd5;
+    }
+    
+    .section-header a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+    }
+    
+    .section-body {
+        padding: 20px 24px;
+    }
+    
+    .booking-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: var(--border-radius-sm);
+        margin-bottom: 12px;
+    }
+    
+    .booking-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .booking-info h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 4px;
+    }
+    
+    .booking-info p {
+        font-size: 12px;
+        color: #a0aec0;
+    }
+    
+    .booking-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    
+    .booking-status.pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+    }
+    
+    .booking-status.confirmed {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+    }
+    
+    .manage-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: var(--accent-gradient);
+        color: var(--bg-primary);
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 12px;
+        transition: var(--transition);
+    }
+    
+    .manage-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 255, 213, 0.3);
+    }
+    
+    .property-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: var(--border-radius-sm);
+        margin-bottom: 12px;
+    }
+    
+    .property-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .property-image {
+        width: 80px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .property-details h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 4px;
+    }
+    
+    .property-details p {
+        font-size: 12px;
+        color: #a0aec0;
+    }
+    
+    .add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: var(--accent-gradient);
+        color: var(--bg-primary);
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+    
+    .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 255, 213, 0.3);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #a0aec0;
+    }
+    
+    .empty-state i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+    }
+    
+    .empty-state p {
+        margin-bottom: 16px;
+    }
+    
+    .verification-alert {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(234, 88, 12, 0.1));
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: var(--border-radius);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .verification-alert i {
+        font-size: 32px;
+        color: var(--warning);
+    }
+    
+    .verification-alert-content h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--warning);
+        margin-bottom: 4px;
+    }
+    
+    .verification-alert-content p {
+        font-size: 13px;
+        color: var(--text-secondary);
+    }
+    
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+    }
+    
+    .quick-action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 20px;
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius-sm);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    
+    .quick-action-btn:hover {
+        box-shadow: var(--nm-shadow-sm);
+        transform: translateY(-2px);
+    }
+    
+    .quick-action-btn i {
+        font-size: 24px;
+        color: var(--accent-secondary);
+    }
+    
+    .quick-action-btn span {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+    
+    @media (max-width: 1200px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .stats-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+{% if not owner.is_verified %}
+<div class="verification-alert">
+    <i class="fas fa-exclamation-triangle"></i>
+    <div class="verification-alert-content">
+        <h4>Account Pending Verification</h4>
+        <p>Your account is being reviewed by our team. Your properties will be visible to users once verified.</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Stats Row -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-icon properties">
+            <i class="fas fa-building"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ accommodations.count }}</h3>
+            <p>Total Properties</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon pending">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ pending_bookings.count }}</h3>
+            <p>Pending Bookings</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon confirmed">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ confirmed_bookings.count }}</h3>
+            <p>Confirmed</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon checkedin">
+            <i class="fas fa-door-open"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ checked_in_bookings.count }}</h3>
+            <p>Checked In</p>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Grid -->
+<div class="dashboard-grid">
+    <!-- Recent Bookings -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2><i class="fas fa-calendar-alt"></i> Recent Bookings</h2>
+            <a href="{% url 'accommodation_owner_bookings' %}">View All</a>
+        </div>
+        <div class="section-body">
+            {% if pending_bookings %}
+            {% for booking in pending_bookings|slice:":5" %}
+            <div class="booking-item">
+                <div class="booking-info">
+                    <h4>{{ booking.guest_name }}</h4>
+                    <p>{{ booking.accommodation.name }} • {{ booking.check_in_date|date:"d M" }} - {{ booking.check_out_date|date:"d M" }}</p>
+                    <a href="{% url 'manage_accommodation_booking' booking.booking_id %}" class="manage-btn">
+                        <i class="fas fa-eye"></i> Manage
+                    </a>
+                </div>
+                <span class="booking-status pending">Pending</span>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-check"></i>
+                <p>No pending bookings</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- My Properties -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2><i class="fas fa-building"></i> My Properties</h2>
+            <a href="{% url 'add_accommodation' %}" class="add-btn">
+                <i class="fas fa-plus"></i> Add New
+            </a>
+        </div>
+        <div class="section-body">
+            {% if accommodations %}
+            {% for acc in accommodations|slice:":3" %}
+            <div class="property-item">
+                <div class="property-image">
+                    {% if acc.photo_1 %}
+                    <img src="{{ acc.photo_1.url }}" alt="{{ acc.name }}">
+                    {% endif %}
+                </div>
+                <div class="property-details">
+                    <h4>{{ acc.name }}</h4>
+                    <p>{{ acc.get_accommodation_type_display }} • ₹{{ acc.price_per_night }}/night</p>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-building"></i>
+                <p>No properties added yet</p>
+                <a href="{% url 'add_accommodation' %}" class="add-btn">
+                    <i class="fas fa-plus"></i> Add Property
+                </a>
+            </div>
+            {% endif %}
+            
+            <div class="quick-actions">
+                <a href="{% url 'add_accommodation' %}" class="quick-action-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Property</span>
+                </a>
+                <a href="{% url 'accommodation_owner_bookings' %}" class="quick-action-btn">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>View Bookings</span>
+                </a>
+                <a href="{% url 'accommodation_owner_profile' %}" class="quick-action-btn">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="{% url 'accommodation_list' %}" class="quick-action-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>View Website</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

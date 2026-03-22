@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}{% if place %}Edit{% else %}Add{% endif %} Place{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<a href="{% url 'dashboard_places' %}" class="breadcrumb-link">Places</a>
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">{% if place %}Edit{% else %}Add{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">{% if place %}Edit Place{% else %}Add New Place{% endif %}</h1>
+    <p class="page-subtitle">{% if place %}Update the place information{% else %}Add a new tourist place to your website{% endif %}</p>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <form method="post" enctype="multipart/form-data" data-validate>
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label class="form-label">Place Name *</label>
+                <input type="text" name="name" class="nm-input" value="{{ place.name|default:'' }}" placeholder="Enter place name" required>
+            </div>
+            
+            <div class="form-group full-width">
+                <label class="form-label">Place URL</label>
+                <input type="url" name="placeUrl" class="nm-input" value="{{ place.placeUrl|default:'' }}" placeholder="https://example.com">
+                <span class="form-hint">Optional: Link to the official website or more information</span>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                {% if place %}Update Place{% else %}Save Place{% endif %}
+            </button>
+            <a href="{% url 'dashboard_places' %}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

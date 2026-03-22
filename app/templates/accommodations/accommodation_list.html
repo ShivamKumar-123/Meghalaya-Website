@@ -1,0 +1,508 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Accommodations - Hotels, Hostels & Guest Houses{% endblock %}
+
+{% block content %}
+<style>
+    .accommodation-hero {
+        background: transparent;
+        padding: 40px 20px 40px 20px;
+        margin-top: 80px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .accommodation-hero h1 {
+        color: #00ffd5;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .accommodation-hero p {
+        color: #e0e0e0;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .category-filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 30px 20px;
+        background: rgba(10, 22, 40, 0.7);
+        backdrop-filter: blur(10px);
+    }
+    
+    .category-btn {
+        padding: 12px 25px;
+        border: 2px solid rgba(0, 255, 213, 0.3);
+        background: rgba(0, 255, 213, 0.1);
+        color: #00ffd5;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .category-btn:hover, .category-btn.active {
+        background: rgba(0, 255, 213, 0.3);
+        border-color: #00ffd5;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.3);
+        color: #fff;
+    }
+    
+    .category-btn i {
+        margin-right: 8px;
+    }
+    
+    .accommodations-container {
+        background: transparent;
+        padding: 40px 20px;
+        min-height: 60vh;
+        position: relative;
+    }
+    
+    .filter-section {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .filter-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .filter-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .filter-group select,
+    .filter-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #fff;
+        color: #1e293b;
+    }
+    
+    .filter-group select,
+    .filter-group input::placeholder {
+        color: #64748b;
+    }
+    
+    .filter-group select:focus,
+    .filter-group input:focus {
+        outline: none;
+        border-color: #00ffd5;
+        box-shadow: 0 0 0 3px rgba(0, 255, 213, 0.1);
+    }
+    
+    .filter-group select option {
+        background: #fff;
+        color: #1e293b;
+    }
+    
+    .filter-btn {
+        padding: 12px 32px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 255, 213, 0.4);
+    }
+    
+    .accommodations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .accommodation-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    
+    .accommodation-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(0, 255, 213, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 255, 213, 0.15);
+    }
+    
+    .accommodation-image {
+        height: 200px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .accommodation-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    
+    .accommodation-card:hover .accommodation-image img {
+        transform: scale(1.1);
+    }
+    
+    .accommodation-badges {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        display: flex;
+        gap: 8px;
+    }
+    
+    .badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .badge.type {
+        background: rgba(0, 255, 213, 0.9);
+        color: #0a1628;
+    }
+    
+    .badge.featured {
+        background: rgba(245, 158, 11, 0.9);
+        color: #fff;
+    }
+    
+    .accommodation-content {
+        padding: 20px;
+    }
+    
+    .accommodation-content h3 {
+        color: #fff;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .accommodation-location {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #a0aec0;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .accommodation-location i {
+        color: #00ffd5;
+    }
+    
+    .accommodation-amenities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .amenity {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        background: rgba(0, 255, 213, 0.1);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 20px;
+        font-size: 12px;
+        color: #a0aec0;
+    }
+    
+    .amenity i {
+        color: #00ffd5;
+        font-size: 10px;
+    }
+    
+    .accommodation-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .accommodation-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    .accommodation-price span {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #a0aec0;
+    }
+    
+    .view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        color: rgba(0, 255, 213, 0.3);
+        margin-bottom: 24px;
+    }
+    
+    .empty-state h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+    
+    .empty-state p {
+        color: #a0aec0;
+    }
+    
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 12px;
+    }
+    
+    .rating i {
+        color: #fbbf24;
+        font-size: 14px;
+    }
+    
+    .rating span {
+        font-size: 14px;
+        color: #a0aec0;
+    }
+    
+    @media (max-width: 768px) {
+        .accommodation-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .filter-row {
+            flex-direction: column;
+        }
+        
+        .filter-group {
+            width: 100%;
+        }
+        
+        .accommodations-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .category-filters {
+            gap: 10px;
+        }
+        
+        .category-btn {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<div class="accommodation-hero">
+    <div class="container">
+        <h1><i class="fas fa-hotel"></i> Find Your Perfect Stay</h1>
+        <p>Discover hotels, hostels, guest houses and more in Meghalaya</p>
+    </div>
+</div>
+
+<!-- Category Filters -->
+<div class="category-filters">
+    <a href="{% url 'accommodation_list' %}" class="category-btn {% if not selected_type %}active{% endif %}">
+        <i class="fas fa-th-large"></i> All
+    </a>
+    <a href="{% url 'accommodation_list' %}?type=hotel" class="category-btn {% if selected_type == 'hotel' %}active{% endif %}">
+        <i class="fas fa-hotel"></i> Hotels
+    </a>
+    <a href="{% url 'accommodation_list' %}?type=resort" class="category-btn {% if selected_type == 'resort' %}active{% endif %}">
+        <i class="fas fa-umbrella-beach"></i> Resorts
+    </a>
+    <a href="{% url 'accommodation_list' %}?type=guest_house" class="category-btn {% if selected_type == 'guest_house' %}active{% endif %}">
+        <i class="fas fa-home"></i> Guest Houses
+    </a>
+    <a href="{% url 'accommodation_list' %}?type=hostel" class="category-btn {% if selected_type == 'hostel' %}active{% endif %}">
+        <i class="fas fa-bed"></i> Hostels
+    </a>
+    <a href="{% url 'accommodation_list' %}?type=homestay" class="category-btn {% if selected_type == 'homestay' %}active{% endif %}">
+        <i class="fas fa-house-user"></i> Homestays
+    </a>
+</div>
+
+<div class="accommodations-container">
+    <!-- Filters -->
+    <div class="filter-section">
+        <form method="GET" action="{% url 'accommodation_list' %}">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Accommodation Type</label>
+                    <select name="type">
+                        <option value="">All Types</option>
+                        {% for value, label in accommodation_types %}
+                        <option value="{{ value }}" {% if selected_type == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>City</label>
+                    <select name="city">
+                        <option value="">All Cities</option>
+                        {% for city in cities %}
+                        <option value="{{ city }}" {% if selected_city == city %}selected{% endif %}>{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Min Price (₹)</label>
+                    <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}">
+                </div>
+                <div class="filter-group">
+                    <label>Max Price (₹)</label>
+                    <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}">
+                </div>
+                <button type="submit" class="filter-btn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Accommodations Grid -->
+    {% if accommodations %}
+    <div class="accommodations-grid">
+        {% for acc in accommodations %}
+        <div class="accommodation-card">
+            <div class="accommodation-image">
+                {% if acc.photo_1 %}
+                <img src="{{ acc.photo_1.url }}" alt="{{ acc.name }}">
+                {% else %}
+                <img src="{% static 'images/placeholder-hotel.jpg' %}" alt="{{ acc.name }}">
+                {% endif %}
+                <div class="accommodation-badges">
+                    <span class="badge type">{{ acc.get_accommodation_type_display }}</span>
+                    {% if acc.is_featured %}
+                    <span class="badge featured"><i class="fas fa-star"></i> Featured</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="accommodation-content">
+                <h3>{{ acc.name }}</h3>
+                <div class="accommodation-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ acc.city }}{% if acc.landmark %}, {{ acc.landmark }}{% endif %}
+                </div>
+                
+                {% if acc.rating > 0 %}
+                <div class="rating">
+                    {% for i in "12345" %}
+                    {% if forloop.counter <= acc.rating %}
+                    <i class="fas fa-star"></i>
+                    {% else %}
+                    <i class="far fa-star"></i>
+                    {% endif %}
+                    {% endfor %}
+                    <span>({{ acc.total_reviews }} reviews)</span>
+                </div>
+                {% endif %}
+                
+                <div class="accommodation-amenities">
+                    {% if acc.wifi_available %}<span class="amenity"><i class="fas fa-wifi"></i> WiFi</span>{% endif %}
+                    {% if acc.ac_available %}<span class="amenity"><i class="fas fa-snowflake"></i> AC</span>{% endif %}
+                    {% if acc.parking_available %}<span class="amenity"><i class="fas fa-parking"></i> Parking</span>{% endif %}
+                    {% if acc.restaurant_available %}<span class="amenity"><i class="fas fa-utensils"></i> Restaurant</span>{% endif %}
+                    {% if acc.hot_water %}<span class="amenity"><i class="fas fa-hot-tub"></i> Hot Water</span>{% endif %}
+                </div>
+                
+                <div class="accommodation-footer">
+                    <div class="accommodation-price">
+                        ₹{{ acc.price_per_night }} <span>/ night</span>
+                    </div>
+                    <a href="{% url 'accommodation_detail' acc.pk %}" class="view-btn">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-bed"></i>
+        <h3>No Accommodations Found</h3>
+        <p>Try adjusting your filters or check back later.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

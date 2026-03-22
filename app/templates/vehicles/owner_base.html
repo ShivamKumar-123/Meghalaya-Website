@@ -1,0 +1,579 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Owner Dashboard{% endblock %} | Meghalaya</title>
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=satoshi@400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Owner Dashboard Specific Styles */
+        .owner-badge {
+            background: var(--accent-gradient);
+            color: #0a1628;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .verification-badge.verified {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+        
+        .verification-badge.pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        
+        .owner-profile-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--nm-shadow-sm);
+        }
+        
+        .owner-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0a1628;
+            font-size: 18px;
+        }
+        
+        .owner-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .owner-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* Fix sidebar scrolling */
+        .sidebar .sidebar-inner {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .sidebar .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+        
+        /* Scrollbar styling */
+        .sidebar .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .sidebar .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 213, 0.3);
+            border-radius: 4px;
+        }
+        
+        .sidebar .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 213, 0.5);
+        }
+        
+        /* Make owner profile card smaller */
+        .owner-profile-card {
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .owner-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+        }
+        
+        .owner-info h4 {
+            font-size: 13px;
+        }
+        
+        .owner-info p {
+            font-size: 11px;
+        }
+        
+        .verification-badge {
+            padding: 4px 8px;
+            font-size: 10px;
+        }
+        
+        /* Fix header layout and alignment */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            height: 60px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin: 16px 24px 16px 24px;
+            box-shadow: var(--nm-shadow-sm);
+        }
+        
+        .header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: 100%;
+        }
+        
+        /* Owner badge styling */
+        .header .owner-badge {
+            background: var(--accent-gradient);
+            color: #0a1628;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            height: 40px;
+        }
+        
+        /* Theme toggle button */
+        .header .header-btn.theme-toggle {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            box-shadow: var(--nm-shadow-sm);
+        }
+        
+        /* Fix header profile avatar */
+        .header .profile-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            max-width: 40px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+        
+        .header .profile-avatar .avatar-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0a1628;
+            line-height: 1;
+        }
+        
+        /* Adjust main content for new header */
+        .main-content {
+            padding-top: 0;
+        }
+        
+        .content-wrapper {
+            padding: 0 24px 24px 24px;
+        }
+        
+        /* ==================== RESPONSIVE STYLES ==================== */
+        
+        /* Tablet and below */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .header {
+                margin: 12px 16px;
+                padding: 10px 16px;
+            }
+            
+            .header .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .content-wrapper {
+                padding: 0 16px 24px 16px;
+            }
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .header {
+                margin: 10px 12px;
+                padding: 8px 12px;
+                height: auto;
+                min-height: 56px;
+            }
+            
+            .header .header-right {
+                gap: 8px;
+            }
+            
+            .header .owner-badge {
+                padding: 6px 12px;
+                font-size: 9px;
+                height: 32px;
+            }
+            
+            .header .header-btn.theme-toggle {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+            
+            .header .profile-avatar {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                max-width: 32px;
+            }
+            
+            .header .profile-avatar .avatar-text {
+                font-size: 11px;
+            }
+            
+            .header .breadcrumb {
+                font-size: 12px;
+            }
+            
+            .content-wrapper {
+                padding: 0 12px 20px 12px;
+            }
+        }
+        
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            .header {
+                margin: 8px;
+                padding: 8px 10px;
+            }
+            
+            .header .owner-badge {
+                display: none;
+            }
+            
+            .header .breadcrumb-link,
+            .header .breadcrumb-separator {
+                display: none;
+            }
+            
+            .header .breadcrumb-current {
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Fixed Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-inner">
+            <!-- Logo Area -->
+            <div class="logo-container nm-flat">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" fill="url(#logoGradient)" />
+                        <defs>
+                            <linearGradient id="logoGradient" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#00ffd5"/>
+                                <stop offset="1" stop-color="#00b4db"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">Owner Panel</span>
+            </div>
+
+            <!-- Owner Profile Card -->
+            <div class="owner-profile-card">
+                <div class="owner-avatar">
+                    {% if owner.profile_photo %}
+                    <img src="{{ owner.profile_photo.url }}" alt="{{ owner.business_name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                    {{ owner.business_name|slice:":2"|upper }}
+                    {% endif %}
+                </div>
+                <div class="owner-info">
+                    <h4>{{ owner.business_name }}</h4>
+                    <p>{{ owner.user.email }}</p>
+                    {% if owner.is_verified %}
+                    <span class="verification-badge verified"><i class="fas fa-check-circle"></i> Verified</span>
+                    {% else %}
+                    <span class="verification-badge pending"><i class="fas fa-clock"></i> Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+                <a href="{% url 'owner_dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'owner_dashboard' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </div>
+                    <span>Dashboard</span>
+                </a>
+                
+                <div class="sidebar-section-title" style="padding: 16px 20px 8px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Vehicles</div>
+                
+                <a href="{% url 'owner_vehicles' %}" class="sidebar-link {% if request.resolver_match.url_name == 'owner_vehicles' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-car" style="font-size: 16px;"></i>
+                    </div>
+                    <span>My Vehicles</span>
+                </a>
+                <a href="{% url 'add_vehicle' %}" class="sidebar-link {% if request.resolver_match.url_name == 'add_vehicle' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-plus-circle" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Add Vehicle</span>
+                </a>
+                
+                <div class="sidebar-section-title" style="padding: 16px 20px 8px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Bookings</div>
+                
+                <a href="{% url 'owner_bookings' %}?status=pending" class="sidebar-link {% if request.resolver_match.url_name == 'owner_bookings' and request.GET.status == 'pending' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-clock" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Pending</span>
+                    {% if pending_count %}
+                    <span class="badge" style="background: var(--warning); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">{{ pending_count }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'owner_bookings' %}?status=confirmed" class="sidebar-link {% if request.resolver_match.url_name == 'owner_bookings' and request.GET.status == 'confirmed' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-check-circle" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Confirmed</span>
+                </a>
+                <a href="{% url 'owner_bookings' %}?status=in_progress" class="sidebar-link {% if request.resolver_match.url_name == 'owner_bookings' and request.GET.status == 'in_progress' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-route" style="font-size: 16px;"></i>
+                    </div>
+                    <span>In Progress</span>
+                </a>
+                <a href="{% url 'owner_bookings' %}?status=completed" class="sidebar-link {% if request.resolver_match.url_name == 'owner_bookings' and request.GET.status == 'completed' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-flag-checkered" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Completed</span>
+                </a>
+                <a href="{% url 'owner_bookings' %}" class="sidebar-link {% if request.resolver_match.url_name == 'owner_bookings' and not request.GET.status %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-list" style="font-size: 16px;"></i>
+                    </div>
+                    <span>All Bookings</span>
+                </a>
+                
+                <div class="sidebar-section-title" style="padding: 16px 20px 8px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Account</div>
+                
+                <a href="{% url 'owner_profile' %}" class="sidebar-link {% if request.resolver_match.url_name == 'owner_profile' %}active{% endif %}">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-user-cog" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Profile Settings</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <a href="{% url 'home' %}" class="sidebar-link">
+                    <div class="sidebar-link-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <span>View Site</span>
+                </a>
+                <form method="post" action="{% url 'logout' %}" class="sidebar-logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="sidebar-link logout-btn">
+                        <div class="sidebar-link-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                        </div>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Sticky Header -->
+        <header class="header nm-flat">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <nav class="breadcrumb">
+                    <a href="{% url 'owner_dashboard' %}" class="breadcrumb-link">Owner Dashboard</a>
+                    {% block breadcrumb %}{% endblock %}
+                </nav>
+            </div>
+            <div class="header-right">
+                <span class="owner-badge">Vehicle Owner</span>
+                <button class="header-btn nm-button theme-toggle" aria-label="Toggle theme" id="themeToggle">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <div class="profile-avatar">
+                    <span class="avatar-text">{{ owner.business_name|slice:":2"|upper }}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-wrapper">
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} cascade-in">
+                    <span>{{ message }}</span>
+                    <button class="alert-close">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    <script>
+        // Mobile sidebar toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+        }
+        
+        // Close sidebar when clicking a link (mobile)
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

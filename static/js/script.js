@@ -11,3 +11,5 @@ function getText() {
 }
 
 export { getText };
+
+

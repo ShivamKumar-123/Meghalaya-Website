@@ -1,0 +1,510 @@
+{% extends 'accommodations/acc_owner_base.html' %}
+
+{% block title %}Manage Booking {{ booking.booking_id }}{% endblock %}
+
+{% block breadcrumb %}
+<span class="breadcrumb-separator">/</span>
+<a href="{% url 'accommodation_owner_bookings' %}" class="breadcrumb-link">Bookings</a>
+<span class="breadcrumb-separator">/</span>
+<span class="breadcrumb-current">{{ booking.booking_id }}</span>
+{% endblock %}
+
+{% block content %}
+<style>
+    .booking-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 24px;
+    }
+    
+    .detail-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+    
+    .detail-header {
+        padding: 24px;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .booking-id-display {
+        font-size: 12px;
+        color: #a0aec0;
+        margin-bottom: 8px;
+    }
+    
+    .detail-header h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 16px;
+    }
+    
+    .status-row {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .status-badge.pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .status-badge.confirmed { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .status-badge.checked_in { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+    .status-badge.checked_out { background: rgba(107, 114, 128, 0.15); color: #6b7280; }
+    .status-badge.cancelled { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+    .status-badge.payment { background: rgba(0, 255, 213, 0.15); color: var(--accent-secondary); }
+    
+    .detail-body {
+        padding: 24px;
+    }
+    
+    .detail-section {
+        margin-bottom: 24px;
+    }
+    
+    .detail-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    .section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid rgba(0, 255, 213, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .section-title i {
+        color: #00ffd5;
+    }
+    
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    
+    .detail-item {
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: var(--border-radius-sm);
+    }
+    
+    .detail-item .label {
+        font-size: 11px;
+        color: #a0aec0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+    
+    .detail-item .value {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .property-info {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: var(--border-radius-sm);
+    }
+    
+    .property-image {
+        width: 80px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .property-details h4 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 4px;
+    }
+    
+    .property-details p {
+        font-size: 13px;
+        color: #a0aec0;
+    }
+    
+    /* Action Card */
+    .action-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: var(--border-radius);
+        padding: 24px;
+    }
+    
+    .action-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+    
+    .payment-summary {
+        margin-bottom: 24px;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .summary-row:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-row .label {
+        color: #a0aec0;
+        font-size: 14px;
+    }
+    
+    .summary-row .value {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+        margin-top: 8px;
+        border-top: 2px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .summary-total .label {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .summary-total .value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    .payment-screenshot {
+        margin: 20px 0;
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: var(--border-radius-sm);
+    }
+    
+    .payment-screenshot h4 {
+        font-size: 13px;
+        color: #a0aec0;
+        margin-bottom: 12px;
+    }
+    
+    .payment-screenshot img {
+        width: 100%;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .action-form {
+        margin-top: 24px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #a0aec0;
+        margin-bottom: 8px;
+    }
+    
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(0, 255, 213, 0.3);
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        resize: vertical;
+        min-height: 80px;
+        background: rgba(10, 22, 40, 0.8);
+        color: #fff;
+    }
+    
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #00ffd5;
+    }
+    
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .action-btn.confirm {
+        background: var(--accent-gradient);
+        color: var(--bg-primary);
+    }
+    
+    .action-btn.checkin {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: #fff;
+    }
+    
+    .action-btn.checkout {
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        color: #fff;
+    }
+    
+    .action-btn.cancel {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .action-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    @media (max-width: 992px) {
+        .booking-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="booking-detail-grid">
+    <div class="detail-card">
+        <div class="detail-header">
+            <div class="booking-id-display">Booking ID: {{ booking.booking_id }}</div>
+            <h2>{{ booking.guest_name }}</h2>
+            <div class="status-row">
+                <span class="status-badge {{ booking.booking_status }}">
+                    <i class="fas fa-{% if booking.booking_status == 'pending' %}clock{% elif booking.booking_status == 'confirmed' %}check-circle{% elif booking.booking_status == 'checked_in' %}door-open{% elif booking.booking_status == 'checked_out' %}door-closed{% else %}times-circle{% endif %}"></i>
+                    {{ booking.get_booking_status_display }}
+                </span>
+                <span class="status-badge payment">
+                    <i class="fas fa-credit-card"></i>
+                    {{ booking.get_payment_status_display }}
+                </span>
+            </div>
+        </div>
+        
+        <div class="detail-body">
+            <div class="detail-section">
+                <h3 class="section-title"><i class="fas fa-building"></i> Property</h3>
+                <div class="property-info">
+                    {% if booking.accommodation.photo_1 %}
+                    <div class="property-image">
+                        <img src="{{ booking.accommodation.photo_1.url }}" alt="">
+                    </div>
+                    {% endif %}
+                    <div class="property-details">
+                        <h4>{{ booking.accommodation.name }}</h4>
+                        <p>{{ booking.accommodation.get_accommodation_type_display }}</p>
+                        <p>{{ booking.accommodation.city }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h3 class="section-title"><i class="fas fa-calendar-alt"></i> Stay Details</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="label">Check-in</div>
+                        <div class="value">{{ booking.check_in_date|date:"d M, Y" }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Check-out</div>
+                        <div class="value">{{ booking.check_out_date|date:"d M, Y" }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Nights</div>
+                        <div class="value">{{ booking.number_of_nights }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Rooms</div>
+                        <div class="value">{{ booking.number_of_rooms }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Guests</div>
+                        <div class="value">{{ booking.number_of_guests }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Room Type</div>
+                        <div class="value">{{ booking.accommodation.get_room_type_display }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h3 class="section-title"><i class="fas fa-user"></i> Guest Information</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="label">Name</div>
+                        <div class="value">{{ booking.guest_name }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Phone</div>
+                        <div class="value">{{ booking.guest_phone }}</div>
+                    </div>
+                    {% if booking.guest_email %}
+                    <div class="detail-item">
+                        <div class="label">Email</div>
+                        <div class="value">{{ booking.guest_email }}</div>
+                    </div>
+                    {% endif %}
+                    {% if booking.guest_id_type %}
+                    <div class="detail-item">
+                        <div class="label">ID Type</div>
+                        <div class="value">{{ booking.guest_id_type }}</div>
+                    </div>
+                    {% endif %}
+                    {% if booking.guest_id_number %}
+                    <div class="detail-item">
+                        <div class="label">ID Number</div>
+                        <div class="value">{{ booking.guest_id_number }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if booking.special_requests %}
+            <div class="detail-section">
+                <h3 class="section-title"><i class="fas fa-comment-alt"></i> Special Requests</h3>
+                <p style="color: var(--text-secondary); padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius-sm);">
+                    {{ booking.special_requests }}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="action-card">
+        <h3><i class="fas fa-tasks"></i> Actions</h3>
+        
+        <div class="payment-summary">
+            <div class="summary-row">
+                <span class="label">Room Charges</span>
+                <span class="value">₹{{ booking.room_charges }}</span>
+            </div>
+            {% if booking.extra_charges > 0 %}
+            <div class="summary-row">
+                <span class="label">Extra Charges</span>
+                <span class="value">₹{{ booking.extra_charges }}</span>
+            </div>
+            {% endif %}
+            <div class="summary-total">
+                <span class="label">Total</span>
+                <span class="value">₹{{ booking.total_amount }}</span>
+            </div>
+        </div>
+        
+        {% if booking.payment_screenshot %}
+        <div class="payment-screenshot">
+            <h4><i class="fas fa-receipt"></i> Payment Screenshot</h4>
+            <a href="{{ booking.payment_screenshot.url }}" target="_blank">
+                <img src="{{ booking.payment_screenshot.url }}" alt="Payment Screenshot">
+            </a>
+        </div>
+        {% endif %}
+        
+        <form method="POST" class="action-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Remarks (Optional)</label>
+                <textarea name="remarks" placeholder="Add any notes or remarks...">{{ booking.owner_remarks }}</textarea>
+            </div>
+            
+            <div class="action-buttons">
+                {% if booking.booking_status == 'pending' and booking.payment_status == 'submitted' %}
+                <button type="submit" name="action" value="confirm" class="action-btn confirm">
+                    <i class="fas fa-check-circle"></i> Confirm Booking
+                </button>
+                {% endif %}
+                
+                {% if booking.booking_status == 'confirmed' %}
+                <button type="submit" name="action" value="check_in" class="action-btn checkin">
+                    <i class="fas fa-door-open"></i> Check In Guest
+                </button>
+                {% endif %}
+                
+                {% if booking.booking_status == 'checked_in' %}
+                <button type="submit" name="action" value="check_out" class="action-btn checkout">
+                    <i class="fas fa-door-closed"></i> Check Out Guest
+                </button>
+                {% endif %}
+                
+                {% if booking.booking_status != 'cancelled' and booking.booking_status != 'checked_out' %}
+                <button type="submit" name="action" value="cancel" class="action-btn cancel">
+                    <i class="fas fa-times-circle"></i> Cancel Booking
+                </button>
+                {% endif %}
+                
+                {% if booking.booking_status == 'confirmed' %}
+                <button type="submit" name="action" value="no_show" class="action-btn cancel">
+                    <i class="fas fa-user-slash"></i> Mark as No-Show
+                </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

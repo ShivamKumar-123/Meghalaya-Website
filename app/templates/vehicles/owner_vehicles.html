@@ -1,0 +1,364 @@
+{% extends 'vehicles/owner_base.html' %}
+
+{% block title %}My Vehicles{% endblock %}
+
+{% block breadcrumb %}
+<span class="breadcrumb-separator">/</span>
+<span class="breadcrumb-current">My Vehicles</span>
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    
+    .add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: var(--accent-gradient);
+        color: #0a1628;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+    
+    .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+    }
+    
+    .vehicles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 24px;
+    }
+    
+    .vehicle-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+    
+    .vehicle-card:hover {
+        transform: translateY(-4px);
+    }
+    
+    .vehicle-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .vehicle-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .vehicle-image .no-image {
+        width: 100%;
+        height: 100%;
+        background: var(--bg-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 48px;
+    }
+    
+    .vehicle-badges {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    
+    .badge.available {
+        background: rgba(16, 185, 129, 0.9);
+        color: #fff;
+    }
+    
+    .badge.unavailable {
+        background: rgba(239, 68, 68, 0.9);
+        color: #fff;
+    }
+    
+    .badge.pending {
+        background: rgba(245, 158, 11, 0.9);
+        color: #fff;
+    }
+    
+    .badge.verified {
+        background: rgba(59, 130, 246, 0.9);
+        color: #fff;
+    }
+    
+    .vehicle-content {
+        padding: 20px;
+    }
+    
+    .vehicle-content h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+    
+    .vehicle-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .vehicle-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--text-secondary);
+    }
+    
+    .vehicle-meta span i {
+        color: var(--accent-primary);
+    }
+    
+    .vehicle-price {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--accent-primary);
+        margin-bottom: 16px;
+    }
+    
+    .vehicle-price span {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-muted);
+    }
+    
+    .vehicle-actions {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .action-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+        border-radius: var(--border-radius-sm);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+    
+    .action-btn.edit {
+        background: rgba(0, 255, 213, 0.1);
+        color: var(--accent-primary);
+    }
+    
+    .action-btn.edit:hover {
+        background: rgba(0, 255, 213, 0.2);
+    }
+    
+    .action-btn.delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+    }
+    
+    .action-btn.delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        color: var(--text-muted);
+        opacity: 0.3;
+        margin-bottom: 24px;
+    }
+    
+    .empty-state h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+    
+    .empty-state p {
+        color: var(--text-muted);
+        margin-bottom: 24px;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+        .vehicles-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .page-header h1 {
+            font-size: 20px;
+        }
+        
+        .add-btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .vehicles-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        .vehicle-image {
+            height: 160px;
+        }
+        
+        .vehicle-content {
+            padding: 16px;
+        }
+        
+        .vehicle-content h3 {
+            font-size: 16px;
+        }
+        
+        .vehicle-price {
+            font-size: 18px;
+        }
+        
+        .empty-state {
+            padding: 60px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .vehicle-meta {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .vehicle-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 10px;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1><i class="fas fa-car" style="color: var(--accent-primary); margin-right: 12px;"></i> My Vehicles</h1>
+    <a href="{% url 'add_vehicle' %}" class="add-btn">
+        <i class="fas fa-plus"></i> Add New Vehicle
+    </a>
+</div>
+
+{% if vehicles %}
+<div class="vehicles-grid">
+    {% for vehicle in vehicles %}
+    <div class="vehicle-card">
+        <div class="vehicle-image">
+            {% if vehicle.vehicle_photo_1 %}
+            <img src="{{ vehicle.vehicle_photo_1.url }}" alt="{{ vehicle.vehicle_name }}">
+            {% else %}
+            <div class="no-image">
+                <i class="fas fa-car"></i>
+            </div>
+            {% endif %}
+            <div class="vehicle-badges">
+                <span class="badge {% if vehicle.is_available %}available{% else %}unavailable{% endif %}">
+                    {% if vehicle.is_available %}Available{% else %}Unavailable{% endif %}
+                </span>
+                {% if vehicle.is_verified %}
+                <span class="badge verified"><i class="fas fa-check"></i> Verified</span>
+                {% else %}
+                <span class="badge pending"><i class="fas fa-clock"></i> Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="vehicle-content">
+            <h3>{{ vehicle.vehicle_name }}</h3>
+            <div class="vehicle-meta">
+                <span><i class="fas fa-tag"></i> {{ vehicle.get_category_display }}</span>
+                <span><i class="fas fa-id-card"></i> {{ vehicle.vehicle_number }}</span>
+                <span><i class="fas fa-users"></i> {{ vehicle.seating_capacity }} Seats</span>
+            </div>
+            <div class="vehicle-price">
+                ₹{{ vehicle.price_per_km }} <span>per km</span>
+            </div>
+            <div class="vehicle-actions">
+                <a href="{% url 'edit_vehicle' vehicle.pk %}" class="action-btn edit">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'delete_vehicle' vehicle.pk %}" class="action-btn delete">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-car"></i>
+    <h3>No Vehicles Yet</h3>
+    <p>You haven't added any vehicles. Add your first vehicle to start receiving bookings.</p>
+    <a href="{% url 'add_vehicle' %}" class="add-btn">
+        <i class="fas fa-plus"></i> Add Your First Vehicle
+    </a>
+</div>
+{% endif %}
+{% endblock %}

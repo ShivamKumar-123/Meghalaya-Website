@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}My Messages{% endblock %}
+
+{% block content %}
+
+<!-- MY MESSAGES PAGE Background Animation - Envelope & Mail -->
+<div class="bg-messages">
+    <i class="fas fa-envelope floating-envelope" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
+    <i class="fas fa-envelope floating-envelope" style="top: 30%; left: 80%; animation-delay: 2s;"></i>
+    <i class="fas fa-envelope floating-envelope" style="top: 60%; left: 20%; animation-delay: 4s;"></i>
+    <i class="fas fa-envelope floating-envelope" style="top: 80%; left: 70%; animation-delay: 1s;"></i>
+    <i class="fas fa-paper-plane floating-envelope" style="top: 20%; left: 50%; animation-delay: 3s;"></i>
+    <i class="fas fa-paper-plane floating-envelope" style="top: 50%; left: 90%; animation-delay: 5s;"></i>
+    <div class="connection-line" style="top: 25%; left: 15%; animation-delay: 0s;"></div>
+    <div class="connection-line" style="top: 45%; left: 55%; animation-delay: 1.5s;"></div>
+    <div class="connection-line" style="top: 75%; left: 35%; animation-delay: 3s;"></div>
+</div>
+
+<style>
+    .messages-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 60px 20px;
+        text-align: center;
+    }
+    
+    .messages-hero h1 {
+        color: #00ffd5;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .messages-hero p {
+        color: #a0a0a0;
+    }
+    
+    .messages-section {
+        padding: 60px 0;
+        min-height: 60vh;
+    }
+    
+    .message-card {
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0,255,213,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .message-card:hover {
+        border-color: #00ffd5;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,255,213,0.1);
+    }
+    
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .message-subject {
+        color: #00ffd5;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .message-status {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    
+    .status-unread { background: #dc3545; color: white; }
+    .status-read { background: #17a2b8; color: white; }
+    .status-replied { background: #28a745; color: white; }
+    .status-closed { background: #6c757d; color: white; }
+    
+    .message-preview {
+        color: #c0c0c0;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    
+    .message-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .message-date {
+        color: #888;
+        font-size: 0.9rem;
+    }
+    
+    .view-btn {
+        background: linear-gradient(135deg, #00ffd5, #4ecdc4);
+        color: #000;
+        padding: 8px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .view-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(0,255,213,0.3);
+        color: #000;
+    }
+    
+    .no-messages {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .no-messages i {
+        font-size: 4rem;
+        color: #444;
+        margin-bottom: 20px;
+    }
+    
+    .no-messages h3 {
+        color: #888;
+        margin-bottom: 15px;
+    }
+    
+    .no-messages a {
+        color: #00ffd5;
+    }
+</style>
+
+<section class="messages-hero">
+    <div class="container">
+        <h1><i class="fas fa-envelope me-3"></i>My Messages</h1>
+        <p>View and manage your conversations with us</p>
+    </div>
+</section>
+
+{% include 'components/wave_separator.html' with wave_type='teal' %}
+
+<section class="messages-section">
+    <div class="container">
+        {% if user_messages %}
+            {% for msg in user_messages %}
+            <div class="message-card">
+                <div class="message-header">
+                    <span class="message-subject">
+                        <i class="fas fa-tag me-2"></i>{{ msg.get_subject_display }}
+                    </span>
+                    <span class="message-status status-{{ msg.status }}">
+                        {% if msg.status == 'unread' %}
+                            <i class="fas fa-envelope me-1"></i>Pending
+                        {% elif msg.status == 'read' %}
+                            <i class="fas fa-envelope-open me-1"></i>Seen
+                        {% elif msg.status == 'replied' %}
+                            <i class="fas fa-reply me-1"></i>Replied
+                        {% else %}
+                            <i class="fas fa-check-circle me-1"></i>Closed
+                        {% endif %}
+                    </span>
+                </div>
+                <p class="message-preview">{{ msg.message|truncatewords:30 }}</p>
+                <div class="message-meta">
+                    <span class="message-date">
+                        <i class="fas fa-clock me-1"></i>{{ msg.created_at|date:"M d, Y H:i" }}
+                        {% if msg.replies.count > 0 %}
+                            <span class="ms-3"><i class="fas fa-comments me-1"></i>{{ msg.replies.count }} replies</span>
+                        {% endif %}
+                    </span>
+                    <a href="{% url 'message_reply' msg.pk %}" class="view-btn">
+                        <i class="fas fa-eye me-1"></i>View Conversation
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-messages">
+                <i class="fas fa-inbox"></i>
+                <h3>No messages yet</h3>
+                <p>You haven't sent any messages. <a href="{% url 'contact' %}">Contact us</a> to start a conversation.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,481 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+
+<!-- ABOUT PAGE Background Animation - Geometric Shapes -->
+<div class="bg-about">
+    <div class="geometric-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+    <div class="wave-lines"></div>
+</div>
+
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(30,60,114,0.8) 100%), 
+                    url('{% static "imagesVideo/img1.png" %}') center/cover no-repeat;
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .about-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #00ffd5;
+        text-shadow: 0 0 30px rgba(0,255,213,0.5);
+        margin-bottom: 20px;
+        animation: fadeInUp 1s ease;
+    }
+    
+    .about-hero p {
+        font-size: 1.3rem;
+        color: #e0e0e0;
+        max-width: 700px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease 0.3s both;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .about-section {
+        padding: 80px 0;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        color: #00ffd5;
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #00ffd5, #4ecdc4);
+        border-radius: 2px;
+    }
+    
+    .about-card {
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        transition: all 0.4s ease;
+        border: 1px solid rgba(0,255,213,0.1);
+        height: 100%;
+    }
+    
+    .about-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,255,213,0.2);
+        border-color: #00ffd5;
+    }
+    
+    .about-card-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #00ffd5, #4ecdc4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2rem;
+        color: #000;
+    }
+    
+    .about-card h3 {
+        color: #ffffff;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .about-card p {
+        color: #b0b0b0;
+        line-height: 1.8;
+    }
+    
+    .story-section {
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
+    }
+    
+    .story-content {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+        flex-wrap: wrap;
+    }
+    
+    .story-image {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .story-image img {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,255,213,0.3);
+    }
+    
+    .story-text {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .story-text h2 {
+        font-size: 2.5rem;
+        color: #00ffd5;
+        margin-bottom: 25px;
+    }
+    
+    .story-text p {
+        color: #c0c0c0;
+        font-size: 1.1rem;
+        line-height: 1.9;
+        margin-bottom: 20px;
+    }
+    
+    .stats-section {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        padding: 60px 0;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 30px;
+    }
+    
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #00ffd5;
+        display: block;
+    }
+    
+    .stat-label {
+        font-size: 1.1rem;
+        color: #ffffff;
+        margin-top: 10px;
+    }
+    
+    .team-section {
+        background: #0a0a0a;
+    }
+    
+    .team-card {
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    
+    .team-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 20px 40px rgba(0,255,213,0.2);
+    }
+    
+    .team-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .team-info {
+        padding: 25px;
+        text-align: center;
+    }
+    
+    .team-info h4 {
+        color: #ffffff;
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+    
+    .team-info p {
+        color: #00ffd5;
+        font-size: 0.95rem;
+    }
+    
+    .team-social {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .team-social a {
+        width: 40px;
+        height: 40px;
+        background: rgba(0,255,213,0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #00ffd5;
+        transition: all 0.3s ease;
+    }
+    
+    .team-social a:hover {
+        background: #00ffd5;
+        color: #000;
+    }
+    
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+    
+    .value-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 25px;
+        background: rgba(0,255,213,0.05);
+        border-radius: 15px;
+        border-left: 4px solid #00ffd5;
+    }
+    
+    .value-icon {
+        font-size: 2rem;
+        color: #00ffd5;
+    }
+    
+    .value-content h4 {
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+    
+    .value-content p {
+        color: #a0a0a0;
+        font-size: 0.95rem;
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <h1><i class="fas fa-mountain-sun me-3"></i>About Meghalaya Tourism</h1>
+        <p>Discover the enchanting "Abode of Clouds" - where nature's beauty meets rich cultural heritage</p>
+    </div>
+</section>
+
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='teal' %}
+
+<!-- Mission Section -->
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title">Our Mission</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="about-card">
+                    <div class="about-card-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3>Explore</h3>
+                    <p>We help travelers discover the hidden gems of Meghalaya, from living root bridges to crystal-clear rivers and majestic waterfalls.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="about-card">
+                    <div class="about-card-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Preserve</h3>
+                    <p>We are committed to sustainable tourism that protects the natural beauty and cultural heritage of Meghalaya for future generations.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="about-card">
+                    <div class="about-card-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Connect</h3>
+                    <p>We bridge the gap between travelers and local communities, creating meaningful experiences and supporting local livelihoods.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='blue' %}
+
+<!-- Story Section -->
+<section class="about-section story-section">
+    <div class="container">
+        <div class="story-content">
+            <div class="story-image">
+                <img src="{% static 'imagesVideo/img4.png' %}" alt="Meghalaya Landscape">
+            </div>
+            <div class="story-text">
+                <h2>Our Story</h2>
+                <p>Meghalaya Tourism was born from a deep love for the northeastern gem of India. Our journey began with a simple mission: to share the breathtaking beauty of the "Abode of Clouds" with the world.</p>
+                <p>From the living root bridges of Cherrapunji to the crystal-clear waters of Dawki River, we've explored every corner of this magical land. Now, we're here to guide you through the same incredible experiences.</p>
+                <p>Our team consists of local experts, passionate travelers, and nature enthusiasts who understand the true essence of Meghalaya. We believe in responsible tourism that benefits both travelers and local communities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <p class="stat-label">Tourist Destinations</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">10K+</span>
+                    <p class="stat-label">Happy Travelers</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">100+</span>
+                    <p class="stat-label">Local Partners</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">5+</span>
+                    <p class="stat-label">Years Experience</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='green' %}
+
+<!-- Values Section -->
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title">Our Values</h2>
+        <div class="values-grid">
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="value-content">
+                    <h4>Sustainability</h4>
+                    <p>We promote eco-friendly tourism practices to preserve Meghalaya's natural beauty.</p>
+                </div>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="value-content">
+                    <h4>Community First</h4>
+                    <p>We support local communities and ensure tourism benefits reach the grassroots level.</p>
+                </div>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="value-content">
+                    <h4>Excellence</h4>
+                    <p>We strive to provide exceptional experiences that exceed traveler expectations.</p>
+                </div>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="value-content">
+                    <h4>Safety</h4>
+                    <p>Your safety is our priority. We ensure all our recommended destinations are secure.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave Separator -->
+{% include 'components/wave_separator.html' with wave_type='dark' %}
+
+<!-- Team Section -->
+<section class="about-section team-section">
+    <div class="container">
+        <h2 class="section-title">Meet Our Team</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="team-card">
+                    <img src="{% static 'imagesVideo/img7.png' %}" alt="Team Member">
+                    <div class="team-info">
+                        <h4>Shivam Kumar</h4>
+                        <p>Founder & Developer</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="team-card">
+                    <img src="{% static 'imagesVideo/img5.png' %}" alt="Team Member">
+                    <div class="team-info">
+                        <h4>Local Guide Team</h4>
+                        <p>Expert Guides</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="team-card">
+                    <img src="{% static 'imagesVideo/img3.png' %}" alt="Team Member">
+                    <div class="team-info">
+                        <h4>Support Team</h4>
+                        <p>Customer Support</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

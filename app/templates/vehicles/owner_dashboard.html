@@ -1,0 +1,867 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Vehicle Owner Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+        background: linear-gradient(180deg, #0a1628 0%, #0d1f35 100%);
+        min-height: 100vh;
+        padding: 100px 20px 40px 20px;
+    }
+    
+    .dashboard-header {
+        max-width: 1400px;
+        margin: 0 auto 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .dashboard-header h1 {
+        color: #00ffd5;
+        font-size: 1.8rem;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .add-vehicle-btn {
+        padding: 12px 25px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .add-vehicle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto 30px;
+    }
+    
+    .stat-card {
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        padding: 25px;
+        text-align: center;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(0, 255, 213, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 1.5rem;
+        color: #00ffd5;
+    }
+    
+    .stat-value {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+    }
+    
+    .section-card {
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    
+    .section-header {
+        background: rgba(0, 255, 213, 0.05);
+        padding: 20px;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .section-header h2 {
+        color: #00ffd5;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    
+    .section-body {
+        padding: 20px;
+    }
+    
+    .vehicle-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .vehicle-thumb {
+        width: 80px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .vehicle-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .vehicle-info {
+        flex: 1;
+    }
+    
+    .vehicle-info h4 {
+        color: #fff;
+        margin-bottom: 5px;
+    }
+    
+    .vehicle-info p {
+        color: #a0a0a0;
+        font-size: 0.85rem;
+    }
+    
+    .vehicle-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .edit-btn {
+        background: rgba(0, 255, 213, 0.1);
+        color: #00ffd5;
+    }
+    
+    .edit-btn:hover {
+        background: rgba(0, 255, 213, 0.2);
+        color: #fff;
+    }
+    
+    .delete-btn {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+    
+    .delete-btn:hover {
+        background: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .badge-available {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .badge-unavailable {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+    }
+    
+    .badge-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+    
+    .booking-item {
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        margin-bottom: 15px;
+        border-left: 3px solid #ffc107;
+    }
+    
+    .booking-item.confirmed {
+        border-left-color: #28a745;
+    }
+    
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .booking-id {
+        color: #00ffd5;
+        font-weight: 600;
+    }
+    
+    .booking-details {
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .booking-details p {
+        margin: 5px 0;
+    }
+    
+    .booking-details strong {
+        color: #fff;
+    }
+    
+    .manage-btn {
+        display: inline-block;
+        padding: 8px 15px;
+        background: rgba(0, 255, 213, 0.1);
+        color: #00ffd5;
+        border: 1px solid rgba(0, 255, 213, 0.3);
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .manage-btn:hover {
+        background: rgba(0, 255, 213, 0.2);
+        color: #fff;
+    }
+    
+    .verification-notice {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .verification-notice i {
+        font-size: 2rem;
+        color: #ffc107;
+    }
+    
+    .verification-notice p {
+        color: #a0a0a0;
+        margin: 0;
+    }
+    
+    .verification-notice strong {
+        color: #ffc107;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #a0a0a0;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        color: rgba(0, 255, 213, 0.3);
+        margin-bottom: 15px;
+    }
+    
+    .booking-card {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 16px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .booking-card-header {
+        background: rgba(0, 255, 213, 0.05);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .booking-card-body {
+        padding: 20px;
+    }
+    
+    .booking-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .booking-info-item {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 12px;
+        border-radius: 8px;
+    }
+    
+    .booking-info-item .label {
+        color: #a0a0a0;
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+    
+    .booking-info-item .value {
+        color: #fff;
+        font-weight: 500;
+    }
+    
+    .booking-info-item .value.highlight {
+        color: #00ffd5;
+    }
+    
+    .payment-screenshot-mini {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid rgba(0, 255, 213, 0.3);
+        cursor: pointer;
+    }
+    
+    .booking-card-footer {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .status-update-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .status-select {
+        padding: 8px 15px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+    
+    .status-select:focus {
+        outline: none;
+        border-color: #00ffd5;
+    }
+    
+    .update-btn {
+        padding: 8px 20px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .update-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0, 255, 213, 0.3);
+    }
+    
+    .badge-confirmed {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .badge-in-progress {
+        background: rgba(0, 123, 255, 0.2);
+        color: #007bff;
+    }
+    
+    .badge-completed {
+        background: rgba(0, 255, 213, 0.2);
+        color: #00ffd5;
+    }
+    
+    .full-width-section {
+        grid-column: span 2;
+    }
+    
+    .tabs-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        color: #a0a0a0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .tab-btn:hover, .tab-btn.active {
+        background: rgba(0, 255, 213, 0.1);
+        border-color: #00ffd5;
+        color: #00ffd5;
+    }
+    
+    .tab-btn .count {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-left: 5px;
+        font-size: 0.8rem;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    @media (max-width: 1200px) {
+        .dashboard-content {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .vehicle-item {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Owner Dashboard</h1>
+        <div class="header-actions">
+            <a href="{% url 'add_vehicle' %}" class="add-vehicle-btn">
+                <i class="fas fa-plus"></i> Add Vehicle
+            </a>
+        </div>
+    </div>
+    
+    {% if not owner.is_verified %}
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <div class="verification-notice">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p><strong>Account Pending Verification</strong><br>Your account is being reviewed. Your vehicles will be visible to users once verified.</p>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-car"></i></div>
+            <div class="stat-value">{{ vehicles.count }}</div>
+            <div class="stat-label">Total Vehicles</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-value">{{ pending_bookings.count }}</div>
+            <div class="stat-label">Pending Bookings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-value">{{ bookings.count }}</div>
+            <div class="stat-label">Total Bookings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-value">{% if owner.is_verified %}<i class="fas fa-check" style="color: #28a745;"></i>{% else %}<i class="fas fa-clock" style="color: #ffc107;"></i>{% endif %}</div>
+            <div class="stat-label">Verification Status</div>
+        </div>
+    </div>
+    
+    <div class="dashboard-content">
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fas fa-car-side"></i> My Vehicles</h2>
+                <a href="{% url 'add_vehicle' %}" class="manage-btn">+ Add New</a>
+            </div>
+            <div class="section-body">
+                {% if vehicles %}
+                    {% for vehicle in vehicles %}
+                    <div class="vehicle-item">
+                        <div class="vehicle-thumb">
+                            {% if vehicle.vehicle_photo_1 %}
+                            <img src="{{ vehicle.vehicle_photo_1.url }}" alt="{{ vehicle.vehicle_name }}">
+                            {% else %}
+                            <img src="{% static 'imagesVideo/img1.png' %}" alt="{{ vehicle.vehicle_name }}">
+                            {% endif %}
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>{{ vehicle.vehicle_name }}</h4>
+                            <p>{{ vehicle.get_category_display }} • {{ vehicle.vehicle_number }} • ₹{{ vehicle.price_per_km }}/km</p>
+                            <span class="status-badge {% if vehicle.is_available %}badge-available{% else %}badge-unavailable{% endif %}">
+                                {% if vehicle.is_available %}Available{% else %}Unavailable{% endif %}
+                            </span>
+                            {% if not vehicle.is_verified %}
+                            <span class="status-badge badge-pending">Pending Verification</span>
+                            {% endif %}
+                        </div>
+                        <div class="vehicle-actions">
+                            <a href="{% url 'edit_vehicle' vehicle.pk %}" class="action-btn edit-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'delete_vehicle' vehicle.pk %}" class="action-btn delete-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-car"></i>
+                        <p>No vehicles added yet</p>
+                        <a href="{% url 'add_vehicle' %}" class="manage-btn">Add Your First Vehicle</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fas fa-bell"></i> Pending Bookings</h2>
+            </div>
+            <div class="section-body">
+                {% if pending_bookings %}
+                    {% for booking in pending_bookings %}
+                    <div class="booking-item">
+                        <div class="booking-header">
+                            <span class="booking-id">{{ booking.booking_id }}</span>
+                            <span class="status-badge badge-pending">Pending</span>
+                        </div>
+                        <div class="booking-details">
+                            <p><strong>{{ booking.passenger_name }}</strong> • {{ booking.passenger_phone }}</p>
+                            <p><i class="fas fa-route"></i> {{ booking.pickup_location }} → {{ booking.destination }}</p>
+                            <p><i class="fas fa-calendar"></i> {{ booking.pickup_date }} at {{ booking.pickup_time }}</p>
+                            <p><i class="fas fa-rupee-sign"></i> <strong>₹{{ booking.total_amount }}</strong></p>
+                        </div>
+                        <a href="{% url 'manage_booking' booking.booking_id %}" class="manage-btn">
+                            <i class="fas fa-cog"></i> Manage
+                        </a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No pending bookings</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- All Bookings Section with Tabs -->
+    <div style="max-width: 1400px; margin: 30px auto 0;">
+        <div class="section-card">
+            <div class="section-header">
+                <h2><i class="fas fa-calendar-alt"></i> All Bookings</h2>
+            </div>
+            <div class="section-body">
+                <div class="tabs-container">
+                    <button class="tab-btn active" onclick="showTab('confirmed')">
+                        <i class="fas fa-check-circle"></i> Confirmed <span class="count">{{ confirmed_bookings.count }}</span>
+                    </button>
+                    <button class="tab-btn" onclick="showTab('in-progress')">
+                        <i class="fas fa-car"></i> In Progress <span class="count">{{ in_progress_bookings.count }}</span>
+                    </button>
+                    <button class="tab-btn" onclick="showTab('completed')">
+                        <i class="fas fa-flag-checkered"></i> Completed <span class="count">{{ completed_bookings.count }}</span>
+                    </button>
+                </div>
+                
+                <!-- Confirmed Bookings Tab -->
+                <div id="confirmed-tab" class="tab-content active">
+                    {% if confirmed_bookings %}
+                        {% for booking in confirmed_bookings %}
+                        <div class="booking-card">
+                            <div class="booking-card-header">
+                                <div>
+                                    <span class="booking-id" style="font-size: 1.1rem;">{{ booking.booking_id }}</span>
+                                    <span style="color: #a0a0a0; margin-left: 10px;">{{ booking.vehicle.vehicle_name }}</span>
+                                </div>
+                                <span class="status-badge badge-confirmed">Confirmed</span>
+                            </div>
+                            <div class="booking-card-body">
+                                <div class="booking-info-grid">
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-user"></i> Passenger Name</div>
+                                        <div class="value">{{ booking.passenger_name }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-phone"></i> Phone</div>
+                                        <div class="value">
+                                            <a href="tel:{{ booking.passenger_phone }}" style="color: #00ffd5;">{{ booking.passenger_phone }}</a>
+                                        </div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-envelope"></i> Email</div>
+                                        <div class="value">{{ booking.passenger_email|default:"Not provided" }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-users"></i> Passengers</div>
+                                        <div class="value">{{ booking.number_of_passengers }} Person(s)</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-map-marker-alt"></i> Pickup</div>
+                                        <div class="value">{{ booking.pickup_location }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-flag"></i> Destination</div>
+                                        <div class="value">{{ booking.destination }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-calendar"></i> Pickup Date</div>
+                                        <div class="value">{{ booking.pickup_date }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-clock"></i> Pickup Time</div>
+                                        <div class="value">{{ booking.pickup_time }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-rupee-sign"></i> Total Amount</div>
+                                        <div class="value highlight" style="font-size: 1.2rem;">₹{{ booking.total_amount }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-credit-card"></i> Payment Status</div>
+                                        <div class="value">
+                                            <span class="status-badge {% if booking.payment_status == 'verified' %}badge-confirmed{% else %}badge-pending{% endif %}">
+                                                {{ booking.get_payment_status_display }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if booking.payment_screenshot %}
+                                <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                                    <span style="color: #a0a0a0;"><i class="fas fa-receipt"></i> Payment Screenshot:</span>
+                                    <a href="{{ booking.payment_screenshot.url }}" target="_blank">
+                                        <img src="{{ booking.payment_screenshot.url }}" class="payment-screenshot-mini" alt="Payment">
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="booking-card-footer">
+                                <form action="{% url 'manage_booking' booking.booking_id %}" method="post" class="status-update-form">
+                                    {% csrf_token %}
+                                    <select name="action" class="status-select">
+                                        <option value="">Update Status</option>
+                                        <option value="in_progress">Start Trip</option>
+                                        <option value="complete">Mark Completed</option>
+                                    </select>
+                                    <button type="submit" class="update-btn"><i class="fas fa-sync"></i> Update</button>
+                                </form>
+                                <a href="{% url 'manage_booking' booking.booking_id %}" class="manage-btn">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-check"></i>
+                            <p>No confirmed bookings</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- In Progress Bookings Tab -->
+                <div id="in-progress-tab" class="tab-content">
+                    {% if in_progress_bookings %}
+                        {% for booking in in_progress_bookings %}
+                        <div class="booking-card">
+                            <div class="booking-card-header">
+                                <div>
+                                    <span class="booking-id" style="font-size: 1.1rem;">{{ booking.booking_id }}</span>
+                                    <span style="color: #a0a0a0; margin-left: 10px;">{{ booking.vehicle.vehicle_name }}</span>
+                                </div>
+                                <span class="status-badge badge-in-progress">In Progress</span>
+                            </div>
+                            <div class="booking-card-body">
+                                <div class="booking-info-grid">
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-user"></i> Passenger</div>
+                                        <div class="value">{{ booking.passenger_name }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-phone"></i> Phone</div>
+                                        <div class="value">
+                                            <a href="tel:{{ booking.passenger_phone }}" style="color: #00ffd5;">{{ booking.passenger_phone }}</a>
+                                        </div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-route"></i> Route</div>
+                                        <div class="value">{{ booking.pickup_location }} → {{ booking.destination }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-rupee-sign"></i> Amount</div>
+                                        <div class="value highlight">₹{{ booking.total_amount }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-card-footer">
+                                <form action="{% url 'manage_booking' booking.booking_id %}" method="post" class="status-update-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="complete">
+                                    <button type="submit" class="update-btn"><i class="fas fa-flag-checkered"></i> Mark Completed</button>
+                                </form>
+                                <a href="{% url 'manage_booking' booking.booking_id %}" class="manage-btn">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-car"></i>
+                            <p>No trips in progress</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Completed Bookings Tab -->
+                <div id="completed-tab" class="tab-content">
+                    {% if completed_bookings %}
+                        {% for booking in completed_bookings %}
+                        <div class="booking-card">
+                            <div class="booking-card-header">
+                                <div>
+                                    <span class="booking-id" style="font-size: 1.1rem;">{{ booking.booking_id }}</span>
+                                    <span style="color: #a0a0a0; margin-left: 10px;">{{ booking.vehicle.vehicle_name }}</span>
+                                </div>
+                                <span class="status-badge badge-completed">Completed</span>
+                            </div>
+                            <div class="booking-card-body">
+                                <div class="booking-info-grid">
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-user"></i> Passenger</div>
+                                        <div class="value">{{ booking.passenger_name }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-phone"></i> Phone</div>
+                                        <div class="value">{{ booking.passenger_phone }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-route"></i> Route</div>
+                                        <div class="value">{{ booking.pickup_location }} → {{ booking.destination }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-rupee-sign"></i> Amount Earned</div>
+                                        <div class="value highlight">₹{{ booking.total_amount }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-calendar"></i> Trip Date</div>
+                                        <div class="value">{{ booking.pickup_date }}</div>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <div class="label"><i class="fas fa-check-circle"></i> Completed On</div>
+                                        <div class="value">{{ booking.updated_at|date:"d M Y" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-card-footer">
+                                <a href="{% url 'manage_booking' booking.booking_id %}" class="manage-btn">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-flag-checkered"></i>
+                            <p>No completed bookings yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName + '-tab').classList.add('active');
+    event.target.closest('.tab-btn').classList.add('active');
+}
+</script>
+{% endblock %}

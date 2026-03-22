@@ -1,0 +1,461 @@
+{% extends 'vehicles/owner_base.html' %}
+
+{% block title %}Profile Settings{% endblock %}
+
+{% block breadcrumb %}
+<span class="breadcrumb-separator">/</span>
+<span class="breadcrumb-current">Profile Settings</span>
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-header {
+        margin-bottom: 24px;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 24px;
+    }
+    
+    .profile-sidebar {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+        padding: 30px;
+        text-align: center;
+    }
+    
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        overflow: hidden;
+        background: var(--accent-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 700;
+        color: #0a1628;
+    }
+    
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .profile-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+    
+    .profile-email {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+    }
+    
+    .verification-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .verification-status.verified {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+    }
+    
+    .verification-status.pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+    }
+    
+    .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .profile-stat {
+        text-align: center;
+    }
+    
+    .profile-stat .value {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--accent-primary);
+    }
+    
+    .profile-stat .label {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+    
+    .profile-form {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+        overflow: hidden;
+    }
+    
+    .form-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-header h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .form-header h2 i {
+        color: var(--accent-primary);
+    }
+    
+    .form-body {
+        padding: 24px;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+    
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 14px 18px;
+        background: var(--bg-secondary);
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        color: var(--text-primary);
+        box-shadow: var(--nm-shadow-inset);
+        transition: var(--transition);
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        box-shadow: var(--nm-shadow-inset), 0 0 0 3px rgba(0, 255, 213, 0.2);
+    }
+    
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: var(--text-muted);
+    }
+    
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .file-upload {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .file-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        background: var(--bg-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+    }
+    
+    .file-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .file-input-wrapper {
+        flex: 1;
+    }
+    
+    .file-input-wrapper input[type="file"] {
+        display: none;
+    }
+    
+    .file-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        box-shadow: var(--nm-shadow-sm);
+        transition: var(--transition);
+    }
+    
+    .file-btn:hover {
+        color: var(--accent-primary);
+    }
+    
+    .form-footer {
+        padding: 20px 24px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .save-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: var(--accent-gradient);
+        color: #0a1628;
+        border: none;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+    }
+    
+    @media (max-width: 992px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 20px;
+        }
+        
+        .profile-sidebar {
+            padding: 24px 20px;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+        }
+        
+        .profile-name {
+            font-size: 18px;
+        }
+        
+        .form-card-header {
+            padding: 16px 20px;
+        }
+        
+        .form-card-body {
+            padding: 20px;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 14px;
+        }
+        
+        .form-footer {
+            padding: 16px 20px;
+        }
+        
+        .save-btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .file-upload {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .profile-stats {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .profile-stat {
+            padding: 12px;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1><i class="fas fa-user-cog" style="color: var(--accent-primary); margin-right: 12px;"></i> Profile Settings</h1>
+</div>
+
+<div class="profile-grid">
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+        <div class="profile-avatar">
+            {% if owner.profile_photo %}
+            <img src="{{ owner.profile_photo.url }}" alt="{{ owner.business_name }}">
+            {% else %}
+            {{ owner.business_name|slice:":2"|upper }}
+            {% endif %}
+        </div>
+        <div class="profile-name">{{ owner.business_name }}</div>
+        <div class="profile-email">{{ owner.user.email }}</div>
+        {% if owner.is_verified %}
+        <span class="verification-status verified">
+            <i class="fas fa-check-circle"></i> Verified Owner
+        </span>
+        {% else %}
+        <span class="verification-status pending">
+            <i class="fas fa-clock"></i> Pending Verification
+        </span>
+        {% endif %}
+        
+        <div class="profile-stats">
+            <div class="profile-stat">
+                <div class="value">{{ owner.vehicles.count }}</div>
+                <div class="label">Vehicles</div>
+            </div>
+            <div class="profile-stat">
+                <div class="value">{{ owner.user.date_joined|date:"Y" }}</div>
+                <div class="label">Member Since</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Form -->
+    <form method="post" enctype="multipart/form-data" class="profile-form">
+        {% csrf_token %}
+        <div class="form-header">
+            <h2><i class="fas fa-edit"></i> Edit Profile</h2>
+        </div>
+        <div class="form-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Business Name</label>
+                    <input type="text" name="business_name" value="{{ owner.business_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" value="{{ owner.phone }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Alternate Phone</label>
+                    <input type="tel" name="alternate_phone" value="{{ owner.alternate_phone|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" name="city" value="{{ owner.city }}" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Address</label>
+                    <textarea name="address" placeholder="Enter your business address">{{ owner.address }}</textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>UPI ID (for payments)</label>
+                    <input type="text" name="upi_id" value="{{ owner.upi_id|default:'' }}" placeholder="yourname@upi">
+                </div>
+                <div class="form-group">
+                    <label>Profile Photo</label>
+                    <div class="file-upload">
+                        <div class="file-preview">
+                            {% if owner.profile_photo %}
+                            <img src="{{ owner.profile_photo.url }}" alt="Profile">
+                            {% else %}
+                            <i class="fas fa-user" style="font-size: 24px;"></i>
+                            {% endif %}
+                        </div>
+                        <div class="file-input-wrapper">
+                            <input type="file" name="profile_photo" id="profile_photo" accept="image/*">
+                            <label for="profile_photo" class="file-btn">
+                                <i class="fas fa-upload"></i> Upload Photo
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Payment QR Code</label>
+                    <div class="file-upload">
+                        <div class="file-preview">
+                            {% if owner.qr_code %}
+                            <img src="{{ owner.qr_code.url }}" alt="QR Code">
+                            {% else %}
+                            <i class="fas fa-qrcode" style="font-size: 24px;"></i>
+                            {% endif %}
+                        </div>
+                        <div class="file-input-wrapper">
+                            <input type="file" name="qr_code" id="qr_code" accept="image/*">
+                            <label for="qr_code" class="file-btn">
+                                <i class="fas fa-upload"></i> Upload QR
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button type="submit" class="save-btn">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

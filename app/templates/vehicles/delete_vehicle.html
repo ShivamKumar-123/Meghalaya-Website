@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Delete {{ vehicle.vehicle_name }}{% endblock %}
+
+{% block content %}
+<style>
+    .delete-container {
+        background: linear-gradient(180deg, #0a1628 0%, #0d1f35 100%);
+        min-height: 100vh;
+        padding: 100px 20px 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .delete-card {
+        max-width: 500px;
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .delete-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(220, 53, 69, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2.5rem;
+        color: #dc3545;
+    }
+    
+    .delete-card h1 {
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .delete-card p {
+        color: #a0a0a0;
+        margin-bottom: 25px;
+    }
+    
+    .vehicle-name {
+        color: #00ffd5;
+        font-weight: 600;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    .cancel-btn {
+        padding: 12px 30px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .cancel-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+    
+    .delete-btn {
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+    }
+</style>
+
+<div class="delete-container">
+    <div class="delete-card">
+        <div class="delete-icon">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+        <h1>Delete Vehicle?</h1>
+        <p>Are you sure you want to delete <span class="vehicle-name">{{ vehicle.vehicle_name }}</span> ({{ vehicle.vehicle_number }})? This action cannot be undone.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="action-buttons">
+                <a href="{% url 'owner_dashboard' %}" class="cancel-btn">Cancel</a>
+                <button type="submit" class="delete-btn">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

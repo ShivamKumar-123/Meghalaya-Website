@@ -1,0 +1,391 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Booking Status - {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+<style>
+    .status-container {
+        background: linear-gradient(180deg, #0a1628 0%, #0d1f35 100%);
+        min-height: 100vh;
+        padding: 100px 20px 40px 20px;
+    }
+    
+    .status-card {
+        max-width: 700px;
+        margin: 0 auto;
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    .status-header {
+        background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 180, 219, 0.1));
+        padding: 30px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .status-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2.5rem;
+    }
+    
+    .status-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+    
+    .status-confirmed {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .status-cancelled {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+    }
+    
+    .status-completed {
+        background: rgba(0, 255, 213, 0.2);
+        color: #00ffd5;
+    }
+    
+    .status-header h1 {
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .booking-id {
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+    
+    .badge-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.5);
+    }
+    
+    .badge-confirmed {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.5);
+    }
+    
+    .badge-cancelled {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.5);
+    }
+    
+    .badge-completed {
+        background: rgba(0, 255, 213, 0.2);
+        color: #00ffd5;
+        border: 1px solid rgba(0, 255, 213, 0.5);
+    }
+    
+    .status-body {
+        padding: 30px;
+    }
+    
+    .info-section {
+        margin-bottom: 25px;
+    }
+    
+    .info-section h3 {
+        color: #00ffd5;
+        font-size: 1rem;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .info-item {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .info-label {
+        color: #a0a0a0;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        color: #fff;
+        font-weight: 500;
+    }
+    
+    .vehicle-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .vehicle-thumb {
+        width: 80px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .vehicle-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .vehicle-details h4 {
+        color: #fff;
+        margin-bottom: 5px;
+    }
+    
+    .vehicle-details p {
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .owner-remarks {
+        background: rgba(0, 255, 213, 0.05);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .owner-remarks h4 {
+        color: #00ffd5;
+        margin-bottom: 10px;
+    }
+    
+    .owner-remarks p {
+        color: #e0e0e0;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+    }
+    
+    .action-btn {
+        flex: 1;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+    
+    .contact-owner {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .contact-btn {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .call-btn {
+        background: linear-gradient(135deg, #25D366, #128C7E);
+        color: #fff;
+    }
+    
+    .call-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        color: #fff;
+    }
+    
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .contact-owner {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="status-container">
+    <div class="status-card">
+        <div class="status-header">
+            <div class="status-icon 
+                {% if booking.booking_status == 'pending' %}status-pending
+                {% elif booking.booking_status == 'confirmed' %}status-confirmed
+                {% elif booking.booking_status == 'cancelled' %}status-cancelled
+                {% elif booking.booking_status == 'completed' %}status-completed
+                {% else %}status-pending{% endif %}">
+                {% if booking.booking_status == 'pending' %}<i class="fas fa-clock"></i>
+                {% elif booking.booking_status == 'confirmed' %}<i class="fas fa-check"></i>
+                {% elif booking.booking_status == 'cancelled' %}<i class="fas fa-times"></i>
+                {% elif booking.booking_status == 'completed' %}<i class="fas fa-flag-checkered"></i>
+                {% else %}<i class="fas fa-clock"></i>{% endif %}
+            </div>
+            <h1>Booking {{ booking.get_booking_status_display }}</h1>
+            <p class="booking-id">Booking ID: {{ booking.booking_id }}</p>
+            <span class="status-badge 
+                {% if booking.booking_status == 'pending' %}badge-pending
+                {% elif booking.booking_status == 'confirmed' %}badge-confirmed
+                {% elif booking.booking_status == 'cancelled' %}badge-cancelled
+                {% elif booking.booking_status == 'completed' %}badge-completed
+                {% else %}badge-pending{% endif %}">
+                {% if booking.payment_status == 'pending' %}Payment Pending
+                {% elif booking.payment_status == 'submitted' %}Payment Submitted - Awaiting Verification
+                {% elif booking.payment_status == 'verified' %}Payment Verified
+                {% else %}{{ booking.get_payment_status_display }}{% endif %}
+            </span>
+        </div>
+        
+        <div class="status-body">
+            <div class="vehicle-info">
+                <div class="vehicle-thumb">
+                    {% if booking.vehicle.vehicle_photo_1 %}
+                    <img src="{{ booking.vehicle.vehicle_photo_1.url }}" alt="{{ booking.vehicle.vehicle_name }}">
+                    {% else %}
+                    <img src="{% static 'imagesVideo/img1.png' %}" alt="{{ booking.vehicle.vehicle_name }}">
+                    {% endif %}
+                </div>
+                <div class="vehicle-details">
+                    <h4>{{ booking.vehicle.vehicle_name }}</h4>
+                    <p>{{ booking.vehicle.get_category_display }} • {{ booking.vehicle.owner.business_name }}</p>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-route"></i> Trip Details</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Pickup Location</div>
+                        <div class="info-value">{{ booking.pickup_location }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Destination</div>
+                        <div class="info-value">{{ booking.destination }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Pickup Date</div>
+                        <div class="info-value">{{ booking.pickup_date }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Pickup Time</div>
+                        <div class="info-value">{{ booking.pickup_time }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-user"></i> Passenger Details</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Name</div>
+                        <div class="info-value">{{ booking.passenger_name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">{{ booking.passenger_phone }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Passengers</div>
+                        <div class="info-value">{{ booking.number_of_passengers }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Amount</div>
+                        <div class="info-value" style="color: #00ffd5; font-size: 1.2rem;">₹{{ booking.total_amount }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            {% if booking.owner_remarks %}
+            <div class="owner-remarks">
+                <h4><i class="fas fa-comment"></i> Owner's Message</h4>
+                <p>{{ booking.owner_remarks }}</p>
+            </div>
+            {% endif %}
+            
+            {% if booking.booking_status == 'confirmed' %}
+            <div class="contact-owner">
+                <a href="tel:{{ booking.vehicle.owner.phone }}" class="contact-btn call-btn">
+                    <i class="fas fa-phone"></i> Call Driver
+                </a>
+                <a href="https://wa.me/91{{ booking.vehicle.owner.phone }}" target="_blank" class="contact-btn call-btn">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+            {% endif %}
+            
+            <div class="action-buttons">
+                <a href="{% url 'my_bookings' %}" class="action-btn btn-secondary">
+                    <i class="fas fa-list"></i> My Bookings
+                </a>
+                <a href="{% url 'vehicle_list' %}" class="action-btn btn-primary">
+                    <i class="fas fa-car"></i> Book Another
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

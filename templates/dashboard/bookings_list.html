@@ -1,0 +1,79 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Bookings{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">Bookings</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Vehicle Bookings</h1>
+    <p class="page-subtitle">Manage all vehicle bookings and their status.</p>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <div class="card-header">
+        <h2 class="card-title">All Bookings ({{ bookings.count }})</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Vehicle</th>
+                    <th>Customer</th>
+                    <th>Route</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td><strong>{{ booking.booking_id }}</strong></td>
+                    <td>{{ booking.vehicle.vehicle_name }}</td>
+                    <td>{{ booking.passenger_name }}<br><small>{{ booking.passenger_phone }}</small></td>
+                    <td>{{ booking.pickup_location }} → {{ booking.destination }}</td>
+                    <td>{{ booking.pickup_date }}<br><small>{{ booking.pickup_time }}</small></td>
+                    <td>₹{{ booking.total_amount }}</td>
+                    <td>
+                        {% if booking.booking_status == 'pending' %}
+                        <span class="status-badge status-warning">Pending</span>
+                        {% elif booking.booking_status == 'confirmed' %}
+                        <span class="status-badge status-success">Confirmed</span>
+                        {% elif booking.booking_status == 'completed' %}
+                        <span class="status-badge status-info">Completed</span>
+                        {% elif booking.booking_status == 'cancelled' %}
+                        <span class="status-badge status-danger">Cancelled</span>
+                        {% endif %}
+                        <br>
+                        {% if booking.payment_status == 'submitted' %}
+                        <small style="color: #ffc107;">Payment Submitted</small>
+                        {% elif booking.payment_status == 'verified' %}
+                        <small style="color: #28a745;">Payment Verified</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="{% url 'dashboard_booking_detail' booking.booking_id %}" class="action-btn nm-button" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted);">No bookings yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

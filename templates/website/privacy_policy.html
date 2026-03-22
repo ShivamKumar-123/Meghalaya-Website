@@ -1,0 +1,203 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block content %}
+
+<style>
+    .policy-hero {
+        background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(30,60,114,0.9) 100%);
+        min-height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .policy-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 50%, rgba(0,255,213,0.1) 0%, transparent 50%);
+    }
+    
+    .policy-hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00ffd5 0%, #00b4d8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .policy-hero p {
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.7);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .policy-content {
+        background: linear-gradient(180deg, #0a0a14 0%, #1a1a2e 100%);
+        padding: 60px 20px;
+        min-height: 60vh;
+    }
+    
+    .policy-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .policy-section {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(0,255,213,0.1);
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .policy-section:hover {
+        border-color: rgba(0,255,213,0.3);
+        box-shadow: 0 10px 30px rgba(0,255,213,0.1);
+        transform: translateY(-3px);
+    }
+    
+    .policy-section h2 {
+        font-size: 1.5rem;
+        color: #00ffd5;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .policy-section h2 i {
+        font-size: 1.2rem;
+    }
+    
+    .policy-section p,
+    .policy-section li {
+        color: rgba(255,255,255,0.8);
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+    
+    .policy-section ul {
+        padding-left: 20px;
+        margin-top: 15px;
+    }
+    
+    .policy-section li {
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    .policy-section li::marker {
+        color: #00ffd5;
+    }
+    
+    .last-updated {
+        text-align: center;
+        color: rgba(255,255,255,0.5);
+        font-size: 0.9rem;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="policy-hero">
+    <div>
+        <h1><i class="fas fa-shield-alt me-3"></i>Privacy Policy</h1>
+        <p>Your privacy is important to us. Learn how we protect your data.</p>
+    </div>
+</section>
+
+<!-- Policy Content -->
+<section class="policy-content">
+    <div class="policy-container">
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-info-circle"></i> Introduction</h2>
+            <p>Welcome to Meghalaya Tourism. We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.</p>
+        </div>
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-database"></i> Information We Collect</h2>
+            <p>We may collect information about you in various ways:</p>
+            <ul>
+                <li><strong>Personal Data:</strong> Name, email address, phone number when you register or contact us</li>
+                <li><strong>Usage Data:</strong> Browser type, IP address, pages visited, time spent on pages</li>
+                <li><strong>Cookies:</strong> Small data files stored on your device to enhance your experience</li>
+                <li><strong>Location Data:</strong> General location information to provide relevant content</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-cogs"></i> How We Use Your Information</h2>
+            <p>We use the information we collect to:</p>
+            <ul>
+                <li>Provide, operate, and maintain our website</li>
+                <li>Improve and personalize your experience</li>
+                <li>Send you newsletters and promotional communications (with your consent)</li>
+                <li>Respond to your inquiries and support requests</li>
+                <li>Monitor and analyze usage patterns and trends</li>
+                <li>Protect against fraudulent or unauthorized activity</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-share-alt"></i> Information Sharing</h2>
+            <p>We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following situations:</p>
+            <ul>
+                <li>With service providers who assist in operating our website</li>
+                <li>To comply with legal obligations or court orders</li>
+                <li>To protect our rights, privacy, safety, or property</li>
+                <li>With your explicit consent</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-lock"></i> Data Security</h2>
+            <p>We implement appropriate technical and organizational security measures to protect your personal information. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.</p>
+        </div>
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-user-check"></i> Your Rights</h2>
+            <p>You have the right to:</p>
+            <ul>
+                <li>Access and receive a copy of your personal data</li>
+                <li>Request correction of inaccurate data</li>
+                <li>Request deletion of your personal data</li>
+                <li>Withdraw consent for data processing</li>
+                <li>Object to processing of your personal data</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section">
+            <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us:</p>
+            <ul>
+                <li><strong>Email:</strong> privacy@meghalayatourism.com</li>
+                <li><strong>Phone:</strong> +91 XXX XXX XXXX</li>
+                <li><strong>Address:</strong> Shillong, Meghalaya, India</li>
+            </ul>
+        </div>
+        
+        <p class="last-updated">Last Updated: March 2026</p>
+    </div>
+</section>
+
+{% endblock %}

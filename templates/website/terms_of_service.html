@@ -1,0 +1,235 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Terms of Service{% endblock %}
+
+{% block content %}
+
+<style>
+    .terms-hero {
+        background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(30,60,114,0.9) 100%);
+        min-height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .terms-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 70% 50%, rgba(0,180,216,0.1) 0%, transparent 50%);
+    }
+    
+    .terms-hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00ffd5 0%, #00b4d8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .terms-hero p {
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.7);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .terms-content {
+        background: linear-gradient(180deg, #0a0a14 0%, #1a1a2e 100%);
+        padding: 60px 20px;
+        min-height: 60vh;
+    }
+    
+    .terms-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .terms-section {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(0,180,216,0.1);
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .terms-section:hover {
+        border-color: rgba(0,180,216,0.3);
+        box-shadow: 0 10px 30px rgba(0,180,216,0.1);
+        transform: translateY(-3px);
+    }
+    
+    .terms-section h2 {
+        font-size: 1.5rem;
+        color: #00b4d8;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .terms-section h2 i {
+        font-size: 1.2rem;
+    }
+    
+    .terms-section p,
+    .terms-section li {
+        color: rgba(255,255,255,0.8);
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+    
+    .terms-section ul,
+    .terms-section ol {
+        padding-left: 20px;
+        margin-top: 15px;
+    }
+    
+    .terms-section li {
+        margin-bottom: 10px;
+    }
+    
+    .terms-section li::marker {
+        color: #00b4d8;
+    }
+    
+    .highlight-box {
+        background: rgba(0,180,216,0.1);
+        border-left: 4px solid #00b4d8;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 0 10px 10px 0;
+    }
+    
+    .highlight-box p {
+        margin: 0;
+        color: rgba(255,255,255,0.9);
+    }
+    
+    .last-updated {
+        text-align: center;
+        color: rgba(255,255,255,0.5);
+        font-size: 0.9rem;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="terms-hero">
+    <div>
+        <h1><i class="fas fa-file-contract me-3"></i>Terms of Service</h1>
+        <p>Please read these terms carefully before using our services.</p>
+    </div>
+</section>
+
+<!-- Terms Content -->
+<section class="terms-content">
+    <div class="terms-container">
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-handshake"></i> Agreement to Terms</h2>
+            <p>By accessing or using the Meghalaya Tourism website, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using this site.</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-user-shield"></i> Use License</h2>
+            <p>Permission is granted to temporarily view and access the materials on Meghalaya Tourism's website for personal, non-commercial use only. This license does not include:</p>
+            <ul>
+                <li>Modifying or copying the materials</li>
+                <li>Using the materials for commercial purposes</li>
+                <li>Attempting to reverse engineer any software on the website</li>
+                <li>Removing any copyright or proprietary notations</li>
+                <li>Transferring the materials to another person</li>
+            </ul>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-user-edit"></i> User Accounts</h2>
+            <p>When you create an account with us, you must provide accurate and complete information. You are responsible for:</p>
+            <ul>
+                <li>Maintaining the confidentiality of your account credentials</li>
+                <li>All activities that occur under your account</li>
+                <li>Notifying us immediately of any unauthorized use</li>
+                <li>Ensuring your account information is up to date</li>
+            </ul>
+            <div class="highlight-box">
+                <p><strong>Important:</strong> We reserve the right to terminate accounts that violate these terms or engage in fraudulent activity.</p>
+            </div>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-ban"></i> Prohibited Activities</h2>
+            <p>You agree not to engage in any of the following activities:</p>
+            <ul>
+                <li>Violating any applicable laws or regulations</li>
+                <li>Impersonating another person or entity</li>
+                <li>Uploading malicious code or viruses</li>
+                <li>Spamming or sending unsolicited communications</li>
+                <li>Interfering with the website's security features</li>
+                <li>Collecting user information without consent</li>
+                <li>Using automated systems to access the website</li>
+            </ul>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-copyright"></i> Intellectual Property</h2>
+            <p>All content on this website, including text, graphics, logos, images, videos, and software, is the property of Meghalaya Tourism or its content suppliers and is protected by copyright and intellectual property laws.</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> Disclaimer</h2>
+            <p>The materials on Meghalaya Tourism's website are provided on an 'as is' basis. We make no warranties, expressed or implied, and hereby disclaim all warranties including:</p>
+            <ul>
+                <li>Implied warranties of merchantability</li>
+                <li>Fitness for a particular purpose</li>
+                <li>Non-infringement of intellectual property</li>
+            </ul>
+            <p>We do not warrant that the website will be uninterrupted, secure, or error-free.</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-balance-scale"></i> Limitation of Liability</h2>
+            <p>In no event shall Meghalaya Tourism or its suppliers be liable for any damages arising out of the use or inability to use the materials on this website, even if we have been notified of the possibility of such damages.</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-edit"></i> Modifications</h2>
+            <p>We may revise these Terms of Service at any time without notice. By using this website, you agree to be bound by the current version of these terms. We encourage you to review this page periodically for any changes.</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-gavel"></i> Governing Law</h2>
+            <p>These terms shall be governed by and construed in accordance with the laws of India, and you submit to the exclusive jurisdiction of the courts located in Meghalaya for the resolution of any disputes.</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2><i class="fas fa-envelope"></i> Contact Information</h2>
+            <p>If you have any questions about these Terms of Service, please contact us:</p>
+            <ul>
+                <li><strong>Email:</strong> legal@meghalayatourism.com</li>
+                <li><strong>Phone:</strong> +91 XXX XXX XXXX</li>
+                <li><strong>Address:</strong> Shillong, Meghalaya, India</li>
+            </ul>
+        </div>
+        
+        <p class="last-updated">Last Updated: March 2026</p>
+    </div>
+</section>
+
+{% endblock %}

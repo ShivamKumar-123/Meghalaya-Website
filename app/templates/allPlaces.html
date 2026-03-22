@@ -6,6 +6,21 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- PLACES PAGE Background Animation - Nature & Mountain Theme -->
+<div class="bg-place">
+    <div class="mountain-silhouette"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="firefly" style="top: 60%; left: 20%; animation-delay: 0s;"></div>
+    <div class="firefly" style="top: 70%; left: 40%; animation-delay: 1s;"></div>
+    <div class="firefly" style="top: 55%; left: 60%; animation-delay: 2s;"></div>
+    <div class="firefly" style="top: 75%; left: 80%; animation-delay: 0.5s;"></div>
+    <div class="firefly" style="top: 65%; left: 30%; animation-delay: 1.5s;"></div>
+    <div class="firefly" style="top: 80%; left: 50%; animation-delay: 2.5s;"></div>
+</div>
+
     <style>
         .place {
             display: flex;
@@ -652,7 +667,7 @@
 
 <div class="container">
     <h2 class="text-center mt-4">
-    <span class="animated-underline">Map of {{ location }}</span>
+    <span class="animated-underline">Map of {{ location.name }}</span>
     </h2>
 
     <div class="row mt-4">
@@ -663,15 +678,14 @@
 
     <!-- Map Column -->
     <div class="col-12 col-lg-6">
-        <div class="map-container">
-        <iframe
-            class="map-iframe"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28775.833961648466!2d91.89695755399316!3d25.638814339989796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375a81e1d743f523%3A0xe9b62edd40375fa5!2sUmiam%20Lake%20Viewpoint!5e0!3m2!1sen!2sin!4v1751114081478!5m2!1sen!2sin"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-        </div>
+        <div class="embed-map-responsive">
+            <div class="embed-map-container">
+                <iframe class="embed-map-frame" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{location.placeUrl}}"></iframe>
+                <a href="https://cartoongames.io" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">Cartoon Games</a>
+                <a href="https://heygames.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">HeyGames</a>
+                <a href="https://map-embed.org" style="font-size:2px!important;color:gray!important;position:absolute;bottom:0;left:0;z-index:1;max-height:10px;overflow:hidden">google maps generator</a></div>
+                <style>.embed-map-responsive{position:relative;text-align:right;width:100%;height:0;padding-bottom:66.66666666666666%;}.embed-map-container{overflow:hidden;background:none!important;width:100%;height:100%;position:absolute;top:0;left:0;}.embed-map-frame{width:100%!important;height:100%!important;position:absolute;top:0;left:0;}</style>
+            </div>
     </div>
     </div>
 </div>

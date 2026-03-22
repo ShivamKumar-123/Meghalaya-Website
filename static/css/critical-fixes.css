@@ -1,0 +1,321 @@
+/* CRITICAL VISIBILITY FIXES - This file should load LAST */
+
+/* ==================== NAVBAR VISIBILITY ==================== */
+.navbar,
+.navbar *,
+.navbar-brand,
+.nav-item,
+.nav-link,
+.navbar-nav,
+.navbar-collapse,
+.dropdown-menu,
+.dropdown-item {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand {
+    color: #ffffff !important;
+}
+
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+    color: #ffd700 !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.navbar .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.96) !important;
+}
+
+.navbar .dropdown-item {
+    color: #ffffff !important;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: rgba(153, 149, 149, 0.15) !important;
+    color: #ffd700 !important;
+}
+
+/* ==================== FORM VISIBILITY ==================== */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="search"],
+textarea,
+select {
+    background-color: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #ced4da !important;
+    padding: 10px 15px !important;
+    border-radius: 8px !important;
+    font-size: 16px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.form-control:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    outline: none !important;
+    background-color: #ffffff !important;
+    color: #333333 !important;
+}
+
+/* Form labels */
+form label,
+form .form-label,
+.card.shadow label,
+.card.shadow-lg label {
+    color: #333333 !important;
+    font-weight: 600 !important;
+    margin-bottom: 5px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Form card containers */
+.card.shadow,
+.card.shadow-lg {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.card.shadow h3,
+.card.shadow-lg h3,
+.card.shadow h4,
+.card.shadow-lg h4 {
+    color: #0d6efd !important;
+}
+
+.card.shadow p,
+.card.shadow-lg p {
+    color: #555555 !important;
+}
+
+.card.shadow .text-muted,
+.card.shadow-lg .text-muted {
+    color: #6c757d !important;
+}
+
+/* Help text */
+.form-text,
+.help-text,
+small.form-text,
+.card.shadow .form-text,
+.card.shadow-lg .form-text {
+    color: #6c757d !important;
+    font-size: 12px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Placeholder text */
+::placeholder {
+    color: #999999 !important;
+    opacity: 1 !important;
+}
+
+/* Error messages */
+.text-danger {
+    color: #dc3545 !important;
+    visibility: visible !important;
+}
+
+/* Alerts */
+.alert {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.alert-danger {
+    background-color: #f8d7da !important;
+    border-color: #f5c6cb !important;
+    color: #721c24 !important;
+}
+
+.alert-success {
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+    color: #155724 !important;
+}
+
+/* Buttons */
+.btn {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.btn-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3 !important;
+    border-color: #004085 !important;
+}
+
+/* ==================== GENERAL CONTENT VISIBILITY ==================== */
+/* Ensure all major content elements are visible */
+.reveal-card,
+.card,
+.hover-effect,
+.three-sec-div,
+.place-section,
+.side,
+.grid-container-ch,
+.pb-section,
+.other-3-places,
+.divbody,
+.gallery,
+.three-section,
+.container,
+.row,
+.section-title,
+.place-heading,
+.trip-heading,
+.cherr-text,
+.pb-text,
+.place-text,
+.text-card,
+.sliderd,
+.gallery-container,
+.map-container,
+.icon-wrapper,
+.footer {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Text colors for dark background pages */
+body .section-title,
+body .place-heading,
+body .trip-heading {
+    color: #00ffd5 !important;
+}
+
+body .cherr-text h2,
+body .pb-text h2,
+body .place-text h2 {
+    color: #00ffd5 !important;
+}
+
+body .cherr-text p,
+body .pb-text p,
+body .place-text p {
+    color: #e0e0e0 !important;
+}
+
+/* Homepage card text (dark background) */
+body .card.hover-effect .card-title {
+    color: #ffffff !important;
+}
+
+body .card.hover-effect .card-text {
+    color: #cccccc !important;
+}
+
+/* List items */
+.styled-list li,
+.styled-list li a,
+ul li,
+ol li,
+li,
+li a {
+    color: #ffffff !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.styled-list li a:hover,
+li a:hover {
+    color: #00ffd5 !important;
+}
+
+/* Three section lists */
+.three-sec-div ul,
+.three-sec-div li,
+.three-sec-div a,
+.three-section ul,
+.three-section li,
+.three-section a {
+    color: #ffffff !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Dropdown menu items */
+.dropdown-menu,
+.dropdown-menu li,
+.dropdown-menu a,
+.dropdown-item {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Images and videos */
+img,
+video {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ==================== DASHBOARD STYLES ==================== */
+/* Dashboard table visibility */
+.table,
+.table th,
+.table td,
+.table tr {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Dashboard cards */
+.dashboard-card,
+.stat-card,
+.card-body {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Dashboard forms */
+.dashboard-form input,
+.dashboard-form select,
+.dashboard-form textarea,
+.dashboard-form label {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Dashboard buttons */
+.btn-edit,
+.btn-delete,
+.btn-add,
+.btn-save {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Dashboard modal */
+.modal,
+.modal-content,
+.modal-header,
+.modal-body,
+.modal-footer {
+    visibility: visible !important;
+    opacity: 1 !important;
+}

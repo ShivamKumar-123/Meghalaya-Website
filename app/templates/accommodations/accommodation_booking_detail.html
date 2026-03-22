@@ -1,0 +1,489 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Booking {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+<style>
+    .booking-detail-page {
+        padding: 40px 0;
+        margin-top: 80px;
+        background: transparent;
+        min-height: 100vh;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #a0aec0;
+        text-decoration: none;
+        margin-bottom: 24px;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #00ffd5;
+    }
+    
+    .booking-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 32px;
+    }
+    
+    .detail-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    
+    .detail-header {
+        background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 180, 219, 0.1));
+        border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+        padding: 24px;
+        color: #fff;
+    }
+    
+    .booking-id {
+        font-size: 14px;
+        color: #a0aec0;
+        margin-bottom: 8px;
+    }
+    
+    .detail-header h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    .status-badges {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+    }
+    
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .status-badge.pending {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+    }
+    
+    .status-badge.confirmed {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
+    
+    .status-badge.checked_in {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+    }
+    
+    .status-badge.checked_out {
+        background: rgba(107, 114, 128, 0.2);
+        color: #9ca3af;
+    }
+    
+    .status-badge.cancelled {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+    
+    .status-badge.payment {
+        background: rgba(0, 255, 213, 0.2);
+        color: #00ffd5;
+    }
+    
+    .detail-body {
+        padding: 32px;
+    }
+    
+    .detail-section {
+        margin-bottom: 32px;
+    }
+    
+    .detail-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid rgba(0, 255, 213, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-title i {
+        color: #00ffd5;
+    }
+    
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    
+    .detail-item {
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: 10px;
+    }
+    
+    .detail-item .label {
+        font-size: 12px;
+        color: #a0aec0;
+        margin-bottom: 4px;
+    }
+    
+    .detail-item .value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .property-card {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.1);
+        border-radius: 12px;
+    }
+    
+    .property-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .property-info h4 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+    
+    .property-info p {
+        font-size: 14px;
+        color: #a0aec0;
+        margin-bottom: 4px;
+    }
+    
+    .property-info a {
+        color: #00ffd5;
+        text-decoration: none;
+    }
+    
+    /* Summary Card */
+    .summary-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        padding: 24px;
+    }
+    
+    .summary-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #00ffd5;
+        margin-bottom: 20px;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .summary-row:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-row .label {
+        color: #a0aec0;
+    }
+    
+    .summary-row .value {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+        margin-top: 12px;
+        border-top: 2px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .summary-total .label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .summary-total .value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    .owner-remarks {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 10px;
+        padding: 16px;
+        margin-top: 20px;
+    }
+    
+    .owner-remarks h4 {
+        color: #10b981;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .owner-remarks p {
+        color: #6ee7b7;
+        font-size: 14px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+    }
+    
+    .action-btn {
+        flex: 1;
+        padding: 14px;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn.primary {
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+    }
+    
+    .action-btn.secondary {
+        background: rgba(10, 22, 40, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.3);
+        color: #a0aec0;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .action-btn.primary:hover {
+        color: #0a1628;
+    }
+    
+    .action-btn.secondary:hover {
+        border-color: #00ffd5;
+        color: #00ffd5;
+    }
+    
+    @media (max-width: 992px) {
+        .booking-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .status-badges {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="booking-detail-page">
+    <div class="container">
+        <a href="{% url 'my_accommodation_bookings' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to My Bookings
+        </a>
+        
+        <div class="booking-detail-grid">
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div class="booking-id">Booking ID: {{ booking.booking_id }}</div>
+                    <h2>{{ booking.accommodation.name }}</h2>
+                    <div class="status-badges">
+                        <span class="status-badge {{ booking.booking_status }}">
+                            {% if booking.booking_status == 'pending' %}<i class="fas fa-clock"></i>{% endif %}
+                            {% if booking.booking_status == 'confirmed' %}<i class="fas fa-check-circle"></i>{% endif %}
+                            {% if booking.booking_status == 'checked_in' %}<i class="fas fa-door-open"></i>{% endif %}
+                            {% if booking.booking_status == 'checked_out' %}<i class="fas fa-door-closed"></i>{% endif %}
+                            {% if booking.booking_status == 'cancelled' %}<i class="fas fa-times-circle"></i>{% endif %}
+                            {{ booking.get_booking_status_display }}
+                        </span>
+                        <span class="status-badge payment">
+                            <i class="fas fa-credit-card"></i> {{ booking.get_payment_status_display }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="detail-body">
+                    <div class="detail-section">
+                        <h3 class="section-title"><i class="fas fa-hotel"></i> Property Details</h3>
+                        <div class="property-card">
+                            {% if booking.accommodation.photo_1 %}
+                            <div class="property-image">
+                                <img src="{{ booking.accommodation.photo_1.url }}" alt="">
+                            </div>
+                            {% endif %}
+                            <div class="property-info">
+                                <h4>{{ booking.accommodation.name }}</h4>
+                                <p>{{ booking.accommodation.get_accommodation_type_display }}</p>
+                                <p><i class="fas fa-map-marker-alt"></i> {{ booking.accommodation.city }}</p>
+                                <a href="{% url 'accommodation_detail' booking.accommodation.pk %}">View Property</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3 class="section-title"><i class="fas fa-calendar-alt"></i> Stay Details</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="label">Check-in Date</div>
+                                <div class="value">{{ booking.check_in_date|date:"d M, Y" }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Check-out Date</div>
+                                <div class="value">{{ booking.check_out_date|date:"d M, Y" }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Number of Nights</div>
+                                <div class="value">{{ booking.number_of_nights }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Number of Rooms</div>
+                                <div class="value">{{ booking.number_of_rooms }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Number of Guests</div>
+                                <div class="value">{{ booking.number_of_guests }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Room Type</div>
+                                <div class="value">{{ booking.accommodation.get_room_type_display }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3 class="section-title"><i class="fas fa-user"></i> Guest Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="label">Guest Name</div>
+                                <div class="value">{{ booking.guest_name }}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Phone</div>
+                                <div class="value">{{ booking.guest_phone }}</div>
+                            </div>
+                            {% if booking.guest_email %}
+                            <div class="detail-item">
+                                <div class="label">Email</div>
+                                <div class="value">{{ booking.guest_email }}</div>
+                            </div>
+                            {% endif %}
+                            {% if booking.guest_id_type %}
+                            <div class="detail-item">
+                                <div class="label">ID Type</div>
+                                <div class="value">{{ booking.guest_id_type }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if booking.special_requests %}
+                    <div class="detail-section">
+                        <h3 class="section-title"><i class="fas fa-comment-alt"></i> Special Requests</h3>
+                        <p style="color: #475569;">{{ booking.special_requests }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <h3><i class="fas fa-receipt"></i> Payment Summary</h3>
+                
+                <div class="summary-row">
+                    <span class="label">Room Charges</span>
+                    <span class="value">₹{{ booking.room_charges }}</span>
+                </div>
+                {% if booking.extra_charges > 0 %}
+                <div class="summary-row">
+                    <span class="label">Extra Charges</span>
+                    <span class="value">₹{{ booking.extra_charges }}</span>
+                </div>
+                {% endif %}
+                <div class="summary-row">
+                    <span class="label">Payment Status</span>
+                    <span class="value">{{ booking.get_payment_status_display }}</span>
+                </div>
+                {% if booking.payment_date %}
+                <div class="summary-row">
+                    <span class="label">Payment Date</span>
+                    <span class="value">{{ booking.payment_date|date:"d M, Y" }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="summary-total">
+                    <span class="label">Total Amount</span>
+                    <span class="value">₹{{ booking.total_amount }}</span>
+                </div>
+                
+                {% if booking.owner_remarks %}
+                <div class="owner-remarks">
+                    <h4><i class="fas fa-comment"></i> Owner Remarks</h4>
+                    <p>{{ booking.owner_remarks }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="action-buttons">
+                    {% if booking.payment_status == 'pending' %}
+                    <a href="{% url 'accommodation_payment' booking.booking_id %}" class="action-btn primary">
+                        <i class="fas fa-credit-card"></i> Complete Payment
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'accommodation_detail' booking.accommodation.pk %}" class="action-btn secondary">
+                        <i class="fas fa-eye"></i> View Property
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

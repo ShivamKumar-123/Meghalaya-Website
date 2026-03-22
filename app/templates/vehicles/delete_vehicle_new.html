@@ -1,0 +1,219 @@
+{% extends 'vehicles/owner_base.html' %}
+
+{% block title %}Delete {{ vehicle.vehicle_name }}{% endblock %}
+
+{% block breadcrumb %}
+<span class="breadcrumb-separator">/</span>
+<a href="{% url 'owner_vehicles' %}" class="breadcrumb-link">My Vehicles</a>
+<span class="breadcrumb-separator">/</span>
+<span class="breadcrumb-current">Delete</span>
+{% endblock %}
+
+{% block content %}
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .delete-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+        overflow: hidden;
+    }
+    
+    .delete-header {
+        padding: 24px;
+        background: rgba(239, 68, 68, 0.1);
+        border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+        text-align: center;
+    }
+    
+    .delete-header i {
+        font-size: 48px;
+        color: var(--danger);
+        margin-bottom: 16px;
+    }
+    
+    .delete-header h1 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+    
+    .delete-header p {
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+    
+    .delete-body {
+        padding: 24px;
+    }
+    
+    .vehicle-preview {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius-sm);
+        margin-bottom: 24px;
+    }
+    
+    .vehicle-preview-image {
+        width: 100px;
+        height: 70px;
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    
+    .vehicle-preview-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .vehicle-preview-image .no-image {
+        width: 100%;
+        height: 100%;
+        background: var(--bg-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 24px;
+    }
+    
+    .vehicle-preview-info h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+    
+    .vehicle-preview-info p {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+    
+    .warning-box {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: var(--border-radius-sm);
+        padding: 16px;
+        margin-bottom: 24px;
+    }
+    
+    .warning-box p {
+        color: var(--warning);
+        font-size: 13px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .warning-box i {
+        margin-top: 2px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 16px;
+    }
+    
+    .cancel-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 24px;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        box-shadow: var(--nm-shadow-sm);
+    }
+    
+    .cancel-btn:hover {
+        color: var(--text-primary);
+    }
+    
+    .delete-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 24px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+</style>
+
+<div class="delete-container">
+    <div class="delete-card">
+        <div class="delete-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h1>Delete Vehicle</h1>
+            <p>Are you sure you want to delete this vehicle?</p>
+        </div>
+        
+        <div class="delete-body">
+            <div class="vehicle-preview">
+                <div class="vehicle-preview-image">
+                    {% if vehicle.vehicle_photo_1 %}
+                    <img src="{{ vehicle.vehicle_photo_1.url }}" alt="{{ vehicle.vehicle_name }}">
+                    {% else %}
+                    <div class="no-image">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="vehicle-preview-info">
+                    <h3>{{ vehicle.vehicle_name }}</h3>
+                    <p>{{ vehicle.get_category_display }} • {{ vehicle.vehicle_number }}</p>
+                    <p>₹{{ vehicle.price_per_km }}/km</p>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <p>
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>This action cannot be undone. All booking history associated with this vehicle will also be affected.</span>
+                </p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="action-buttons">
+                    <a href="{% url 'owner_vehicles' %}" class="cancel-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="delete-btn">
+                        <i class="fas fa-trash"></i> Delete Vehicle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

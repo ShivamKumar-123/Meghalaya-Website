@@ -1,0 +1,363 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Book Local Transport - Meghalaya{% endblock %}
+
+{% block content %}
+<style>
+    .vehicle-hero {
+        background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0d2137 100%);
+        padding: 120px 20px 60px 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vehicle-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("{% static 'imagesVideo/img1.png' %}") center/cover;
+        opacity: 0.15;
+    }
+    
+    .vehicle-hero h1 {
+        color: #00ffd5;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .vehicle-hero p {
+        color: #e0e0e0;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .category-filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 30px 20px;
+        background: rgba(10, 22, 40, 0.9);
+    }
+    
+    .category-btn {
+        padding: 12px 25px;
+        border: 2px solid rgba(0, 255, 213, 0.3);
+        background: rgba(0, 255, 213, 0.1);
+        color: #00ffd5;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .category-btn:hover, .category-btn.active {
+        background: rgba(0, 255, 213, 0.3);
+        border-color: #00ffd5;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.3);
+        color: #fff;
+    }
+    
+    .category-btn i {
+        margin-right: 8px;
+    }
+    
+    .vehicles-container {
+        background: linear-gradient(180deg, #0a1628 0%, #0d1f35 100%);
+        padding: 40px 20px;
+        min-height: 60vh;
+    }
+    
+    .vehicles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .vehicle-card {
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    
+    .vehicle-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(0, 255, 213, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 255, 213, 0.15);
+    }
+    
+    .vehicle-image {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .vehicle-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    
+    .vehicle-card:hover .vehicle-image img {
+        transform: scale(1.1);
+    }
+    
+    .vehicle-category-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(0, 255, 213, 0.9);
+        color: #0a1628;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .vehicle-info {
+        padding: 20px;
+    }
+    
+    .vehicle-name {
+        color: #fff;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .vehicle-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .vehicle-detail {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #a0a0a0;
+        font-size: 0.9rem;
+    }
+    
+    .vehicle-detail i {
+        color: #00ffd5;
+    }
+    
+    .vehicle-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .price-amount {
+        color: #00ffd5;
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+    
+    .price-unit {
+        color: #a0a0a0;
+        font-size: 0.85rem;
+    }
+    
+    .view-btn {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .view-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    .owner-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .owner-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 255, 213, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #00ffd5;
+    }
+    
+    .owner-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .owner-name {
+        color: #e0e0e0;
+        font-size: 0.9rem;
+    }
+    
+    .no-vehicles {
+        text-align: center;
+        padding: 60px 20px;
+        color: #a0a0a0;
+    }
+    
+    .no-vehicles i {
+        font-size: 4rem;
+        color: rgba(0, 255, 213, 0.3);
+        margin-bottom: 20px;
+    }
+    
+    .register-cta {
+        background: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 180, 219, 0.1));
+        border: 1px solid rgba(0, 255, 213, 0.3);
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        max-width: 600px;
+        margin: 40px auto;
+    }
+    
+    .register-cta h3 {
+        color: #00ffd5;
+        margin-bottom: 15px;
+    }
+    
+    .register-cta p {
+        color: #a0a0a0;
+        margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .vehicle-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .category-filters {
+            gap: 10px;
+        }
+        
+        .category-btn {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+        }
+        
+        .vehicles-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="vehicle-hero">
+    <h1><i class="fas fa-car-side"></i> Book Local Transport</h1>
+    <p>Rickshaw, Taxi, Car, Bus & Bike - All in one place</p>
+</div>
+
+<div class="category-filters">
+    <a href="{% url 'vehicle_list' %}" class="category-btn {% if not selected_category %}active{% endif %}">
+        <i class="fas fa-th-large"></i> All Vehicles
+    </a>
+    {% for cat_value, cat_name in categories %}
+    <a href="{% url 'vehicle_list' %}?category={{ cat_value }}" class="category-btn {% if selected_category == cat_value %}active{% endif %}">
+        {% if cat_value == 'rickshaw' %}<i class="fas fa-taxi"></i>
+        {% elif cat_value == 'taxi' %}<i class="fas fa-car"></i>
+        {% elif cat_value == 'car' %}<i class="fas fa-car-side"></i>
+        {% elif cat_value == 'bus' %}<i class="fas fa-bus"></i>
+        {% elif cat_value == 'bike' %}<i class="fas fa-motorcycle"></i>
+        {% endif %}
+        {{ cat_name }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="vehicles-container">
+    {% if vehicles %}
+    <div class="vehicles-grid">
+        {% for vehicle in vehicles %}
+        <div class="vehicle-card">
+            <div class="vehicle-image">
+                {% if vehicle.vehicle_photo_1 %}
+                <img src="{{ vehicle.vehicle_photo_1.url }}" alt="{{ vehicle.vehicle_name }}">
+                {% else %}
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1a3a5c, #0a1628); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-{% if vehicle.category == 'rickshaw' %}taxi{% elif vehicle.category == 'taxi' %}car{% elif vehicle.category == 'car' %}car-side{% elif vehicle.category == 'bus' %}bus{% elif vehicle.category == 'bike' %}motorcycle{% else %}car{% endif %}" style="font-size: 4rem; color: rgba(0, 255, 213, 0.3);"></i>
+                </div>
+                {% endif %}
+                <span class="vehicle-category-badge">{{ vehicle.get_category_display }}</span>
+            </div>
+            <div class="vehicle-info">
+                <div class="owner-info">
+                    <div class="owner-avatar">
+                        {% if vehicle.owner.profile_photo %}
+                        <img src="{{ vehicle.owner.profile_photo.url }}" alt="{{ vehicle.owner.owner_name }}">
+                        {% else %}
+                        <i class="fas fa-user"></i>
+                        {% endif %}
+                    </div>
+                    <span class="owner-name">{{ vehicle.owner.business_name }}</span>
+                </div>
+                <h3 class="vehicle-name">{{ vehicle.vehicle_name }}</h3>
+                <div class="vehicle-details">
+                    <span class="vehicle-detail"><i class="fas fa-users"></i> {{ vehicle.seating_capacity }} Seats</span>
+                    <span class="vehicle-detail"><i class="fas fa-gas-pump"></i> {{ vehicle.get_fuel_type_display }}</span>
+                    {% if vehicle.ac_available %}
+                    <span class="vehicle-detail"><i class="fas fa-snowflake"></i> AC</span>
+                    {% endif %}
+                </div>
+                <div class="vehicle-price">
+                    <div>
+                        <span class="price-amount">₹{{ vehicle.price_per_km }}</span>
+                        <span class="price-unit">/km</span>
+                    </div>
+                    <a href="{% url 'vehicle_detail' vehicle.pk %}" class="view-btn">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-vehicles">
+        <i class="fas fa-car-crash"></i>
+        <h3>No vehicles available</h3>
+        <p>Check back later or try a different category</p>
+    </div>
+    {% endif %}
+    
+    <div class="register-cta">
+        <h3><i class="fas fa-handshake"></i> Are you a vehicle owner?</h3>
+        <p>Register your vehicle and start earning by providing transport services to tourists</p>
+        <a href="{% url 'vehicle_owner_register' %}" class="view-btn">Register as Vehicle Owner</a>
+    </div>
+</div>
+{% endblock %}

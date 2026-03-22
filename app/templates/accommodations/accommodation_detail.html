@@ -1,0 +1,708 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}{{ accommodation.name }} - {{ accommodation.get_accommodation_type_display }}{% endblock %}
+
+{% block content %}
+<style>
+    .accommodation-detail {
+        background: transparent;
+        padding: 40px 0;
+        margin-top: 80px;
+        min-height: 100vh;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #a0aec0;
+        text-decoration: none;
+        margin-bottom: 24px;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #00ffd5;
+    }
+    
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 32px;
+    }
+    
+    .gallery {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    
+    .main-image {
+        height: 400px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .thumbnail-row {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .thumbnail {
+        flex: 1;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .thumbnail:hover,
+    .thumbnail.active {
+        opacity: 1;
+        border-color: #00ffd5;
+    }
+    
+    .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .detail-content {
+        margin-top: 32px;
+    }
+    
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+    
+    .detail-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+    
+    .detail-location {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #a0aec0;
+        font-size: 16px;
+    }
+    
+    .detail-location i {
+        color: #00ffd5;
+    }
+    
+    .type-badge {
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    .rating-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    
+    .rating-stars {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .rating-stars i {
+        color: #fbbf24;
+        font-size: 18px;
+    }
+    
+    .rating-text {
+        font-size: 16px;
+        color: #a0aec0;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #00ffd5;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid rgba(0, 255, 213, 0.2);
+    }
+    
+    .description {
+        color: #a0aec0;
+        line-height: 1.8;
+        margin-bottom: 32px;
+    }
+    
+    .amenities-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    
+    .amenity-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 12px;
+    }
+    
+    .amenity-item i {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(0, 255, 213, 0.2), rgba(0, 180, 219, 0.2));
+        color: #00ffd5;
+        border-radius: 10px;
+        font-size: 18px;
+    }
+    
+    .amenity-item span {
+        font-weight: 500;
+        color: #fff;
+    }
+    
+    .amenity-item.unavailable {
+        opacity: 0.4;
+    }
+    
+    .amenity-item.unavailable i {
+        background: rgba(100, 116, 139, 0.2);
+        color: #64748b;
+    }
+    
+    .room-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+    
+    .room-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 12px;
+    }
+    
+    .room-detail-item i {
+        color: #00ffd5;
+        font-size: 20px;
+    }
+    
+    .room-detail-item .label {
+        font-size: 13px;
+        color: #a0aec0;
+    }
+    
+    .room-detail-item .value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .policies {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 32px;
+    }
+    
+    .policies h4 {
+        color: #f59e0b;
+        margin-bottom: 12px;
+    }
+    
+    .policies p {
+        color: #fcd34d;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    /* Booking Card */
+    .booking-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        padding: 24px;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .booking-price {
+        text-align: center;
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .booking-price .amount {
+        font-size: 36px;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    .booking-price .per-night {
+        font-size: 16px;
+        color: #a0aec0;
+    }
+    
+    .booking-info {
+        margin-bottom: 24px;
+    }
+    
+    .booking-info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .booking-info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .booking-info-item .label {
+        color: #a0aec0;
+    }
+    
+    .booking-info-item .value {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .book-btn {
+        display: block;
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .book-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    .owner-info {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .owner-info h4 {
+        font-size: 14px;
+        color: #a0aec0;
+        margin-bottom: 12px;
+    }
+    
+    .owner-details {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .owner-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #0a1628;
+    }
+    
+    .owner-name {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .owner-verified {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: #10b981;
+    }
+    
+    /* Similar Accommodations */
+    .similar-section {
+        margin-top: 60px;
+    }
+    
+    .similar-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+    
+    .similar-card {
+        background: rgba(15, 30, 50, 0.8);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .similar-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(0, 255, 213, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 255, 213, 0.1);
+    }
+    
+    .similar-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+    
+    .similar-card-content {
+        padding: 16px;
+    }
+    
+    .similar-card h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+    
+    .similar-card .price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    @media (max-width: 992px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .booking-card {
+            position: static;
+        }
+        
+        .amenities-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .similar-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .amenities-grid,
+        .room-details {
+            grid-template-columns: 1fr;
+        }
+        
+        .similar-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .detail-header {
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+</style>
+
+<div class="accommodation-detail">
+    <div class="container">
+        <a href="{% url 'accommodation_list' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Accommodations
+        </a>
+        
+        <div class="detail-grid">
+            <div class="detail-main">
+                <!-- Gallery -->
+                <div class="gallery">
+                    <div class="main-image" id="mainImage">
+                        {% if accommodation.photo_1 %}
+                        <img src="{{ accommodation.photo_1.url }}" alt="{{ accommodation.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="thumbnail-row">
+                        {% if accommodation.photo_1 %}
+                        <div class="thumbnail active" onclick="changeImage('{{ accommodation.photo_1.url }}', this)">
+                            <img src="{{ accommodation.photo_1.url }}" alt="">
+                        </div>
+                        {% endif %}
+                        {% if accommodation.photo_2 %}
+                        <div class="thumbnail" onclick="changeImage('{{ accommodation.photo_2.url }}', this)">
+                            <img src="{{ accommodation.photo_2.url }}" alt="">
+                        </div>
+                        {% endif %}
+                        {% if accommodation.photo_3 %}
+                        <div class="thumbnail" onclick="changeImage('{{ accommodation.photo_3.url }}', this)">
+                            <img src="{{ accommodation.photo_3.url }}" alt="">
+                        </div>
+                        {% endif %}
+                        {% if accommodation.photo_4 %}
+                        <div class="thumbnail" onclick="changeImage('{{ accommodation.photo_4.url }}', this)">
+                            <img src="{{ accommodation.photo_4.url }}" alt="">
+                        </div>
+                        {% endif %}
+                        {% if accommodation.photo_5 %}
+                        <div class="thumbnail" onclick="changeImage('{{ accommodation.photo_5.url }}', this)">
+                            <img src="{{ accommodation.photo_5.url }}" alt="">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="detail-content">
+                    <div class="detail-header">
+                        <div>
+                            <h1>{{ accommodation.name }}</h1>
+                            <div class="detail-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ accommodation.address }}, {{ accommodation.city }}
+                            </div>
+                        </div>
+                        <span class="type-badge">{{ accommodation.get_accommodation_type_display }}</span>
+                    </div>
+                    
+                    {% if accommodation.rating > 0 %}
+                    <div class="rating-section">
+                        <div class="rating-stars">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= accommodation.rating %}
+                            <i class="fas fa-star"></i>
+                            {% else %}
+                            <i class="far fa-star"></i>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="rating-text">{{ accommodation.rating }} ({{ accommodation.total_reviews }} reviews)</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if accommodation.description %}
+                    <h3 class="section-title">About This Property</h3>
+                    <p class="description">{{ accommodation.description }}</p>
+                    {% endif %}
+                    
+                    <h3 class="section-title">Room Details</h3>
+                    <div class="room-details">
+                        <div class="room-detail-item">
+                            <i class="fas fa-bed"></i>
+                            <div>
+                                <div class="label">Room Type</div>
+                                <div class="value">{{ accommodation.get_room_type_display }}</div>
+                            </div>
+                        </div>
+                        <div class="room-detail-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <div class="label">Max Guests</div>
+                                <div class="value">{{ accommodation.max_guests_per_room }} per room</div>
+                            </div>
+                        </div>
+                        <div class="room-detail-item">
+                            <i class="fas fa-door-open"></i>
+                            <div>
+                                <div class="label">Available Rooms</div>
+                                <div class="value">{{ accommodation.available_rooms }} of {{ accommodation.total_rooms }}</div>
+                            </div>
+                        </div>
+                        <div class="room-detail-item">
+                            <i class="fas fa-bath"></i>
+                            <div>
+                                <div class="label">Bathroom</div>
+                                <div class="value">{% if accommodation.bathroom_attached %}Attached{% else %}Shared{% endif %}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="section-title">Amenities</h3>
+                    <div class="amenities-grid">
+                        <div class="amenity-item {% if not accommodation.wifi_available %}unavailable{% endif %}">
+                            <i class="fas fa-wifi"></i>
+                            <span>WiFi</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.ac_available %}unavailable{% endif %}">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.tv_available %}unavailable{% endif %}">
+                            <i class="fas fa-tv"></i>
+                            <span>Television</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.parking_available %}unavailable{% endif %}">
+                            <i class="fas fa-parking"></i>
+                            <span>Parking</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.restaurant_available %}unavailable{% endif %}">
+                            <i class="fas fa-utensils"></i>
+                            <span>Restaurant</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.room_service %}unavailable{% endif %}">
+                            <i class="fas fa-concierge-bell"></i>
+                            <span>Room Service</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.laundry_service %}unavailable{% endif %}">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Laundry</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.hot_water %}unavailable{% endif %}">
+                            <i class="fas fa-hot-tub"></i>
+                            <span>Hot Water</span>
+                        </div>
+                        <div class="amenity-item {% if not accommodation.power_backup %}unavailable{% endif %}">
+                            <i class="fas fa-bolt"></i>
+                            <span>Power Backup</span>
+                        </div>
+                    </div>
+                    
+                    {% if accommodation.house_rules %}
+                    <div class="policies">
+                        <h4><i class="fas fa-clipboard-list"></i> House Rules</h4>
+                        <p>{{ accommodation.house_rules }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if accommodation.cancellation_policy %}
+                    <div class="policies">
+                        <h4><i class="fas fa-times-circle"></i> Cancellation Policy</h4>
+                        <p>{{ accommodation.cancellation_policy }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Booking Card -->
+            <div class="booking-sidebar">
+                <div class="booking-card">
+                    <div class="booking-price">
+                        <span class="amount">₹{{ accommodation.price_per_night }}</span>
+                        <span class="per-night">/ night</span>
+                    </div>
+                    
+                    <div class="booking-info">
+                        <div class="booking-info-item">
+                            <span class="label">Room Type</span>
+                            <span class="value">{{ accommodation.get_room_type_display }}</span>
+                        </div>
+                        <div class="booking-info-item">
+                            <span class="label">Max Guests</span>
+                            <span class="value">{{ accommodation.max_guests_per_room }}</span>
+                        </div>
+                        <div class="booking-info-item">
+                            <span class="label">Extra Person</span>
+                            <span class="value">₹{{ accommodation.extra_person_charge }}/night</span>
+                        </div>
+                        <div class="booking-info-item">
+                            <span class="label">Available</span>
+                            <span class="value">{{ accommodation.available_rooms }} rooms</span>
+                        </div>
+                    </div>
+                    
+                    {% if accommodation.available_rooms > 0 %}
+                    <a href="{% url 'book_accommodation' accommodation.pk %}" class="book-btn">
+                        <i class="fas fa-calendar-check"></i> Book Now
+                    </a>
+                    {% else %}
+                    <button class="book-btn" disabled style="opacity: 0.5; cursor: not-allowed;">
+                        No Rooms Available
+                    </button>
+                    {% endif %}
+                    
+                    <div class="owner-info">
+                        <h4>Property Owner</h4>
+                        <div class="owner-details">
+                            <div class="owner-avatar">
+                                {{ accommodation.owner.business_name|slice:":2"|upper }}
+                            </div>
+                            <div>
+                                <div class="owner-name">{{ accommodation.owner.business_name }}</div>
+                                {% if accommodation.owner.is_verified %}
+                                <div class="owner-verified">
+                                    <i class="fas fa-check-circle"></i> Verified Owner
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Similar Accommodations -->
+        {% if similar_accommodations %}
+        <div class="similar-section">
+            <h3 class="section-title">Similar Accommodations</h3>
+            <div class="similar-grid">
+                {% for acc in similar_accommodations %}
+                <a href="{% url 'accommodation_detail' acc.pk %}" class="similar-card">
+                    {% if acc.photo_1 %}
+                    <img src="{{ acc.photo_1.url }}" alt="{{ acc.name }}">
+                    {% endif %}
+                    <div class="similar-card-content">
+                        <h4>{{ acc.name }}</h4>
+                        <div class="price">₹{{ acc.price_per_night }}/night</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function changeImage(src, element) {
+    document.querySelector('#mainImage img').src = src;
+    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+    element.classList.add('active');
+}
+</script>
+{% endblock %}

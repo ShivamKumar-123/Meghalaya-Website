@@ -1,0 +1,613 @@
+{% extends 'vehicles/owner_base.html' %}
+
+{% block title %}Manage Booking - {{ booking.booking_id }}{% endblock %}
+
+{% block breadcrumb %}
+<span class="breadcrumb-separator">/</span>
+<a href="{% url 'owner_bookings' %}" class="breadcrumb-link">Bookings</a>
+<span class="breadcrumb-separator">/</span>
+<span class="breadcrumb-current">{{ booking.booking_id }}</span>
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    
+    .booking-id-badge {
+        background: var(--accent-gradient);
+        color: #0a1628;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    
+    .booking-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 24px;
+    }
+    
+    .info-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+    
+    .info-card:last-child {
+        margin-bottom: 0;
+    }
+    
+    .info-card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .info-card-header i {
+        color: var(--accent-primary);
+        font-size: 18px;
+    }
+    
+    .info-card-header h3 {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+    
+    .info-card-body {
+        padding: 24px;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .info-item {
+        background: var(--bg-secondary);
+        padding: 16px;
+        border-radius: var(--border-radius-sm);
+    }
+    
+    .info-item.full-width {
+        grid-column: span 2;
+    }
+    
+    .info-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .info-value {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+    
+    .info-value a {
+        color: var(--accent-primary);
+        text-decoration: none;
+    }
+    
+    .info-value a:hover {
+        text-decoration: underline;
+    }
+    
+    .info-value.highlight {
+        color: var(--accent-primary);
+        font-size: 20px;
+        font-weight: 700;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .status-badge.pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+    }
+    
+    .status-badge.confirmed {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+    }
+    
+    .status-badge.in_progress {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--info);
+    }
+    
+    .status-badge.completed {
+        background: rgba(0, 255, 213, 0.15);
+        color: var(--accent-primary);
+    }
+    
+    .status-badge.cancelled {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--danger);
+    }
+    
+    .contact-links {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+    }
+    
+    .contact-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+    
+    .contact-link.phone {
+        background: rgba(0, 255, 213, 0.1);
+        color: var(--accent-primary);
+    }
+    
+    .contact-link.whatsapp {
+        background: rgba(37, 211, 102, 0.1);
+        color: #25D366;
+    }
+    
+    .contact-link:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Sidebar */
+    .sidebar-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        box-shadow: var(--nm-shadow);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+    
+    .sidebar-card:last-child {
+        margin-bottom: 0;
+    }
+    
+    .sidebar-card-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .sidebar-card-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .sidebar-card-header h3 i {
+        color: var(--accent-primary);
+    }
+    
+    .sidebar-card-body {
+        padding: 20px;
+    }
+    
+    .payment-screenshot {
+        width: 100%;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .payment-screenshot:hover {
+        transform: scale(1.02);
+    }
+    
+    .no-screenshot {
+        text-align: center;
+        padding: 30px;
+        background: rgba(245, 158, 11, 0.1);
+        border-radius: var(--border-radius-sm);
+        color: var(--warning);
+    }
+    
+    .no-screenshot i {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+    
+    .action-form textarea {
+        width: 100%;
+        padding: 14px;
+        background: var(--bg-secondary);
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        color: var(--text-primary);
+        box-shadow: var(--nm-shadow-inset);
+        min-height: 100px;
+        resize: vertical;
+        margin-bottom: 16px;
+    }
+    
+    .action-form textarea:focus {
+        outline: none;
+        box-shadow: var(--nm-shadow-inset), 0 0 0 3px rgba(0, 255, 213, 0.2);
+    }
+    
+    .action-form textarea::placeholder {
+        color: var(--text-muted);
+    }
+    
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 20px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .action-btn.confirm {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #fff;
+    }
+    
+    .action-btn.confirm:hover {
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    .action-btn.reject {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+    }
+    
+    .action-btn.reject:hover {
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    
+    .action-btn.in-progress {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: #fff;
+    }
+    
+    .action-btn.in-progress:hover {
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .action-btn.complete {
+        background: var(--accent-gradient);
+        color: #0a1628;
+    }
+    
+    .action-btn.complete:hover {
+        box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 14px;
+        margin-top: 24px;
+        transition: var(--transition);
+    }
+    
+    .back-link:hover {
+        color: var(--accent-primary);
+    }
+    
+    @media (max-width: 1200px) {
+        .booking-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .info-item.full-width {
+            grid-column: span 1;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h1><i class="fas fa-clipboard-list" style="color: var(--accent-primary); margin-right: 12px;"></i> Manage Booking</h1>
+    <span class="booking-id-badge">{{ booking.booking_id }}</span>
+</div>
+
+<div class="booking-grid">
+    <!-- Main Content -->
+    <div>
+        <!-- User Account Details -->
+        <div class="info-card">
+            <div class="info-card-header">
+                <i class="fas fa-user-circle"></i>
+                <h3>User Account Details</h3>
+            </div>
+            <div class="info-card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-user"></i> Username</div>
+                        <div class="info-value">{{ booking.user.username }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-envelope"></i> Account Email</div>
+                        <div class="info-value">
+                            <a href="mailto:{{ booking.user.email }}">{{ booking.user.email|default:"Not provided" }}</a>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-id-card"></i> Full Name</div>
+                        <div class="info-value">{{ booking.user.first_name }} {{ booking.user.last_name }}{% if not booking.user.first_name and not booking.user.last_name %}Not provided{% endif %}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-calendar-plus"></i> Booking Date</div>
+                        <div class="info-value">{{ booking.created_at|date:"d M Y, h:i A" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Passenger Details -->
+        <div class="info-card">
+            <div class="info-card-header">
+                <i class="fas fa-users"></i>
+                <h3>Passenger Details</h3>
+            </div>
+            <div class="info-card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-user"></i> Passenger Name</div>
+                        <div class="info-value">{{ booking.passenger_name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-user-friends"></i> Number of Passengers</div>
+                        <div class="info-value highlight">{{ booking.number_of_passengers }} Person(s)</div>
+                    </div>
+                    <div class="info-item full-width">
+                        <div class="info-label"><i class="fas fa-phone"></i> Contact</div>
+                        <div class="info-value">{{ booking.passenger_phone }}</div>
+                        <div class="contact-links">
+                            <a href="tel:{{ booking.passenger_phone }}" class="contact-link phone">
+                                <i class="fas fa-phone"></i> Call
+                            </a>
+                            <a href="https://wa.me/91{{ booking.passenger_phone }}" target="_blank" class="contact-link whatsapp">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-item full-width">
+                        <div class="info-label"><i class="fas fa-envelope"></i> Passenger Email</div>
+                        <div class="info-value">
+                            {% if booking.passenger_email %}
+                            <a href="mailto:{{ booking.passenger_email }}">{{ booking.passenger_email }}</a>
+                            {% else %}
+                            Not provided
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trip Details -->
+        <div class="info-card">
+            <div class="info-card-header">
+                <i class="fas fa-route"></i>
+                <h3>Trip Details</h3>
+            </div>
+            <div class="info-card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-map-marker-alt"></i> Pickup Location</div>
+                        <div class="info-value">{{ booking.pickup_location }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-flag-checkered"></i> Destination</div>
+                        <div class="info-value">{{ booking.destination }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-calendar"></i> Pickup Date</div>
+                        <div class="info-value">{{ booking.pickup_date }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-clock"></i> Pickup Time</div>
+                        <div class="info-value">{{ booking.pickup_time }}</div>
+                    </div>
+                    {% if booking.special_requests %}
+                    <div class="info-item full-width">
+                        <div class="info-label"><i class="fas fa-comment-alt"></i> Special Requests</div>
+                        <div class="info-value">{{ booking.special_requests }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vehicle Details -->
+        <div class="info-card">
+            <div class="info-card-header">
+                <i class="fas fa-car"></i>
+                <h3>Vehicle Details</h3>
+            </div>
+            <div class="info-card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-car"></i> Vehicle</div>
+                        <div class="info-value">{{ booking.vehicle.vehicle_name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-id-card"></i> Number</div>
+                        <div class="info-value">{{ booking.vehicle.vehicle_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-tag"></i> Category</div>
+                        <div class="info-value">{{ booking.vehicle.get_category_display }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label"><i class="fas fa-users"></i> Capacity</div>
+                        <div class="info-value">{{ booking.vehicle.seating_capacity }} Seats</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <a href="{% url 'owner_bookings' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Bookings
+        </a>
+    </div>
+    
+    <!-- Sidebar -->
+    <div>
+        <!-- Payment Details -->
+        <div class="sidebar-card">
+            <div class="sidebar-card-header">
+                <h3><i class="fas fa-rupee-sign"></i> Payment Details</h3>
+            </div>
+            <div class="sidebar-card-body">
+                <div class="info-item" style="margin-bottom: 16px;">
+                    <div class="info-label">Total Amount</div>
+                    <div class="info-value highlight">₹{{ booking.total_amount }}</div>
+                </div>
+                <div class="info-item" style="margin-bottom: 16px;">
+                    <div class="info-label">Payment Status</div>
+                    <div class="info-value">
+                        <span class="status-badge {% if booking.payment_status == 'verified' %}confirmed{% elif booking.payment_status == 'submitted' %}pending{% else %}pending{% endif %}">
+                            {{ booking.get_payment_status_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Booking Status</div>
+                    <div class="info-value">
+                        <span class="status-badge {{ booking.booking_status }}">
+                            {{ booking.get_booking_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Screenshot -->
+        <div class="sidebar-card">
+            <div class="sidebar-card-header">
+                <h3><i class="fas fa-receipt"></i> Payment Screenshot</h3>
+            </div>
+            <div class="sidebar-card-body">
+                {% if booking.payment_screenshot %}
+                <a href="{{ booking.payment_screenshot.url }}" target="_blank">
+                    <img src="{{ booking.payment_screenshot.url }}" alt="Payment Screenshot" class="payment-screenshot">
+                </a>
+                <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 12px;">
+                    <i class="fas fa-search-plus"></i> Click to view full size
+                </p>
+                {% else %}
+                <div class="no-screenshot">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>No payment screenshot uploaded</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="sidebar-card">
+            <div class="sidebar-card-header">
+                <h3><i class="fas fa-cogs"></i> Take Action</h3>
+            </div>
+            <div class="sidebar-card-body">
+                <form method="post" class="action-form">
+                    {% csrf_token %}
+                    <textarea name="remarks" placeholder="Add remarks or message for the customer (optional)..."></textarea>
+                    
+                    <div class="action-buttons">
+                        {% if booking.booking_status == 'pending' %}
+                        <button type="submit" name="action" value="confirm" class="action-btn confirm">
+                            <i class="fas fa-check"></i> Confirm Booking
+                        </button>
+                        <button type="submit" name="action" value="reject" class="action-btn reject">
+                            <i class="fas fa-times"></i> Reject Booking
+                        </button>
+                        {% elif booking.booking_status == 'confirmed' %}
+                        <button type="submit" name="action" value="in_progress" class="action-btn in-progress">
+                            <i class="fas fa-car"></i> Start Trip
+                        </button>
+                        <button type="submit" name="action" value="complete" class="action-btn complete">
+                            <i class="fas fa-flag-checkered"></i> Mark Completed
+                        </button>
+                        {% elif booking.booking_status == 'in_progress' %}
+                        <button type="submit" name="action" value="complete" class="action-btn complete">
+                            <i class="fas fa-flag-checkered"></i> Mark Completed
+                        </button>
+                        {% elif booking.booking_status == 'completed' %}
+                        <p style="text-align: center; color: var(--success); padding: 20px;">
+                            <i class="fas fa-check-circle" style="font-size: 24px;"></i><br>
+                            This booking is completed
+                        </p>
+                        {% elif booking.booking_status == 'cancelled' %}
+                        <p style="text-align: center; color: var(--danger); padding: 20px;">
+                            <i class="fas fa-times-circle" style="font-size: 24px;"></i><br>
+                            This booking was cancelled
+                        </p>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

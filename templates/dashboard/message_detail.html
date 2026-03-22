@@ -1,0 +1,173 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Message Detail - Dashboard{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-envelope-open-text me-2"></i>Message Detail
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Message Info -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Sender Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="text-muted small">Name</label>
+                    <p class="mb-0 fw-bold">{{ contact_message.name }}</p>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small">Email</label>
+                    <p class="mb-0">
+                        <a href="mailto:{{ contact_message.email }}">{{ contact_message.email }}</a>
+                    </p>
+                </div>
+                {% if contact_message.phone %}
+                <div class="mb-3">
+                    <label class="text-muted small">Phone</label>
+                    <p class="mb-0">
+                        <a href="tel:{{ contact_message.phone }}">{{ contact_message.phone }}</a>
+                    </p>
+                </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label class="text-muted small">Subject</label>
+                    <p class="mb-0">
+                        <span class="badge bg-primary">{{ contact_message.get_subject_display }}</span>
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small">Status</label>
+                    <p class="mb-0">
+                        {% if contact_message.status == 'unread' %}
+                            <span class="badge bg-danger">Unread</span>
+                        {% elif contact_message.status == 'read' %}
+                            <span class="badge bg-info">Read</span>
+                        {% elif contact_message.status == 'replied' %}
+                            <span class="badge bg-success">Replied</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Closed</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small">Received</label>
+                    <p class="mb-0">{{ contact_message.created_at|date:"M d, Y H:i" }}</p>
+                </div>
+                
+                <hr>
+                
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'dashboard_message_status' contact_message.pk %}?status=closed" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-check-circle me-1"></i>Close
+                    </a>
+                    <a href="{% url 'dashboard_message_delete' contact_message.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                        <i class="fas fa-trash me-1"></i>Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <a href="{% url 'dashboard_messages' %}" class="btn btn-outline-primary mt-3">
+            <i class="fas fa-arrow-left me-2"></i>Back to Messages
+        </a>
+    </div>
+    
+    <!-- Conversation -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Conversation</h5>
+            </div>
+            <div class="card-body" style="max-height: 500px; overflow-y: auto;" id="conversationBox">
+                <!-- Original Message -->
+                <div class="message-bubble user-message mb-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong>{{ contact_message.name }}</strong>
+                                <small class="text-muted">{{ contact_message.created_at|date:"M d, Y H:i" }}</small>
+                            </div>
+                            <div class="message-content p-3 rounded" style="background: #e3f2fd;">
+                                {{ contact_message.message|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Replies -->
+                {% for reply in replies %}
+                <div class="message-bubble {% if reply.is_admin_reply %}admin-message{% else %}user-message{% endif %} mb-4">
+                    <div class="d-flex align-items-start gap-3 {% if reply.is_admin_reply %}flex-row-reverse{% endif %}">
+                        <div class="avatar {% if reply.is_admin_reply %}bg-success{% else %}bg-primary{% endif %} text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
+                            <i class="fas {% if reply.is_admin_reply %}fa-user-shield{% else %}fa-user{% endif %}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2 {% if reply.is_admin_reply %}flex-row-reverse{% endif %}">
+                                <strong>{% if reply.is_admin_reply %}Admin{% if reply.user %} ({{ reply.user.username }}){% endif %}{% else %}{{ contact_message.name }}{% endif %}</strong>
+                                <small class="text-muted">{{ reply.created_at|date:"M d, Y H:i" }}</small>
+                            </div>
+                            <div class="message-content p-3 rounded {% if reply.is_admin_reply %}text-end{% endif %}" style="background: {% if reply.is_admin_reply %}#e8f5e9{% else %}#e3f2fd{% endif %};">
+                                {{ reply.reply_text|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Reply Form -->
+            <div class="card-footer">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold"><i class="fas fa-reply me-2"></i>Send Reply</label>
+                        <textarea name="reply_text" class="form-control" rows="4" placeholder="Type your reply here..." required></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>Reply will be sent to {{ contact_message.email }}
+                        </small>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane me-2"></i>Send Reply
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.message-bubble {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-content {
+    word-wrap: break-word;
+}
+
+.avatar {
+    font-size: 1.2rem;
+}
+</style>
+
+<script>
+// Scroll to bottom of conversation
+document.addEventListener('DOMContentLoaded', function() {
+    const conversationBox = document.getElementById('conversationBox');
+    conversationBox.scrollTop = conversationBox.scrollHeight;
+});
+</script>
+{% endblock %}

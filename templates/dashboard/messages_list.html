@@ -1,0 +1,118 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Messages - Dashboard{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-envelope me-2"></i>Contact Messages
+{% if unread_count > 0 %}
+<span class="badge bg-danger ms-2">{{ unread_count }} New</span>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3">
+            <h5 class="mb-0">All Messages</h5>
+            <!-- Status Filter -->
+            <div class="btn-group" role="group">
+                <a href="{% url 'dashboard_messages' %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+                <a href="{% url 'dashboard_messages' %}?status=unread" class="btn btn-sm {% if status_filter == 'unread' %}btn-danger{% else %}btn-outline-danger{% endif %}">Unread</a>
+                <a href="{% url 'dashboard_messages' %}?status=read" class="btn btn-sm {% if status_filter == 'read' %}btn-info{% else %}btn-outline-info{% endif %}">Read</a>
+                <a href="{% url 'dashboard_messages' %}?status=replied" class="btn btn-sm {% if status_filter == 'replied' %}btn-success{% else %}btn-outline-success{% endif %}">Replied</a>
+                <a href="{% url 'dashboard_messages' %}?status=closed" class="btn btn-sm {% if status_filter == 'closed' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Closed</a>
+            </div>
+        </div>
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search messages...">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="messagesTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 50px;">Status</th>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages_list %}
+                    <tr class="{% if msg.status == 'unread' %}table-warning{% endif %}">
+                        <td>
+                            {% if msg.status == 'unread' %}
+                                <span class="badge bg-danger"><i class="fas fa-envelope"></i></span>
+                            {% elif msg.status == 'read' %}
+                                <span class="badge bg-info"><i class="fas fa-envelope-open"></i></span>
+                            {% elif msg.status == 'replied' %}
+                                <span class="badge bg-success"><i class="fas fa-reply"></i></span>
+                            {% else %}
+                                <span class="badge bg-secondary"><i class="fas fa-check-circle"></i></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ msg.name }}</strong><br>
+                            <small class="text-muted">{{ msg.email }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">{{ msg.get_subject_display }}</span>
+                        </td>
+                        <td>
+                            <span class="text-truncate d-inline-block" style="max-width: 200px;">
+                                {{ msg.message|truncatewords:10 }}
+                            </span>
+                        </td>
+                        <td>
+                            <small>{{ msg.created_at|date:"M d, Y" }}<br>{{ msg.created_at|time:"H:i" }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'dashboard_message_detail' msg.pk %}" class="btn btn-primary" title="View & Reply">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="{% url 'dashboard_message_status' msg.pk %}?status=unread"><i class="fas fa-envelope text-danger me-2"></i>Mark Unread</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dashboard_message_status' msg.pk %}?status=read"><i class="fas fa-envelope-open text-info me-2"></i>Mark Read</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dashboard_message_status' msg.pk %}?status=closed"><i class="fas fa-check-circle text-secondary me-2"></i>Close</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{% url 'dashboard_message_delete' msg.pk %}" onclick="return confirm('Are you sure you want to delete this message?')"><i class="fas fa-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">No messages found</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#messagesTable tbody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

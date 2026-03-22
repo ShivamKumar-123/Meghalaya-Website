@@ -1,0 +1,335 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}My Accommodation Bookings{% endblock %}
+
+{% block content %}
+<style>
+    .my-bookings-page {
+        padding: 40px 0;
+        margin-top: 80px;
+        background: transparent;
+        min-height: 100vh;
+    }
+    
+    .page-header {
+        margin-bottom: 32px;
+    }
+    
+    .page-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #00ffd5;
+        margin-bottom: 8px;
+    }
+    
+    .page-header p {
+        color: #a0aec0;
+    }
+    
+    .bookings-grid {
+        display: grid;
+        gap: 24px;
+    }
+    
+    .booking-card {
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 200px 1fr auto;
+        transition: all 0.3s ease;
+    }
+    
+    .booking-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(0, 255, 213, 0.5);
+        box-shadow: 0 8px 30px rgba(0, 255, 213, 0.1);
+    }
+    
+    .booking-image {
+        height: 100%;
+        min-height: 180px;
+    }
+    
+    .booking-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .booking-content {
+        padding: 24px;
+    }
+    
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+    
+    .booking-id {
+        font-size: 12px;
+        color: #a0aec0;
+        margin-bottom: 4px;
+    }
+    
+    .booking-content h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+    
+    .booking-location {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #a0aec0;
+        font-size: 14px;
+    }
+    
+    .booking-location i {
+        color: #00ffd5;
+    }
+    
+    .booking-details {
+        display: flex;
+        gap: 24px;
+        margin-top: 16px;
+    }
+    
+    .booking-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .booking-detail i {
+        color: #00ffd5;
+    }
+    
+    .booking-detail span {
+        font-size: 14px;
+        color: #a0aec0;
+    }
+    
+    .booking-actions {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 12px;
+        border-left: 1px solid rgba(0, 255, 213, 0.1);
+    }
+    
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .status-badge.pending {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+    }
+    
+    .status-badge.confirmed {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
+    
+    .status-badge.checked_in {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+    }
+    
+    .status-badge.checked_out {
+        background: rgba(107, 114, 128, 0.2);
+        color: #9ca3af;
+    }
+    
+    .status-badge.cancelled {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+    
+    .booking-amount {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00ffd5;
+    }
+    
+    .view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    
+    .view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: rgba(15, 30, 50, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 16px;
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        color: rgba(0, 255, 213, 0.3);
+        margin-bottom: 24px;
+    }
+    
+    .empty-state h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+    
+    .empty-state p {
+        color: #a0aec0;
+        margin-bottom: 24px;
+    }
+    
+    .browse-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .browse-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+        color: #0a1628;
+    }
+    
+    @media (max-width: 992px) {
+        .booking-card {
+            grid-template-columns: 1fr;
+        }
+        
+        .booking-image {
+            height: 200px;
+        }
+        
+        .booking-actions {
+            border-left: none;
+            border-top: 1px solid rgba(0, 255, 213, 0.1);
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .booking-details {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .booking-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+<div class="my-bookings-page">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-calendar-check" style="color: #00b4db;"></i> My Accommodation Bookings</h1>
+            <p>View and manage your accommodation bookings</p>
+        </div>
+        
+        {% if bookings %}
+        <div class="bookings-grid">
+            {% for booking in bookings %}
+            <div class="booking-card">
+                <div class="booking-image">
+                    {% if booking.accommodation.photo_1 %}
+                    <img src="{{ booking.accommodation.photo_1.url }}" alt="{{ booking.accommodation.name }}">
+                    {% endif %}
+                </div>
+                <div class="booking-content">
+                    <div class="booking-header">
+                        <div>
+                            <div class="booking-id">Booking ID: {{ booking.booking_id }}</div>
+                            <h3>{{ booking.accommodation.name }}</h3>
+                            <div class="booking-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ booking.accommodation.city }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="booking-details">
+                        <div class="booking-detail">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>{{ booking.check_in_date|date:"d M" }} - {{ booking.check_out_date|date:"d M, Y" }}</span>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-moon"></i>
+                            <span>{{ booking.number_of_nights }} Night{% if booking.number_of_nights > 1 %}s{% endif %}</span>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-door-open"></i>
+                            <span>{{ booking.number_of_rooms }} Room{% if booking.number_of_rooms > 1 %}s{% endif %}</span>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-users"></i>
+                            <span>{{ booking.number_of_guests }} Guest{% if booking.number_of_guests > 1 %}s{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="booking-actions">
+                    <span class="status-badge {{ booking.booking_status }}">
+                        {{ booking.get_booking_status_display }}
+                    </span>
+                    <div class="booking-amount">₹{{ booking.total_amount }}</div>
+                    <a href="{% url 'accommodation_booking_detail' booking.booking_id %}" class="view-btn">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-bed"></i>
+            <h3>No Bookings Yet</h3>
+            <p>You haven't made any accommodation bookings yet. Start exploring!</p>
+            <a href="{% url 'accommodation_list' %}" class="browse-btn">
+                <i class="fas fa-search"></i> Browse Accommodations
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

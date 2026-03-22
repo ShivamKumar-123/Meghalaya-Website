@@ -1,0 +1,304 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Message Detail{% endblock %}
+
+{% block content %}
+<style>
+    .message-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 40px 20px;
+    }
+    
+    .back-link {
+        color: #00ffd5;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #4ecdc4;
+        transform: translateX(-5px);
+    }
+    
+    .message-title {
+        color: #ffffff;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .message-meta-info {
+        color: #888;
+        font-size: 0.95rem;
+    }
+    
+    .conversation-section {
+        padding: 40px 0;
+        min-height: 60vh;
+    }
+    
+    .conversation-box {
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(0,255,213,0.1);
+    }
+    
+    .message-bubble {
+        margin-bottom: 25px;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .bubble-wrapper {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .bubble-wrapper.admin {
+        flex-direction: row-reverse;
+    }
+    
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
+    .avatar.user {
+        background: linear-gradient(135deg, #00ffd5, #4ecdc4);
+        color: #000;
+    }
+    
+    .avatar.admin {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: #fff;
+    }
+    
+    .bubble-content {
+        flex-grow: 1;
+        max-width: 80%;
+    }
+    
+    .bubble-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    
+    .bubble-wrapper.admin .bubble-header {
+        flex-direction: row-reverse;
+    }
+    
+    .bubble-sender {
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .bubble-time {
+        font-size: 0.85rem;
+        color: #888;
+    }
+    
+    .bubble-text {
+        padding: 15px 20px;
+        border-radius: 15px;
+        line-height: 1.7;
+        color: #e0e0e0;
+    }
+    
+    .bubble-text.user {
+        background: rgba(0,255,213,0.1);
+        border: 1px solid rgba(0,255,213,0.2);
+    }
+    
+    .bubble-text.admin {
+        background: rgba(40,167,69,0.1);
+        border: 1px solid rgba(40,167,69,0.2);
+        text-align: right;
+    }
+    
+    .reply-form {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .reply-form label {
+        color: #00ffd5;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: block;
+    }
+    
+    .reply-form textarea {
+        width: 100%;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border: 2px solid rgba(0,255,213,0.2);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 1rem;
+        min-height: 120px;
+        resize: vertical;
+        transition: all 0.3s ease;
+    }
+    
+    .reply-form textarea:focus {
+        outline: none;
+        border-color: #00ffd5;
+        box-shadow: 0 0 20px rgba(0,255,213,0.2);
+    }
+    
+    .reply-form textarea::placeholder {
+        color: #666;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #00ffd5, #4ecdc4);
+        color: #000;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,255,213,0.3);
+    }
+    
+    .status-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+    
+    .status-unread { background: #dc3545; color: white; }
+    .status-read { background: #17a2b8; color: white; }
+    .status-replied { background: #28a745; color: white; }
+    .status-closed { background: #6c757d; color: white; }
+    
+    .alert-success {
+        background: rgba(0,255,213,0.1);
+        border: 1px solid #00ffd5;
+        color: #00ffd5;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<section class="message-hero">
+    <div class="container">
+        <a href="{% url 'my_messages' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i>Back to Messages
+        </a>
+        <h1 class="message-title">
+            <i class="fas fa-tag me-2"></i>{{ contact_message.get_subject_display }}
+        </h1>
+        <div class="message-meta-info">
+            <span class="me-3"><i class="fas fa-clock me-1"></i>{{ contact_message.created_at|date:"M d, Y H:i" }}</span>
+            <span class="status-badge status-{{ contact_message.status }}">
+                {{ contact_message.get_status_display }}
+            </span>
+        </div>
+    </div>
+</section>
+
+{% include 'components/wave_separator.html' with wave_type='teal' %}
+
+<section class="conversation-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>{{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="conversation-box">
+                    <!-- Original Message -->
+                    <div class="message-bubble">
+                        <div class="bubble-wrapper">
+                            <div class="avatar user">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="bubble-content">
+                                <div class="bubble-header">
+                                    <span class="bubble-sender">You</span>
+                                    <span class="bubble-time">{{ contact_message.created_at|date:"M d, Y H:i" }}</span>
+                                </div>
+                                <div class="bubble-text user">
+                                    {{ contact_message.message|linebreaks }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Replies -->
+                    {% for reply in replies %}
+                    <div class="message-bubble">
+                        <div class="bubble-wrapper {% if reply.is_admin_reply %}admin{% endif %}">
+                            <div class="avatar {% if reply.is_admin_reply %}admin{% else %}user{% endif %}">
+                                <i class="fas {% if reply.is_admin_reply %}fa-user-shield{% else %}fa-user{% endif %}"></i>
+                            </div>
+                            <div class="bubble-content">
+                                <div class="bubble-header">
+                                    <span class="bubble-sender">{% if reply.is_admin_reply %}Admin{% else %}You{% endif %}</span>
+                                    <span class="bubble-time">{{ reply.created_at|date:"M d, Y H:i" }}</span>
+                                </div>
+                                <div class="bubble-text {% if reply.is_admin_reply %}admin{% else %}user{% endif %}">
+                                    {{ reply.reply_text|linebreaks }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Reply Form -->
+                    {% if contact_message.status != 'closed' %}
+                    <form method="post" class="reply-form">
+                        {% csrf_token %}
+                        <label><i class="fas fa-reply me-2"></i>Send a Reply</label>
+                        <textarea name="reply_text" placeholder="Type your message here..." required></textarea>
+                        <div class="mt-3">
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-paper-plane"></i>Send Reply
+                            </button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="text-center mt-4 py-3" style="color: #888;">
+                        <i class="fas fa-lock me-2"></i>This conversation has been closed.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
