@@ -57,4 +57,12 @@ urlpatterns = [
     path('vehicles/<int:pk>/verify/', dashboard_views.dashboard_vehicle_verify, name='dashboard_vehicle_verify'),
     path('bookings/', dashboard_views.dashboard_bookings, name='dashboard_bookings'),
     path('bookings/<str:booking_id>/', dashboard_views.dashboard_booking_detail, name='dashboard_booking_detail'),
+    
+    # Accommodation Management
+    path('accommodation-owners/', dashboard_views.dashboard_accommodation_owners, name='dashboard_accommodation_owners'),
+    path('accommodation-owners/<int:pk>/action/', dashboard_views.dashboard_accommodation_owner_action, name='dashboard_accommodation_owner_action'),
+    path('accommodations/', dashboard_views.dashboard_accommodations, name='dashboard_accommodations'),
+    path('accommodations/<int:pk>/verify/', dashboard_views.dashboard_accommodation_verify, name='dashboard_accommodation_verify'),
+    path('accommodation-bookings/', dashboard_views.dashboard_accommodation_bookings, name='dashboard_accommodation_bookings'),
+    path('accommodation-bookings/<str:booking_id>/', dashboard_views.dashboard_accommodation_booking_detail, name='dashboard_accommodation_booking_detail'),
 ]

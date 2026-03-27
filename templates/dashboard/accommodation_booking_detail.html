@@ -1,0 +1,129 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Booking {{ booking.booking_id }}{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<a href="{% url 'dashboard_accommodation_bookings' %}" class="breadcrumb-link">Accommodation Bookings</a>
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">{{ booking.booking_id }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Accommodation Booking Details</h1>
+    <p class="page-subtitle">Booking ID: {{ booking.booking_id }}</p>
+</div>
+
+<div class="cards-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Property Information</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Property:</strong> {{ booking.accommodation.name }}</p>
+            <p><strong>Type:</strong> {{ booking.accommodation.get_accommodation_type_display }}</p>
+            <p><strong>Owner:</strong> {{ booking.accommodation.owner.business_name }}</p>
+            <p><strong>Location:</strong> {{ booking.accommodation.city }}</p>
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <p><strong>Check-in Date:</strong> {{ booking.check_in_date }}</p>
+            <p><strong>Check-out Date:</strong> {{ booking.check_out_date }}</p>
+            <p><strong>Number of Nights:</strong> {{ booking.number_of_nights }}</p>
+            <p><strong>Number of Rooms:</strong> {{ booking.number_of_rooms }}</p>
+        </div>
+    </div>
+    
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Guest Information</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Name:</strong> {{ booking.guest_name }}</p>
+            <p><strong>Phone:</strong> {{ booking.guest_phone }}</p>
+            <p><strong>Email:</strong> {{ booking.guest_email|default:"Not provided" }}</p>
+            <p><strong>Number of Guests:</strong> {{ booking.number_of_guests }}</p>
+            {% if booking.special_requests %}
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <p><strong>Special Requests:</strong></p>
+            <p>{{ booking.special_requests }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Payment & Status</h2>
+        </div>
+        <div style="padding: 20px;">
+            <p><strong>Total Amount:</strong> <span style="font-size: 1.5rem; color: var(--accent-primary);">₹{{ booking.total_amount }}</span></p>
+            <p><strong>Booking Status:</strong> 
+                {% if booking.booking_status == 'pending' %}
+                <span class="status-badge status-warning">Pending</span>
+                {% elif booking.booking_status == 'confirmed' %}
+                <span class="status-badge status-success">Confirmed</span>
+                {% elif booking.booking_status == 'checked_in' %}
+                <span class="status-badge status-info">Checked In</span>
+                {% elif booking.booking_status == 'checked_out' %}
+                <span class="status-badge" style="background: rgba(108, 117, 125, 0.1); color: #6c757d;">Completed</span>
+                {% elif booking.booking_status == 'cancelled' %}
+                <span class="status-badge status-danger">Cancelled</span>
+                {% endif %}
+            </p>
+            <p><strong>Payment Status:</strong> 
+                {% if booking.payment_status == 'pending' %}
+                <span class="status-badge status-warning">Pending</span>
+                {% elif booking.payment_status == 'paid' %}
+                <span class="status-badge status-success">Paid</span>
+                {% endif %}
+            </p>
+            {% if booking.payment_screenshot %}
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <p><strong>Payment Screenshot:</strong></p>
+            <img src="{{ booking.payment_screenshot.url }}" alt="Payment Screenshot" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card nm-flat cascade-in">
+        <div class="card-header">
+            <h2 class="card-title">Actions</h2>
+        </div>
+        <div style="padding: 20px;">
+            <form method="post">
+                {% csrf_token %}
+                {% if booking.booking_status == 'pending' %}
+                <button type="submit" name="action" value="confirm" class="btn-primary" style="margin-right: 10px;">
+                    <i class="fas fa-check"></i> Confirm Booking
+                </button>
+                <button type="submit" name="action" value="cancel" class="btn-secondary" style="background: #dc3545; border-color: #dc3545;">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+                {% elif booking.booking_status == 'confirmed' %}
+                <button type="submit" name="action" value="check_in" class="btn-primary" style="margin-right: 10px;">
+                    <i class="fas fa-door-open"></i> Check In Guest
+                </button>
+                <button type="submit" name="action" value="cancel" class="btn-secondary" style="background: #dc3545; border-color: #dc3545;">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+                {% elif booking.booking_status == 'checked_in' %}
+                <button type="submit" name="action" value="check_out" class="btn-primary">
+                    <i class="fas fa-door-closed"></i> Check Out Guest
+                </button>
+                {% elif booking.booking_status == 'checked_out' %}
+                <p style="color: var(--success-color);"><i class="fas fa-check-circle"></i> This booking has been completed.</p>
+                {% elif booking.booking_status == 'cancelled' %}
+                <p style="color: var(--danger-color);"><i class="fas fa-times-circle"></i> This booking was cancelled.</p>
+                {% endif %}
+            </form>
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+            <a href="{% url 'dashboard_accommodation_bookings' %}" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Bookings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

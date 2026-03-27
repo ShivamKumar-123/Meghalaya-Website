@@ -4,10 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db import models
 from .models import (
     MeghalayaLocation, RegionOfMeghalaya, Festival, 
     MeghalayaImages, MeghalyaVideos, TrevalAround,
-    ContactMessage, MessageReply
+    ContactMessage, MessageReply,
+    Accommodation, AccommodationOwner, AccommodationBooking,
+    Vehicle, VehicleOwner, VehicleBooking
 )
 
 def is_staff_or_superuser(user):
@@ -17,12 +20,52 @@ def is_staff_or_superuser(user):
 @login_required
 @user_passes_test(is_staff_or_superuser)
 def dashboard_home(request):
+    # Vehicle statistics
+    total_vehicles = Vehicle.objects.count()
+    total_vehicle_owners = VehicleOwner.objects.count()
+    total_vehicle_bookings = VehicleBooking.objects.count()
+    pending_vehicle_bookings = VehicleBooking.objects.filter(booking_status='pending').count()
+    vehicle_revenue = VehicleBooking.objects.filter(
+        booking_status__in=['confirmed', 'in_progress', 'completed'],
+        payment_status='verified'
+    ).aggregate(total=models.Sum('total_amount'))['total'] or 0
+    
+    # Accommodation statistics
+    total_accommodations = Accommodation.objects.count()
+    total_accommodation_owners = AccommodationOwner.objects.count()
+    total_accommodation_bookings = AccommodationBooking.objects.count()
+    pending_accommodation_bookings = AccommodationBooking.objects.filter(booking_status='pending').count()
+    accommodation_revenue = AccommodationBooking.objects.filter(
+        booking_status__in=['confirmed', 'checked_in', 'checked_out'],
+        payment_status='paid'
+    ).aggregate(total=models.Sum('total_amount'))['total'] or 0
+    
+    # Recent bookings
+    recent_vehicle_bookings = VehicleBooking.objects.order_by('-created_at')[:5]
+    recent_accommodation_bookings = AccommodationBooking.objects.order_by('-created_at')[:5]
+    
     context = {
         'places_count': MeghalayaLocation.objects.count(),
         'regions_count': RegionOfMeghalaya.objects.count(),
         'festivals_count': Festival.objects.count(),
         'users_count': User.objects.count(),
         'recent_places': MeghalayaLocation.objects.order_by('-created_at')[:5],
+        # Vehicle stats
+        'total_vehicles': total_vehicles,
+        'total_vehicle_owners': total_vehicle_owners,
+        'total_vehicle_bookings': total_vehicle_bookings,
+        'pending_vehicle_bookings': pending_vehicle_bookings,
+        'vehicle_revenue': vehicle_revenue,
+        'recent_vehicle_bookings': recent_vehicle_bookings,
+        # Accommodation stats
+        'total_accommodations': total_accommodations,
+        'total_accommodation_owners': total_accommodation_owners,
+        'total_accommodation_bookings': total_accommodation_bookings,
+        'pending_accommodation_bookings': pending_accommodation_bookings,
+        'accommodation_revenue': accommodation_revenue,
+        'recent_accommodation_bookings': recent_accommodation_bookings,
+        # Combined stats
+        'total_revenue': vehicle_revenue + accommodation_revenue,
     }
     return render(request, 'dashboard/dashboard_home.html', context)
 
@@ -427,7 +470,7 @@ from .models import VehicleOwner, Vehicle, VehicleBooking
 @login_required
 @user_passes_test(is_staff_or_superuser)
 def dashboard_vehicle_owners(request):
-    owners = VehicleOwner.objects.all().order_by('-created_at')
+    owners = VehicleOwner.objects.all().select_related('user').prefetch_related('vehicles').order_by('-created_at')
     return render(request, 'dashboard/vehicle_owners.html', {'owners': owners})
 
 @login_required
@@ -458,7 +501,7 @@ def dashboard_vehicle_owner_verify(request, pk):
 @login_required
 @user_passes_test(is_staff_or_superuser)
 def dashboard_vehicles(request):
-    vehicles = Vehicle.objects.all().order_by('-created_at')
+    vehicles = Vehicle.objects.all().select_related('owner').order_by('-created_at')
     return render(request, 'dashboard/vehicles_list.html', {'vehicles': vehicles})
 
 @login_required
@@ -481,7 +524,7 @@ def dashboard_vehicle_verify(request, pk):
 @login_required
 @user_passes_test(is_staff_or_superuser)
 def dashboard_bookings(request):
-    bookings = VehicleBooking.objects.all().order_by('-created_at')
+    bookings = VehicleBooking.objects.all().select_related('vehicle', 'vehicle__owner', 'user').order_by('-created_at')
     return render(request, 'dashboard/bookings_list.html', {'bookings': bookings})
 
 @login_required
@@ -503,3 +546,91 @@ def dashboard_booking_detail(request, booking_id):
         return redirect('dashboard_bookings')
     
     return render(request, 'dashboard/booking_detail.html', {'booking': booking})
+
+# ==================== ACCOMMODATION MANAGEMENT ====================
+@login_required
+@user_passes_test(is_staff_or_superuser)
+def dashboard_accommodation_owners(request):
+    owners = AccommodationOwner.objects.all().select_related('user').prefetch_related('accommodations').order_by('-created_at')
+    return render(request, 'dashboard/accommodation_owners_list.html', {'owners': owners})
+
+@login_required
+@user_passes_test(is_staff_or_superuser)
+def dashboard_accommodation_owner_action(request, pk):
+    owner = get_object_or_404(AccommodationOwner, pk=pk)
+    action = request.GET.get('action', 'verify')
+    
+    if action == 'verify':
+        owner.is_verified = True
+        owner.save()
+        messages.success(request, f'Accommodation owner "{owner.business_name}" verified!')
+    elif action == 'unverify':
+        owner.is_verified = False
+        owner.save()
+        messages.warning(request, f'Accommodation owner "{owner.business_name}" unverified!')
+    elif action == 'activate':
+        owner.is_active = True
+        owner.save()
+        messages.success(request, f'Accommodation owner "{owner.business_name}" activated!')
+    elif action == 'deactivate':
+        owner.is_active = False
+        owner.save()
+        messages.warning(request, f'Accommodation owner "{owner.business_name}" deactivated!')
+    
+    return redirect('dashboard_accommodation_owners')
+
+@login_required
+@user_passes_test(is_staff_or_superuser)
+def dashboard_accommodations(request):
+    accommodations = Accommodation.objects.all().select_related('owner').order_by('-created_at')
+    return render(request, 'dashboard/accommodations_list.html', {'accommodations': accommodations})
+
+@login_required
+@user_passes_test(is_staff_or_superuser)
+def dashboard_accommodation_verify(request, pk):
+    accommodation = get_object_or_404(Accommodation, pk=pk)
+    action = request.GET.get('action', 'verify')
+    
+    if action == 'verify':
+        accommodation.is_verified = True
+        accommodation.save()
+        messages.success(request, f'Accommodation "{accommodation.name}" verified! It will now be visible to users.')
+    elif action == 'unverify':
+        accommodation.is_verified = False
+        accommodation.save()
+        messages.warning(request, f'Accommodation "{accommodation.name}" unverified!')
+    
+    return redirect('dashboard_accommodations')
+
+@login_required
+@user_passes_test(is_staff_or_superuser)
+def dashboard_accommodation_bookings(request):
+    bookings = AccommodationBooking.objects.all().select_related('accommodation', 'accommodation__owner', 'user').order_by('-created_at')
+    return render(request, 'dashboard/accommodation_bookings_list.html', {'bookings': bookings})
+
+@login_required
+@user_passes_test(is_staff_or_superuser)
+def dashboard_accommodation_booking_detail(request, booking_id):
+    booking = get_object_or_404(AccommodationBooking.objects.select_related('accommodation', 'accommodation__owner', 'user'), booking_id=booking_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'confirm':
+            booking.booking_status = 'confirmed'
+            booking.save()
+            messages.success(request, 'Booking confirmed!')
+        elif action == 'cancel':
+            booking.booking_status = 'cancelled'
+            booking.save()
+            messages.warning(request, 'Booking cancelled!')
+        elif action == 'check_in':
+            booking.booking_status = 'checked_in'
+            booking.save()
+            messages.success(request, 'Guest checked in!')
+        elif action == 'check_out':
+            booking.booking_status = 'checked_out'
+            booking.save()
+            messages.success(request, 'Guest checked out!')
+        return redirect('dashboard_accommodation_bookings')
+    
+    return render(request, 'dashboard/accommodation_booking_detail.html', {'booking': booking})

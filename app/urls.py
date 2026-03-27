@@ -104,6 +104,8 @@ urlpatterns = [
 
     path('accommodation-owner/login/', views.accommodation_owner_login, name='accommodation_owner_login'),
 
+    path('accommodation-owner/login/submit/', views.accommodation_owner_login_submit, name='accommodation_owner_login_submit'),
+
     path('accommodation-owner/register/', views.accommodation_owner_register, name='accommodation_owner_register'),
 
     path('accommodation-owner/dashboard/', views.accommodation_owner_dashboard, name='accommodation_owner_dashboard'),

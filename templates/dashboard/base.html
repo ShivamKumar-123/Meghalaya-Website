@@ -138,6 +138,27 @@
                     </div>
                     <span>Bookings</span>
                 </a>
+                
+                <!-- Accommodation Management Section -->
+                <div class="sidebar-section-title" style="padding: 16px 20px 8px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Accommodation</div>
+                <a href="{% url 'dashboard_accommodation_owners' %}" class="sidebar-link">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-user-tie" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Property Owners</span>
+                </a>
+                <a href="{% url 'dashboard_accommodations' %}" class="sidebar-link">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-hotel" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Accommodations</span>
+                </a>
+                <a href="{% url 'dashboard_accommodation_bookings' %}" class="sidebar-link">
+                    <div class="sidebar-link-icon">
+                        <i class="fas fa-bed" style="font-size: 16px;"></i>
+                    </div>
+                    <span>Bookings</span>
+                </a>
             </nav>
 
             <!-- Sidebar Footer -->

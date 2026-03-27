@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Accommodations{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">Accommodations</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Accommodations</h1>
+    <p class="page-subtitle">Manage all registered properties and their verification status. Only verified accommodations are visible to users.</p>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <div class="card-header">
+        <h2 class="card-title">All Accommodations ({{ accommodations.count }})</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Property Name</th>
+                    <th>Type</th>
+                    <th>Owner</th>
+                    <th>City</th>
+                    <th>Price/Night</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acc in accommodations %}
+                <tr>
+                    <td><strong>{{ acc.name }}</strong></td>
+                    <td>{{ acc.get_accommodation_type_display }}</td>
+                    <td>{{ acc.owner.business_name }}</td>
+                    <td>{{ acc.city }}</td>
+                    <td>₹{{ acc.price_per_night }}</td>
+                    <td>
+                        {% if acc.is_verified %}
+                        <span class="status-badge status-success">Verified</span>
+                        {% else %}
+                        <span class="status-badge status-warning">Pending Verification</span>
+                        {% endif %}
+                        {% if acc.is_available %}
+                        <span class="status-badge status-info">Available</span>
+                        {% else %}
+                        <span class="status-badge status-danger">Unavailable</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            {% if not acc.is_verified %}
+                            <a href="{% url 'dashboard_accommodation_verify' acc.pk %}?action=verify" class="action-btn nm-button" title="Verify - Make visible to users" style="color: #28a745;">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'dashboard_accommodation_verify' acc.pk %}?action=unverify" class="action-btn nm-button" title="Unverify - Hide from users" style="color: #ffc107;">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted);">No accommodations registered yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

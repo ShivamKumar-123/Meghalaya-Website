@@ -1,0 +1,187 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Accommodation Owner Login{% endblock %}
+
+{% block content %}
+<style>
+    .login-page {
+        min-height: 100vh;
+        padding: 120px 20px 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .login-container {
+        max-width: 450px;
+        width: 100%;
+    }
+    
+    .login-card {
+        background: rgba(15, 30, 50, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 213, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+    }
+    
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .login-header i {
+        font-size: 3rem;
+        color: #00ffd5;
+        margin-bottom: 15px;
+    }
+    
+    .login-header h1 {
+        color: #fff;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .login-header p {
+        color: #a0a0a0;
+        font-size: 0.95rem;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        color: #a0a0a0;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus {
+        outline: none;
+        border-color: #00ffd5;
+        box-shadow: 0 0 10px rgba(0, 255, 213, 0.2);
+    }
+    
+    .form-group input::placeholder {
+        color: #666;
+    }
+    
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #00ffd5, #00b4db);
+        color: #0a1628;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+    
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 255, 213, 0.4);
+    }
+    
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+        color: #a0a0a0;
+    }
+    
+    .register-link a {
+        color: #00ffd5;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+    
+    .info-message {
+        background: rgba(0, 180, 219, 0.1);
+        border: 1px solid rgba(0, 180, 219, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #00b4db;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    
+    .error-message {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #dc3545;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+</style>
+
+<div class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-hotel"></i>
+                <h1>Owner Login</h1>
+                <p>Access your accommodation dashboard</p>
+            </div>
+            
+            {% if request.user.is_authenticated %}
+            <div class="info-message">
+                <i class="fas fa-info-circle"></i> You are logged in as <strong>{{ request.user.username }}</strong>. Enter different credentials to switch accounts.
+            </div>
+            {% endif %}
+            
+            {% if messages %}
+            {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}info-message{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            
+            <form method="post" action="{% url 'accommodation_owner_login_submit' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+            </form>
+            
+            <div class="register-link">
+                Not registered yet? <a href="{% url 'accommodation_owner_register' %}">Register as Owner</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

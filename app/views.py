@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db import models
 
 from . models import MeghalayaImages,MeghalyaVideos,RegionOfMeghalaya, Festival, TrevalAround,MeghalayaLocation, ContactMessage, MessageReply, AccommodationOwner, Accommodation, AccommodationBooking
 
@@ -38,27 +39,35 @@ from decimal import Decimal
 
 
 def home(request):
+    from django.core.cache import cache
+    
+    # Try to get cached data first
+    meghaData = cache.get('home_meghaData')
+    if meghaData is None:
+        meghaData = list(MeghalayaImages.objects.all())
+        cache.set('home_meghaData', meghaData, 300)  # Cache for 5 minutes
 
-    meghaData = MeghalayaImages.objects.all()
+    placeName = cache.get('home_placeName')
+    if placeName is None:
+        placeName = list(MeghalayaImages.objects.values('name').exclude(
+            name__in=["Cherrapunji", "Police Bazar", "Seven Sister Falls", "Dawki River", "Cathedral of Mary"]
+        ).distinct())
+        cache.set('home_placeName', placeName, 300)
 
-    # placeName = MeghalayaImages.objects.values_list('name', flat=True).distinct()
+    regionName = cache.get('home_regionName')
+    if regionName is None:
+        regionName = list(RegionOfMeghalaya.objects.values('name').distinct())
+        cache.set('home_regionName', regionName, 300)
 
-    placeName = MeghalayaImages.objects.values('name').exclude(
+    festivalnames = cache.get('home_festivalnames')
+    if festivalnames is None:
+        festivalnames = list(Festival.objects.values('festival_name').distinct())
+        cache.set('home_festivalnames', festivalnames, 300)
 
-    name__in=["Cherrapunji", "Police Bazar", "Seven Sister Falls", "Dawki River", "Cathedral of Mary"]
-
-    ).distinct()
-
-
-
-    regionName= RegionOfMeghalaya.objects.values('name').distinct()
-
-    festivalnames = Festival.objects.values('festival_name').distinct()
-
-    trevalPlace = TrevalAround.objects.values('name').distinct()
-
-
-
+    trevalPlace = cache.get('home_trevalPlace')
+    if trevalPlace is None:
+        trevalPlace = list(TrevalAround.objects.values('name').distinct())
+        cache.set('home_trevalPlace', trevalPlace, 300)
 
 
 
@@ -379,7 +388,7 @@ def vehicle_list(request):
 
     
 
-    vehicles = Vehicle.objects.filter(is_available=True, is_verified=True, owner__is_verified=True, owner__is_active=True)
+    vehicles = Vehicle.objects.filter(is_available=True, is_verified=True, owner__is_verified=True, owner__is_active=True).select_related('owner')
 
     
 
@@ -729,7 +738,7 @@ def owner_dashboard(request):
 
     vehicles = owner.vehicles.all()
 
-    bookings = VehicleBooking.objects.filter(vehicle__owner=owner).order_by('-created_at')
+    bookings = VehicleBooking.objects.filter(vehicle__owner=owner).select_related('vehicle', 'user').order_by('-created_at')
 
     pending_bookings = bookings.filter(booking_status='pending', payment_status='submitted')
 
@@ -1263,7 +1272,7 @@ def accommodation_list(request):
 
     """List all available accommodations"""
 
-    accommodations = Accommodation.objects.filter(is_available=True, is_verified=True)
+    accommodations = Accommodation.objects.filter(is_available=True, is_verified=True, owner__is_verified=True, owner__is_active=True).select_related('owner')
 
     
 
@@ -1305,7 +1314,7 @@ def accommodation_list(request):
 
     # Get unique cities for filter
 
-    cities = Accommodation.objects.filter(is_available=True, is_verified=True).values_list('city', flat=True).distinct()
+    cities = Accommodation.objects.filter(is_available=True, is_verified=True, owner__is_verified=True, owner__is_active=True).values_list('city', flat=True).distinct()
 
     
 
@@ -1597,98 +1606,140 @@ def accommodation_owner_register(request):
 
 
 
-@login_required
-
 def accommodation_owner_login(request):
+    """Accommodation owner login page"""
+    # If user is already logged in and is an accommodation owner, redirect to dashboard
+    if request.user.is_authenticated:
+        try:
+            owner = request.user.accommodation_owner_profile
+            return redirect('accommodation_owner_dashboard')
+        except AccommodationOwner.DoesNotExist:
+            # User is logged in but not an accommodation owner
+            # Allow them to access login page to switch accounts
+            pass
+    
+    return render(request, 'accommodations/owner_login.html')
 
-    """Redirect to accommodation owner dashboard"""
 
-    try:
-
-        owner = request.user.accommodation_owner_profile
-
-        return redirect('accommodation_owner_dashboard')
-
-    except AccommodationOwner.DoesNotExist:
-
-        messages.error(request, 'You are not registered as an accommodation owner.')
-
-        return redirect('accommodation_owner_register')
+def accommodation_owner_login_submit(request):
+    """Handle accommodation owner login form submission"""
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Check if user is registered as accommodation owner
+            try:
+                owner = user.accommodation_owner_profile
+                # If user is different from current logged-in user, logout first
+                if request.user.is_authenticated and request.user != user:
+                    auth_logout(request)
+                auth_login(request, user)
+                messages.success(request, f'Welcome back, {owner.business_name}!')
+                return redirect('accommodation_owner_dashboard')
+            except AccommodationOwner.DoesNotExist:
+                messages.error(request, 'You are not registered as an accommodation owner. Please register first.')
+                return redirect('accommodation_owner_register')
+        else:
+            messages.error(request, 'Invalid username or password.')
+            return redirect('accommodation_owner_login')
+    
+    return redirect('accommodation_owner_login')
 
 
 
 
 
 @login_required
-
 def accommodation_owner_dashboard(request):
-
-    """Accommodation owner dashboard"""
-
+    """Accommodation owner dashboard with numeric statistics"""
     try:
-
         owner = request.user.accommodation_owner_profile
-
     except AccommodationOwner.DoesNotExist:
-
         messages.error(request, 'Please register as an accommodation owner first.')
-
         return redirect('accommodation_owner_register')
-
     
-
     accommodations = owner.accommodations.all()
-
     
-
-    # Get bookings for owner's accommodations
-
-    pending_bookings = AccommodationBooking.objects.filter(
-
-        accommodation__owner=owner,
-
-        booking_status='pending',
-
-        payment_status='submitted'
-
-    )
-
-    confirmed_bookings = AccommodationBooking.objects.filter(
-
-        accommodation__owner=owner,
-
-        booking_status='confirmed'
-
-    )
-
-    checked_in_bookings = AccommodationBooking.objects.filter(
-
-        accommodation__owner=owner,
-
-        booking_status='checked_in'
-
-    )
-
+    # Get bookings for owner's accommodations with select_related to reduce queries
+    all_bookings = AccommodationBooking.objects.filter(accommodation__owner=owner).select_related('accommodation', 'user')
     
-
+    pending_bookings = all_bookings.filter(booking_status='pending', payment_status='submitted')
+    confirmed_bookings = all_bookings.filter(booking_status='confirmed')
+    checked_in_bookings = all_bookings.filter(booking_status='checked_in')
+    completed_bookings = all_bookings.filter(booking_status='checked_out')
+    cancelled_bookings = all_bookings.filter(booking_status='cancelled')
+    
+    # Numeric Statistics
+    total_properties = accommodations.count()
+    total_bookings = all_bookings.count()
     pending_count = pending_bookings.count()
-
+    confirmed_count = confirmed_bookings.count()
+    checked_in_count = checked_in_bookings.count()
+    completed_count = completed_bookings.count()
+    cancelled_count = cancelled_bookings.count()
     
-
-    return render(request, 'accommodations/owner_dashboard.html', {
-
+    # Revenue calculations
+    total_revenue = all_bookings.filter(
+        booking_status__in=['confirmed', 'checked_in', 'checked_out'],
+        payment_status='paid'
+    ).aggregate(total=models.Sum('total_amount'))['total'] or 0
+    
+    # This month's revenue
+    from datetime import datetime
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+    monthly_revenue = all_bookings.filter(
+        booking_status__in=['confirmed', 'checked_in', 'checked_out'],
+        payment_status='paid',
+        created_at__month=current_month,
+        created_at__year=current_year
+    ).aggregate(total=models.Sum('total_amount'))['total'] or 0
+    
+    # This month's bookings
+    monthly_bookings = all_bookings.filter(
+        created_at__month=current_month,
+        created_at__year=current_year
+    ).count()
+    
+    # Calculate occupancy rate (checked_in / total_rooms)
+    total_rooms = accommodations.aggregate(total=models.Sum('total_rooms'))['total'] or 0
+    occupied_rooms = checked_in_bookings.count()
+    occupancy_rate = round((occupied_rooms / total_rooms * 100), 1) if total_rooms > 0 else 0
+    
+    # Average rating
+    avg_rating = accommodations.aggregate(avg=models.Avg('rating'))['avg'] or 0
+    avg_rating = round(avg_rating, 1)
+    
+    # Available rooms
+    available_rooms = accommodations.aggregate(total=models.Sum('available_rooms'))['total'] or 0
+    
+    return render(request, 'accommodations/owner_dashboard_new.html', {
         'owner': owner,
-
         'accommodations': accommodations,
-
         'pending_bookings': pending_bookings,
-
         'confirmed_bookings': confirmed_bookings,
-
         'checked_in_bookings': checked_in_bookings,
-
+        'completed_bookings': completed_bookings,
         'pending_count': pending_count,
-
+        # Numeric stats
+        'total_properties': total_properties,
+        'total_bookings': total_bookings,
+        'confirmed_count': confirmed_count,
+        'checked_in_count': checked_in_count,
+        'completed_count': completed_count,
+        'cancelled_count': cancelled_count,
+        'total_revenue': total_revenue,
+        'monthly_revenue': monthly_revenue,
+        'monthly_bookings': monthly_bookings,
+        'occupancy_rate': occupancy_rate,
+        'total_rooms': total_rooms,
+        'available_rooms': available_rooms,
+        'avg_rating': avg_rating,
     })
 
 

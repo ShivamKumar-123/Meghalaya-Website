@@ -135,6 +135,14 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Cache Configuration - Using local memory cache for faster page loads
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
 STATIC_URL = "static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 MEDIA_URL = '/media/'

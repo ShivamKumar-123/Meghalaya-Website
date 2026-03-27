@@ -1,0 +1,85 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Property Owners{% endblock %}
+
+{% block breadcrumb %}
+<svg class="breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+<span class="breadcrumb-current">Property Owners</span>
+{% endblock %}
+
+{% block content %}
+<div class="title-section cascade-in">
+    <h1 class="page-title">Accommodation Owners</h1>
+    <p class="page-subtitle">Manage registered property owners and their verification status.</p>
+</div>
+
+<div class="card nm-flat cascade-in">
+    <div class="card-header">
+        <h2 class="card-title">All Property Owners ({{ owners.count }})</h2>
+    </div>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Business Name</th>
+                    <th>Owner</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>Properties</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for owner in owners %}
+                <tr>
+                    <td><strong>{{ owner.business_name }}</strong></td>
+                    <td>{{ owner.owner_name }}</td>
+                    <td>{{ owner.phone }}</td>
+                    <td>{{ owner.city }}</td>
+                    <td>{{ owner.accommodations.count }}</td>
+                    <td>
+                        {% if owner.is_verified %}
+                        <span class="status-badge status-success">Verified</span>
+                        {% else %}
+                        <span class="status-badge status-warning">Pending</span>
+                        {% endif %}
+                        {% if not owner.is_active %}
+                        <span class="status-badge status-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            {% if not owner.is_verified %}
+                            <a href="{% url 'dashboard_accommodation_owner_action' owner.pk %}?action=verify" class="action-btn nm-button" title="Verify" style="color: #28a745;">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'dashboard_accommodation_owner_action' owner.pk %}?action=unverify" class="action-btn nm-button" title="Unverify" style="color: #ffc107;">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% endif %}
+                            {% if owner.is_active %}
+                            <a href="{% url 'dashboard_accommodation_owner_action' owner.pk %}?action=deactivate" class="action-btn nm-button" title="Deactivate" style="color: #dc3545;">
+                                <i class="fas fa-ban"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'dashboard_accommodation_owner_action' owner.pk %}?action=activate" class="action-btn nm-button" title="Activate" style="color: #28a745;">
+                                <i class="fas fa-check-circle"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted);">No property owners registered yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
